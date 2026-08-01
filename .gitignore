@@ -1,0 +1,47 @@
+# Secrets
+.env
+*.local.yml
+application-local.yml
+
+# Java / Maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# Go
+bin/
+*.exe
+*.test
+*.out
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Data
+*.log
+logs/
+captured/
+
+
+# Normalize line endings
+* text=auto
+
+# Windows scripts
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Unix scripts
+*.sh text eol=lf
+
+
+
+private-drafts/

@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: bridge
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # XML compresses roughly 10:1. At ~145 GB/day raw this is the single
+      # highest-leverage setting in the file.
+      compression-type: zstd
+      # Wait for the write to be acknowledged by all in-sync replicas before
+      # send() completes. With one broker this is the same as acks=1, but it
+      # is the correct setting and costs nothing now.
+      acks: all
+      # Retry transient broker errors rather than surfacing them to the listener.
+      retries: 5
+      properties:
+        # Collections reach ~370 KB; allow headroom well past that.
+        max.request.size: 10485760
+        # Small linger lets the producer batch, which improves compression
+        # ratio noticeably on messages this size.
+        linger.ms: 20
+        enable.idempotence: true
+
+kafka:
+  topic:
+    raw: ${KAFKA_TOPIC_RAW:fixm.raw}
+
+solace:
+  # Full URI including scheme and port, e.g. tcps://ems2.swim.faa.gov:55443
+  host: ${SOLACE_HOST}
+  vpn: ${SOLACE_VPN}
+  username: ${SOLACE_USERNAME}
+  password: ${SOLACE_PASSWORD}
+  queue: ${SOLACE_QUEUE}
+  connection-factory: ${SOLACE_CONNECTION_FACTORY}
+
+logging:
+  level:
+    root: INFO
+    com.naspipeline.bridge: ${LOG_LEVEL:INFO}
+    # Uncomment when a connection won't establish. Very noisy.
+    # com.solacesystems: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ 
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/>
+    </parent>
+ 
+    <groupId>com.naspipeline</groupId>
+    <artifactId>bridge</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>bridge</name>
+    <description>JMS to Kafka bridge for SWIM SFDPS flight data</description>
+ 
+    <properties>
+        <java.version>25</java.version>
+        <!-- Matches the version used by the FAA jumpstart kit. -->
+        <solace.jms.version>10.30.1</solace.jms.version>
+        <jakarta.jms.version>3.1.0</jakarta.jms.version>
+    </properties>
+ 
+    <dependencies>
+ 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+ 
+        <!-- Spring's JMS support: @JmsListener, listener containers,
+             JndiTemplate. Deliberately NOT spring-boot-starter-activemq,
+             which would drag in a broker client we don't want. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+        </dependency>
+ 
+        <!-- The JMS interfaces themselves. spring-jms does not bring these
+             in at compile scope, so they are declared explicitly. -->
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+            <version>${jakarta.jms.version}</version>
+        </dependency>
+ 
+        <!-- Solace client, jakarta namespace variant. NOT plain sol-jms:
+             that one implements javax.jms and is binary-incompatible with
+             Spring 6+. The two must never both be on the classpath. -->
+        <dependency>
+            <groupId>com.solacesystems</groupId>
+            <artifactId>sol-jms-jakarta</artifactId>
+            <version>${solace.jms.version}</version>
+        </dependency>
+ 
+        <!-- Kafka producer. Not wired up yet, but here so the dependency
+             is settled before you need it. -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+ 
+    </dependencies>
+ 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+ 
+</project>
