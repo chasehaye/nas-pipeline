@@ -3,32 +3,33 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/chasehaye/nas-pipeline/processor/internal/consumer"
+	"github.com/chasehaye/nas-pipeline/processor/internal/config"
+	"github.com/chasehaye/nas-pipeline/processor/internal/kafka"
+	"github.com/chasehaye/nas-pipeline/processor/internal/pipeline"
 )
 
 func main() {
-	c := consumer.New(consumer.Config{
-		Brokers: envOr("KAFKA_BROKERS", "localhost:9092"),
-		Topic:   envOr("KAFKA_TOPIC_RAW", "fixm.raw"),
-		Group:   envOr("KAFKA_GROUP", "processor"),
-	})
-	defer c.Close()
+	cfg := config.Load()
 
-	ctx, cancel := signal.NotifyContext(
-		context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer cancel()
-
-	s := c.Run(ctx)
-	log.Print(s.Summary())
-}
-
-func envOr(k, def string) string {
-	if v := os.Getenv(k); v != "" {
-		return v
+	if err := kafka.EnsureTopic(cfg.Brokers, cfg.NormalizedTopic, 1, 1); err != nil {
+		log.Fatal(err)
 	}
-	return def
+
+	consumer := kafka.NewConsumer(kafka.ConsumerConfig{
+		Brokers: cfg.Brokers,
+		Topic:   cfg.RawTopic,
+		Group:   cfg.Group,
+	})
+	defer consumer.Close()
+
+	producer := kafka.NewProducer(kafka.ProducerConfig{
+		Brokers: cfg.Brokers,
+		Topic:   cfg.NormalizedTopic,
+	})
+	defer producer.Close()
+
+	if err := pipeline.New(consumer, producer).Run(context.Background()); err != nil {
+		log.Fatal(err)
+	}
 }
