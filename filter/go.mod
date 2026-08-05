@@ -1,4 +1,4 @@
-module github.com/chasehaye/nas-pipeline/processor
+module github.com/chasehaye/nas-pipeline/filter
 
 go 1.26.1
 

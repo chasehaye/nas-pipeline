@@ -13,15 +13,11 @@ import (
 	"github.com/chasehaye/nas-pipeline/processor/internal/metrics"
 )
 
-// Fetcher is anything we can pull messages from and commit back to.
-// *kafka.Consumer satisfies this as-is.
 type Fetcher interface {
 	Fetch(ctx context.Context) (kafka.Message, error)
 	Commit(ctx context.Context, msg kafka.Message) error
 }
 
-// Publisher is anything we can publish normalized bytes to.
-// *kafka.Producer satisfies this as-is.
 type Publisher interface {
 	Publish(ctx context.Context, data []byte) error
 }
@@ -35,8 +31,7 @@ func New(fetcher Fetcher, publisher Publisher) *Processor {
 	return &Processor{fetcher: fetcher, publisher: publisher}
 }
 
-// Run consumes, processes, publishes, and commits in a loop until the context
-// is cancelled or an interrupt/SIGTERM is received.
+
 func (p *Processor) Run(ctx context.Context) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer cancel()
@@ -48,7 +43,7 @@ func (p *Processor) Run(ctx context.Context) error {
 		if err != nil {
 			if ctx.Err() != nil {
 				log.Print(stats.Summary())
-				return nil // graceful shutdown
+				return nil
 			}
 			log.Printf("consume error: %v", err)
 			continue
@@ -78,7 +73,6 @@ func (p *Processor) Run(ctx context.Context) error {
 	}
 }
 
-// Process is the pure transform: parse a FIXM envelope and encode it as JSON.
 func Process(data []byte) ([]byte, error) {
 	messages, err := fixm.ParseEnvelope(data)
 	if err != nil {

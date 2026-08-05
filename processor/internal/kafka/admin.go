@@ -44,18 +44,11 @@ func EnsureTopic(
 
 	defer controllerConn.Close()
 
-
-	err = controllerConn.CreateTopics(
+	return controllerConn.CreateTopics(
 		kafka.TopicConfig{
-			Topic: topic,
-			NumPartitions: partitions,
+			Topic:             topic,
+			NumPartitions:     partitions,
 			ReplicationFactor: replicationFactor,
 		},
 	)
-
-	if err != nil && err.Error() != "topic already exists" {
-		return err
-	}
-
-	return nil
 }

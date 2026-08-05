@@ -1,4 +1,11 @@
 spring:
+  # Load secrets from a local .env (parsed as a properties file) so they
+  # never have to be exported in a shell or committed to the repo. The
+  # file is resolved relative to the working directory the app is launched
+  # from, so run the bridge from this module's directory. `optional:` means
+  # startup won't fail if the file is absent (e.g. real env vars in prod).
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: bridge
   kafka:

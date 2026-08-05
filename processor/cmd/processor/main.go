@@ -4,12 +4,18 @@ import (
 	"context"
 	"log"
 
+	"github.com/joho/godotenv"
+
 	"github.com/chasehaye/nas-pipeline/processor/internal/config"
 	"github.com/chasehaye/nas-pipeline/processor/internal/kafka"
 	"github.com/chasehaye/nas-pipeline/processor/internal/pipeline"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+	}
+
 	cfg := config.Load()
 
 	if err := kafka.EnsureTopic(cfg.Brokers, cfg.NormalizedTopic, 1, 1); err != nil {
