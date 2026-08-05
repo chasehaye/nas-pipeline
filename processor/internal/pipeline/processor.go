@@ -19,7 +19,7 @@ type Fetcher interface {
 }
 
 type Publisher interface {
-	Publish(ctx context.Context, data []byte) error
+	Publish(ctx context.Context, msgs ...kafka.Message) error
 }
 
 type Processor struct {
@@ -55,15 +55,15 @@ func (p *Processor) Run(ctx context.Context) error {
 			log.Print(stats.Progress())
 		}
 
-		data, err := Process(msg.Value)
+		flights, err := fixm.ParseEnvelope(msg.Value)
 		if err != nil {
 			stats.ParseErrors++
 			log.Printf("process error offset %d: %v", msg.Offset, err)
 			continue
 		}
 
-		if err := p.publisher.Publish(ctx, data); err != nil {
-			log.Printf("publish error: %v", err)
+		if err := p.publishFlights(ctx, flights); err != nil {
+			log.Printf("publish error offset %d (will retry envelope): %v", msg.Offset, err)
 			continue
 		}
 
@@ -73,11 +73,22 @@ func (p *Processor) Run(ctx context.Context) error {
 	}
 }
 
-func Process(data []byte) ([]byte, error) {
-	messages, err := fixm.ParseEnvelope(data)
-	if err != nil {
-		return nil, err
+func (p *Processor) publishFlights(ctx context.Context, flights []fixm.Message) error {
+	if len(flights) == 0 {
+		return nil
 	}
 
-	return fixm.EncodeJSON(messages)
+	msgs := make([]kafka.Message, 0, len(flights))
+	for _, f := range flights {
+		data, err := fixm.EncodeOne(f)
+		if err != nil {
+			return err
+		}
+		msgs = append(msgs, kafka.Message{
+			Key:   []byte(f.Flight.Gufi.Code),
+			Value: data,
+		})
+	}
+
+	return p.publisher.Publish(ctx, msgs...)
 }

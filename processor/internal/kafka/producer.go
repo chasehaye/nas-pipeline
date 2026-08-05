@@ -26,11 +26,7 @@ func NewProducer(cfg ProducerConfig) *Producer {
 			),
 
 			Topic: cfg.Topic,
-
-			Balancer: &kafka.LeastBytes{},
-
-			// Default BatchTimeout is 1s, so a single synchronous write
-			// stalls ~1s waiting for a batch that never fills. Flush fast.
+			Balancer: &kafka.Hash{},
 			BatchTimeout: 10 * time.Millisecond,
 		},
 	}
@@ -44,13 +40,8 @@ func (p *Producer) Close() error {
 
 func (p *Producer) Publish(
 	ctx context.Context,
-	data []byte,
+	msgs ...kafka.Message,
 ) error {
 
-	return p.writer.WriteMessages(
-		ctx,
-		kafka.Message{
-			Value: data,
-		},
-	)
+	return p.writer.WriteMessages(ctx, msgs...)
 }

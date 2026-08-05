@@ -20,9 +20,9 @@ type Producer struct {
 func NewProducer(cfg ProducerConfig) *Producer {
 	return &Producer{
 		writer: &kafka.Writer{
-			Addr:     kafka.TCP(strings.Split(cfg.Brokers, ",")...),
-			Topic:    cfg.Topic,
-			Balancer: &kafka.LeastBytes{},
+			Addr:  kafka.TCP(strings.Split(cfg.Brokers, ",")...),
+			Topic: cfg.Topic,
+			Balancer:     &kafka.Hash{},
 			BatchTimeout: 10 * time.Millisecond,
 		},
 	}
@@ -30,6 +30,6 @@ func NewProducer(cfg ProducerConfig) *Producer {
 
 func (p *Producer) Close() error { return p.writer.Close() }
 
-func (p *Producer) Publish(ctx context.Context, data []byte) error {
-	return p.writer.WriteMessages(ctx, kafka.Message{Value: data})
+func (p *Producer) Publish(ctx context.Context, key, data []byte) error {
+	return p.writer.WriteMessages(ctx, kafka.Message{Key: key, Value: data})
 }

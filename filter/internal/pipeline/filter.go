@@ -21,7 +21,7 @@ type Fetcher interface {
 }
 
 type Publisher interface {
-	Publish(ctx context.Context, data []byte) error
+	Publish(ctx context.Context, key, data []byte) error
 }
 
 
@@ -60,13 +60,13 @@ func (f *Filter) Run(ctx context.Context) error {
 			continue
 		}
 
-		stats.Envelopes++
+		stats.Flights++
 		stats.BytesRead += int64(len(msg.Value))
-		if stats.Envelopes%1000 == 0 {
+		if stats.Flights%1000 == 0 {
 			log.Print(stats.Progress())
 		}
 
-		msgs, err := flight.Parse(msg.Value)
+		m, err := flight.Parse(msg.Value)
 		if err != nil {
 			stats.ParseErrors++
 			log.Printf("parse error offset %d (dropped): %v", msg.Offset, err)
@@ -74,28 +74,13 @@ func (f *Filter) Run(ctx context.Context) error {
 			continue
 		}
 
-		survivors := msgs[:0]
-		for _, m := range msgs {
-			if f.blocklist.Blocks(m.Ident.CallSign, m.Ident.Registration) {
-				stats.Blocked++
-				continue
-			}
-			survivors = append(survivors, m)
-		}
-
-		if len(survivors) == 0 {
-			stats.Dropped++
+		if f.blocklist.Blocks(m.Ident.CallSign, m.Ident.Registration) {
+			stats.Blocked++
 			f.commit(ctx, msg)
 			continue
 		}
 
-		out, err := flight.Marshal(survivors)
-		if err != nil {
-			log.Printf("encode error offset %d: %v", msg.Offset, err)
-			continue
-		}
-
-		if err := f.publisher.Publish(ctx, out); err != nil {
+		if err := f.publisher.Publish(ctx, []byte(m.Gufi), m.Raw); err != nil {
 			log.Printf("publish error: %v", err)
 			continue
 		}

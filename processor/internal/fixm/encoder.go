@@ -5,8 +5,9 @@ import (
 	"fmt"
 )
 
-func EncodeJSON(messages []Message) ([]byte, error) {
-	data, err := json.Marshal(messages)
+
+func EncodeOne(m Message) ([]byte, error) {
+	data, err := json.Marshal(m)
 	if err != nil {
 		return nil, fmt.Errorf("json encode: %w", err)
 	}

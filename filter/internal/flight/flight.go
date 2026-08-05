@@ -4,7 +4,7 @@ import "encoding/json"
 
 
 type Ident struct {
-	CallSign     string // FIXM aircraftIdentification
+	CallSign     string
 	Registration string
 }
 
@@ -16,6 +16,9 @@ type element struct {
 		AircraftDescription struct {
 			Registration string `json:"registration"`
 		} `json:"aircraftDescription"`
+		Gufi struct {
+			Code string `json:"code"`
+		} `json:"gufi"`
 	} `json:"flight"`
 }
 
@@ -23,37 +26,21 @@ type element struct {
 type Message struct {
 	Raw   json.RawMessage
 	Ident Ident
+	Gufi  string
 }
 
 
-func Parse(payload []byte) ([]Message, error) {
-	var raws []json.RawMessage
-	if err := json.Unmarshal(payload, &raws); err != nil {
-		return nil, err
+func Parse(payload []byte) (Message, error) {
+	var e element
+	if err := json.Unmarshal(payload, &e); err != nil {
+		return Message{}, err
 	}
-
-	msgs := make([]Message, 0, len(raws))
-	for _, raw := range raws {
-		var e element
-		if err := json.Unmarshal(raw, &e); err != nil {
-			return nil, err
-		}
-		msgs = append(msgs, Message{
-			Raw: raw,
-			Ident: Ident{
-				CallSign:     e.Flight.FlightIdentification.AircraftIdentification,
-				Registration: e.Flight.AircraftDescription.Registration,
-			},
-		})
-	}
-	return msgs, nil
-}
-
-
-func Marshal(msgs []Message) ([]byte, error) {
-	raws := make([]json.RawMessage, len(msgs))
-	for i, m := range msgs {
-		raws[i] = m.Raw
-	}
-	return json.Marshal(raws)
+	return Message{
+		Raw: payload,
+		Ident: Ident{
+			CallSign:     e.Flight.FlightIdentification.AircraftIdentification,
+			Registration: e.Flight.AircraftDescription.Registration,
+		},
+		Gufi: e.Flight.Gufi.Code,
+	}, nil
 }

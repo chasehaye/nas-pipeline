@@ -45,9 +45,6 @@ func EnsureTopic(
 	defer controllerConn.Close()
 
 
-	// CreateTopics is idempotent: kafka-go swallows the broker's
-	// TopicAlreadyExists (code 36) and returns nil, so creating an existing
-	// topic is a harmless no-op — no special-casing needed here.
 	return controllerConn.CreateTopics(
 		kafka.TopicConfig{
 			Topic:             topic,
