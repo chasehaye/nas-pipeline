@@ -1,0 +1,6024 @@
+[
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.903Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "705",
+        "aircraftIdentification": "JIA5201",
+        "siteSpecificPlanId": "660"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "DROPPED"
+      },
+      "gufi": {
+        "code": "78b5ad2f-3733-47db-94db-52d83c89ab55",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KCLT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:56:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KVPS",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:00:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:06Z",
+            "targetPositionTime": "2026-08-05T21:18:06Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "416.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "29300.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.48 -82.174722"
+            },
+            "targetAltitude": {
+              "value": "29300.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.479722 -82.175"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-330.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-253.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "JIA"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188493"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:38:15Z.000/19/4K4"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "13"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122782"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A86A2B"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT706954K4"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "20"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "34000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.903Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "492",
+        "aircraftIdentification": "N2417L",
+        "siteSpecificPlanId": "871"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "bac5e872-8056-412b-97b6-8335a39a9f9a",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KMGM",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:44:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KSA1",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:08Z",
+            "targetPositionTime": "2026-08-05T21:18:08Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "97.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "1100.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.294722 -86.326111"
+            },
+            "targetAltitude": {
+              "value": "1100.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.295 -86.326389"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-43.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "87.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188508"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T20:35:06Z.000/19/4sJ"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "1"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122782"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A2370E"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT741064sJ"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {},
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {
+          "value": "2500.0",
+          "uom": "FEET"
+        },
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.903Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "24A",
+        "aircraftIdentification": "N448L",
+        "siteSpecificPlanId": "678"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "1a55556d-b8aa-44e5-864c-5da19cadd48e",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KTUL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T17:22:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KGEV",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:36:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:03Z",
+            "targetPositionTime": "2026-08-05T21:18:03Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "169.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "10900.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.5225 -83.350278"
+            },
+            "targetAltitude": {
+              "value": "10900.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.5225 -83.35"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "170.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "24.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188520"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T16:00:00Z.187/10/439"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "7"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122782"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "36.5225/-83.35"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "10900.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+170/+24"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:03Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A5694F"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KK57639439"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "45"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "11000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.903Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "688",
+        "aircraftIdentification": "SCX8152",
+        "siteSpecificPlanId": "36"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "7359db36-8da1-47de-a304-ec1704b19148",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KGPT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T19:54:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KGSO",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:21:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:00Z",
+            "targetPositionTime": "2026-08-05T21:18:00Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "279.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "6600.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.191111 -80.090833"
+            },
+            "targetAltitude": {
+              "value": "6600.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.191111 -80.090556"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "270.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "58.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "SCX"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188528"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:26:19Z.000/07/4EX"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "12"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122782"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "36.191111/-80.090556"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "6600.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+270/+58"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:00Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AB88EE"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KH663794EX"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "GGG",
+        "sectorIdentifier": "1W"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "11000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "571",
+        "aircraftIdentification": "AAL1155",
+        "siteSpecificPlanId": "193"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "aa487edf-ed7f-4391-8236-cf4e2c737c72",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KCLT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:07:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KBOS",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:42:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:08Z",
+            "targetPositionTime": "2026-08-05T21:18:08Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "397.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "17200.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.329722 -79.996944"
+            },
+            "targetAltitude": {
+              "value": "17200.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.33 -79.996111"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "374.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "133.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "AAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188530"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:40:38Z.000/19/4oY"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A77F2D"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT708384oY"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "29"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "090",
+        "aircraftIdentification": "N560RE",
+        "siteSpecificPlanId": "341"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "f5dd2619-b564-4bde-9aaa-43096a51eff4",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KPDK",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:13:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KBHM",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:38:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:09Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "277.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "9000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.873056 -84.605"
+            },
+            "targetAltitude": {
+              "value": "9000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.873056 -84.605"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-281.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "6.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188529"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:46:07Z.000/19/4My"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.873056/-84.605"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "9000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-281/+6"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:09Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A72866"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT711674My"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {
+          "value": "16000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "633",
+        "aircraftIdentification": "DAL753",
+        "siteSpecificPlanId": "198"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "07f5d0c6-60e6-4cb5-b2bd-27094d7a221a",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:48:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KLAX",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T01:00:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:09Z",
+            "targetPositionTime": "2026-08-05T21:18:09Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "443.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "31500.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.861389 -86.774722"
+            },
+            "targetAltitude": {
+              "value": "31500.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.861389 -86.774722"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-429.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "118.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188533"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T17:58:00Z.000/19/43c"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "10"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "32.861389/-86.774722"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "31500.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-429/+118"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:09Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A399DE"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT6468043c"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "03"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "32000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "660",
+        "aircraftIdentification": "AAL1224",
+        "siteSpecificPlanId": "934"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "129d665d-a508-4703-995f-485fbbc79c4d",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KCLT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:15:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KEWR",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:37:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:09Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "263.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "4800.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.101944 -80.850556"
+            },
+            "targetAltitude": {
+              "value": "4700.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.101667 -80.850278"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "216.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-150.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {
+          "handoff": [
+            {
+              "receivingUnit": {
+                "unitIdentifier": "ZTL",
+                "sectorIdentifier": "29"
+              },
+              "transferringUnit": {},
+              "acceptingUnit": {}
+            }
+          ]
+        }
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "AAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188531"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:30:20Z.000/19/4ec"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ADDA24"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT702204ec"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "CCC",
+        "sectorIdentifier": "1E"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "252",
+        "aircraftIdentification": "DAL1219",
+        "siteSpecificPlanId": "195"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "3a276bb2-af09-47bb-9844-175cf771fc95",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:15:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KLAX",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T01:09:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:08Z",
+            "targetPositionTime": "2026-08-05T21:18:08Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "265.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "5200.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.674167 -84.603056"
+            },
+            "targetAltitude": {
+              "value": "5200.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.674167 -84.603056"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-266.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "56.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188532"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:58:00Z.000/19/4Ta"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.674167/-84.603056"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "5200.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-266/+56"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:08Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A657F4"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT682804Ta"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {
+          "value": "34000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "324",
+        "aircraftIdentification": "N350KR",
+        "siteSpecificPlanId": "356"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "75208cb0-9904-480d-a30f-ebfb71305c78",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KHKY",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:17:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KBTR",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:40:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:07Z",
+            "targetPositionTime": "2026-08-05T21:18:07Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "173.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "1500.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.733889 -81.398889"
+            },
+            "targetAltitude": {
+              "value": "1500.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.733889 -81.398889"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-142.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-100.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188537"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T21:00:00Z.731/19/434"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "2"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "M-A3E5BE"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT75634434"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "45"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "43000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "540",
+        "aircraftIdentification": "UPS328",
+        "siteSpecificPlanId": "781"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "fd19ab43-822b-4656-ac56-161d73e77448",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KSDF",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:52:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "TJSJ",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T00:29:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:02Z",
+            "targetPositionTime": "2026-08-05T21:18:02Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "444.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "35000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.068611 -83.417222"
+            },
+            "targetAltitude": {
+              "value": "35000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.067778 -83.415833"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "341.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-284.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "UPS"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188548"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T16:18:41Z.000/08/4ol"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "2"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A3EA54"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KI587214ol"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "15"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.917Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "768",
+        "aircraftIdentification": "N601NT",
+        "siteSpecificPlanId": "383"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "7d274cae-578e-4bae-be86-cf6542c2904e",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KTRI",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:11:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KX04",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T23:47:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:17:59Z",
+            "targetPositionTime": "2026-08-05T21:18:00Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "135.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "8000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.291111 -82.296944"
+            },
+            "targetAltitude": {
+              "value": "8000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.291389 -82.2975"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "101.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-90.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188546"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T20:58:27Z.000/19/4YD"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122783"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "36.291389/-82.2975"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "8000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+101/-90"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:17:59Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A7CC34"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT755074YD"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {
+          "value": "9000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "36N",
+        "aircraftIdentification": "DAL2050",
+        "siteSpecificPlanId": "601"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "edfc9e8a-85d6-45a5-ba44-c4e4a48afd0f",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:15:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KBUF",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:45:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:08Z",
+            "targetPositionTime": "2026-08-05T21:18:08Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "292.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "7800.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.775556 -84.576667"
+            },
+            "targetAltitude": {
+              "value": "7700.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.775556 -84.576667"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "39.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "295.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188573"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:58:00Z.000/19/4sU"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.775556/-84.576667"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "7700.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+39/+295"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:08Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A39100"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT718804sU"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "476",
+        "aircraftIdentification": "DAL472",
+        "siteSpecificPlanId": "618"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "dbef0a69-3300-4d10-ae3a-5cdf204cb40e",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:05:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KSEA",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T01:47:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:10Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "385.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "20600.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.691944 -85.736667"
+            },
+            "targetAltitude": {
+              "value": "20600.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.691944 -85.736389"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-390.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-7.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188574"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:56:00Z.000/19/4HX"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "4"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.691944/-85.736389"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "20600.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-390/-7"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:10Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A7B4F2"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT717604HX"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "03"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "32000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "050",
+        "aircraftIdentification": "DAL3112",
+        "siteSpecificPlanId": "230"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "45e7f893-9837-41b7-8a86-56dc2cba7095",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:02:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KSAV",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:46:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:09Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "436.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "23000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.556389 -83.938056"
+            },
+            "targetAltitude": {
+              "value": "23000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.556389 -83.938056"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "441.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "8.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188577"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:30:59Z.000/19/4oh"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "7"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "32.556389/-83.938056"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "23000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+441/+8"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:09Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A448FC"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT702594oh"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "19"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "23000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "16W",
+        "aircraftIdentification": "CXK389",
+        "siteSpecificPlanId": "718"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "fff2ac02-6ce5-402f-8ecf-b4ca526ded1f",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KLZU",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T19:56:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KLZU",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:14:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:04Z",
+            "targetPositionTime": "2026-08-05T21:18:05Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "109.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "3100.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.581944 -83.591667"
+            },
+            "targetAltitude": {
+              "value": "3100.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.581944 -83.591667"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-28.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "102.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "CXK"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188578"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:18:02Z.000/19/41C"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "2"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.581944/-83.591667"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "3100.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-28/+102"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:04Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ACD8C1"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT6948241C"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {
+          "value": "5000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "525",
+        "aircraftIdentification": "DAL214",
+        "siteSpecificPlanId": "329"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "f137d195-9465-42d8-933a-9ce21071b7f0",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:00:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "LIRF",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T06:06:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:04Z",
+            "targetPositionTime": "2026-08-05T21:18:04Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "456.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "22300.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.911389 -82.937778"
+            },
+            "targetAltitude": {
+              "value": "22300.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.911389 -82.9375"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "410.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "216.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188582"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T17:42:56Z.000/19/4dz"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "4"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.911389/-82.9375"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "22300.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+410/+216"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:04Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A4FC00"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT637764dz"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "32"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "41W",
+        "aircraftIdentification": "N262QS",
+        "siteSpecificPlanId": "443"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "589b04c2-9b5d-42f1-a6fc-90fbb11cf7be",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KORD",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:12:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "MYNN",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:53:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:00Z",
+            "targetPositionTime": "2026-08-05T21:18:01Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "433.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "37000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.5825 -84.577778"
+            },
+            "targetAltitude": {
+              "value": "37000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.581667 -84.5775"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "39.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-431.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {
+          "handoff": [
+            {
+              "receivingUnit": {
+                "unitIdentifier": "ZTL",
+                "sectorIdentifier": "27"
+              },
+              "transferringUnit": {},
+              "acceptingUnit": {}
+            }
+          ]
+        }
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188584"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T16:12:29Z.000/06/4DY"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "27"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A287DA"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KG583494DY"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "36"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "37000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "43Y",
+        "aircraftIdentification": "N121CD",
+        "siteSpecificPlanId": "392"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "3b28ca34-efad-4e5c-86a2-b1c7194915f2",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KRYY",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:46:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KADS",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-06T00:07:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:05Z",
+            "targetPositionTime": "2026-08-05T21:18:05Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "174.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "18000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.944722 -86.011389"
+            },
+            "targetAltitude": {
+              "value": "18000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.944722 -86.011389"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-176.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-6.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {
+          "handoff": [
+            {
+              "receivingUnit": {
+                "unitIdentifier": "ZTL",
+                "sectorIdentifier": "13"
+              },
+              "transferringUnit": {},
+              "acceptingUnit": {}
+            }
+          ]
+        }
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188579"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:06:37Z.000/19/4WR"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "5"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.944722/-86.011389"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "18000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-176/-6"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:05Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A0579F"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT687974WR"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "05"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "18000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "87Y",
+        "aircraftIdentification": "KOW860",
+        "siteSpecificPlanId": "1030"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "1c9b11c4-a934-4838-a311-2793d187ead9",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KNEW",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:49:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KTEB",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T23:04:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:10Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "467.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "45000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "31.578889 -87.202222"
+            },
+            "targetAltitude": {
+              "value": "45000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "31.578889 -87.202222"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "362.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "303.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "KOW"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188591"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T17:25:02Z.000/07/4yz"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "7"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "31.578889/-87.202222"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "45000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+362/+303"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:10Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ABD096"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KH627024yz"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "08"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "45000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "50Y",
+        "aircraftIdentification": "TCN784",
+        "siteSpecificPlanId": "38"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "79cc0feb-27bc-4f99-a7ec-49e6c8d3e296",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KBNA",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:41:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KTRI",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:13:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:11Z",
+            "targetPositionTime": "2026-08-05T21:18:12Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "220.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "3500.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.596944 -82.393611"
+            },
+            "targetAltitude": {
+              "value": "3500.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "36.596944 -82.393889"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "154.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-140.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "TCN"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188595"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T02:36:27Z.000/12/4SA"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "7"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "36.596944/-82.393889"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "3500.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+154/-140"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:11Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AAA178"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KM093874SA"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "TTT",
+        "sectorIdentifier": "1W"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "11000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "440",
+        "aircraftIdentification": "AAL1788",
+        "siteSpecificPlanId": "361"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "a2a0eaff-2459-4f58-9b67-6ec348c1ca46",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KDCA",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:23:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KMSY",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:34:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:01Z",
+            "targetPositionTime": "2026-08-05T21:18:01Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "442.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "38000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.537778 -82.508056"
+            },
+            "targetAltitude": {
+              "value": "38000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.5375 -82.508611"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-364.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-250.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "AAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188601"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:40:35Z.000/22/4LH"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "5"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AA7288"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KW672354LH"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "23"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "38000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.939Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "54F",
+        "aircraftIdentification": "UAL47",
+        "siteSpecificPlanId": "471"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "a18ec359-add4-4f60-bef5-0836fce78393",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "EDDF",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KIAH",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:04Z",
+            "targetPositionTime": "2026-08-05T21:18:04Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "464.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "38000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.011389 -83.316667"
+            },
+            "targetAltitude": {
+              "value": "38000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.011389 -83.316667"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-337.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-320.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {
+          "handoff": [
+            {
+              "receivingUnit": {
+                "unitIdentifier": "ZTL",
+                "sectorIdentifier": "27"
+              },
+              "transferringUnit": {},
+              "acceptingUnit": {}
+            }
+          ]
+        }
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "UAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188604"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:27:41Z.000/01/4"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "11"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122784"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "34.011389/-83.316667"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "38000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-337/-320"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:04Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AACC5B"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KB664614Zc"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "23"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "38000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "941",
+        "aircraftIdentification": "JIA5068",
+        "siteSpecificPlanId": "262"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "f6507b50-010b-4780-a1dc-d8700738579b",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KBHM",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:10:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KCLT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:17:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:10Z",
+            "targetPositionTime": "2026-08-05T21:18:10Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "235.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "4000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.411111 -81.082222"
+            },
+            "targetAltitude": {
+              "value": "4000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.411111 -81.0825"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "57.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "228.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "JIA"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188616"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:07:16Z.000/19/439"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "12"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A7FED3"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT68836439"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "CCC",
+        "sectorIdentifier": "1U"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "24000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "041",
+        "aircraftIdentification": "DAL2153",
+        "siteSpecificPlanId": "398"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "50d8d06b-24ac-42a1-b060-267ab94a3a61",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:11:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KCAE",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:51:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:06Z",
+            "targetPositionTime": "2026-08-05T21:18:06Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "338.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "16200.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.546944 -84.289722"
+            },
+            "targetAltitude": {
+              "value": "16100.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.546944 -84.289722"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "214.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "271.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188613"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:26:00Z.000/19/4OD"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.546944/-84.289722"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "16100.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+214/+271"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:06Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ADC8EE"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT699604OD"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "16"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "19000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "173",
+        "aircraftIdentification": "DAL2128",
+        "siteSpecificPlanId": "311"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "dbef27c8-01c0-4f4f-85ad-7578d80c3c3e",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:10:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KICT",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:53:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:09Z",
+            "targetPositionTime": "2026-08-05T21:18:09Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "371.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "12100.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.689444 -85.101111"
+            },
+            "targetAltitude": {
+              "value": "12100.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.689444 -85.101667"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-370.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-26.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188611"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:40:59Z.000/19/4of"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ACE5BB"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT708594of"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "05"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "32000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "849",
+        "aircraftIdentification": "DAL1323",
+        "siteSpecificPlanId": "386"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "60172326-f0c1-454a-8f60-8077d66168f3",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:07:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KMIA",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:29:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:07Z",
+            "targetPositionTime": "2026-08-05T21:18:07Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "402.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "19400.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.895278 -84.248056"
+            },
+            "targetAltitude": {
+              "value": "19400.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.895278 -84.247778"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "225.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-341.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {
+          "handoff": [
+            {
+              "receivingUnit": {
+                "unitIdentifier": "ZTL",
+                "sectorIdentifier": "22"
+              },
+              "transferringUnit": {},
+              "acceptingUnit": {}
+            }
+          ]
+        }
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188612"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T19:36:00Z.000/19/4aY"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "4"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "32.895278/-84.247778"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "19400.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+225/-341"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:07Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A417C9"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT705604aY"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "21"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "35000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "258",
+        "aircraftIdentification": "DAL2340",
+        "siteSpecificPlanId": "689"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "1c5ff9fb-90a3-430c-a170-f17b72ad3bb6",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:42:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KEWR",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:20:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:07Z",
+            "targetPositionTime": "2026-08-05T21:18:07Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "469.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "33000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.728611 -80.898333"
+            },
+            "targetAltitude": {
+              "value": "33000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "35.728611 -80.898056"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "393.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "254.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188619"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:44:00Z.000/19/4lI"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "5"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "35.728611/-80.898056"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "33000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+393/+254"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:07Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A3725A"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT674404lI"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "33"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "33000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "841",
+        "aircraftIdentification": "EDV5314",
+        "siteSpecificPlanId": "1053"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "d9f43bcd-02e3-4c8a-a182-ee73ff132e74",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:04:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KAEX",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:24:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:08Z",
+            "targetPositionTime": "2026-08-05T21:18:09Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "403.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "23200.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.651667 -84.670556"
+            },
+            "targetAltitude": {
+              "value": "23200.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.651111 -84.670556"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-43.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-400.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "EDV"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188618"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T18:52:47Z.000/19/49k"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "6"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ACEB76"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT6796749k"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "10"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "34000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "508",
+        "aircraftIdentification": "ATN3352",
+        "siteSpecificPlanId": "622"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "d710d8bd-bf74-4515-ac5b-e60b88e4c03f",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T20:48:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KBWI",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T22:20:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:11Z",
+            "targetPositionTime": "2026-08-05T21:18:11Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "497.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "33000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.995556 -81.263333"
+            },
+            "targetAltitude": {
+              "value": "33000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.995556 -81.263333"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "420.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "261.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "ATN"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188620"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T16:12:38Z.000/19/48t"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "4"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "34.995556/-81.263333"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "33000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+420/+261"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:11Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-A81045"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT5835848t"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "33"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "33000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "212",
+        "aircraftIdentification": "N8450D",
+        "siteSpecificPlanId": "9"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "c93a89b0-137a-48b2-9005-138539df29c8",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KEKY",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:01:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KHSV",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:05Z",
+            "targetPositionTime": "2026-08-05T21:18:06Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "112.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "3500.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.817222 -87.042778"
+            },
+            "targetAltitude": {
+              "value": "3500.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "33.817222 -87.042778"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "-36.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "108.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {}
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188624"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T21:01:37Z.000/19/4mt"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "1"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "33.817222/-87.042778"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "3500.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "-36/+108"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:05Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AB94C8"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT756974mt"
+      },
+      "controllingUnit": {},
+      "assignedAltitude": {
+        "simple": {},
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {
+          "value": "3500.0",
+          "uom": "FEET"
+        },
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "407",
+        "aircraftIdentification": "AAL942",
+        "siteSpecificPlanId": "61"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "b9a421be-e726-4444-a12d-d75a2c0cbb20",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KAUS",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T19:50:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KPHL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T23:03:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:03Z",
+            "targetPositionTime": "2026-08-05T21:18:03Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "450.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "37000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.745833 -86.549167"
+            },
+            "targetAltitude": {
+              "value": "37000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "34.746389 -86.548333"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "387.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "230.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "AAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188632"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T17:55:33Z.000/07/4kt"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "22"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-AA02AB"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KH645334kt"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "02"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "37000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  },
+  {
+    "flight": {
+      "timestamp": "2026-08-05T21:18:12.957Z",
+      "centre": "ZTL",
+      "source": "TH",
+      "system": "ATL",
+      "flightIdentification": {
+        "computerId": "959",
+        "aircraftIdentification": "DAL3014",
+        "siteSpecificPlanId": "80"
+      },
+      "flightStatus": {
+        "fdpsFlightStatus": "ACTIVE"
+      },
+      "gufi": {
+        "code": "51f4e367-9acd-4b78-aa4f-c434c8c6cac0",
+        "codeSpace": "urn:uuid"
+      },
+      "departure": {
+        "departurePoint": "KATL",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {
+              "time": "2026-08-05T21:09:00Z"
+            },
+            "estimated": {},
+            "controlled": {}
+          }
+        }
+      },
+      "arrival": {
+        "arrivalPoint": "KSAV",
+        "runwayPositionAndTime": {
+          "runwayTime": {
+            "actual": {},
+            "estimated": {
+              "time": "2026-08-05T21:52:00Z"
+            },
+            "controlled": {}
+          }
+        }
+      },
+      "enRoute": {
+        "positions": [
+          {
+            "positionTime": "2026-08-05T21:18:07Z",
+            "targetPositionTime": "2026-08-05T21:18:07Z",
+            "reportSource": "SURVEILLANCE",
+            "actualSpeed": {
+              "surveillance": {
+                "value": "368.0",
+                "uom": "KNOTS"
+              }
+            },
+            "altitude": {
+              "value": "23000.0",
+              "uom": "FEET"
+            },
+            "location": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.986944 -84.346389"
+            },
+            "targetAltitude": {
+              "value": "23000.0",
+              "uom": "FEET"
+            },
+            "targetPosition": {
+              "srsName": "urn:ogc:def:crs:EPSG::4326",
+              "pos": "32.986944 -84.346389"
+            },
+            "trackVelocity": {
+              "x": {
+                "value": "212.0",
+                "uom": "KNOTS"
+              },
+              "y": {
+                "value": "-295.0",
+                "uom": "KNOTS"
+              }
+            }
+          }
+        ],
+        "boundaryCrossings": {}
+      },
+      "operator": {
+        "operatingOrganization": {
+          "organization": {
+            "name": "DAL"
+          }
+        }
+      },
+      "supplementalData": {
+        "additionalFlightInformation": {
+          "nameValue": [
+            {
+              "name": "MSG_SEQ_NO",
+              "value": "81188650"
+            },
+            {
+              "name": "FDPS_GUFI",
+              "value": "us.fdps.2026-08-05T17:56:00Z.000/19/4Xs"
+            },
+            {
+              "name": "FLIGHT_PLAN_SEQ_NO",
+              "value": "3"
+            },
+            {
+              "name": "SOURCE_TIME_AND_SEQ",
+              "value": "2118122785"
+            },
+            {
+              "name": "SOURCE_TIME",
+              "value": "21_18_12"
+            },
+            {
+              "name": "ADSB_POS_174A",
+              "value": "32.986944/-84.346389"
+            },
+            {
+              "name": "ADSB_ALT_175A",
+              "value": "23000.0"
+            },
+            {
+              "name": "ADSB_VEL_176A",
+              "value": "+212/-295"
+            },
+            {
+              "name": "ADSB_TIME_177A",
+              "value": "2026-08-05T21:18:07Z"
+            },
+            {
+              "name": "ADSB_02M_52B",
+              "value": "-ACF89F"
+            }
+          ]
+        }
+      },
+      "coordination": {
+        "coordinationFix": {
+          "distance": {},
+          "radial": {},
+          "location": {}
+        }
+      },
+      "flightPlan": {
+        "identifier": "KT645604Xs"
+      },
+      "controllingUnit": {
+        "unitIdentifier": "ZTL",
+        "sectorIdentifier": "21"
+      },
+      "assignedAltitude": {
+        "simple": {
+          "value": "23000.0",
+          "uom": "FEET"
+        },
+        "block": {
+          "above": {},
+          "below": {}
+        },
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      },
+      "agreed": {
+        "route": {
+          "expandedRoute": {}
+        }
+      },
+      "aircraftDescription": {
+        "aircraftType": {},
+        "capabilities": {
+          "communication": {},
+          "navigation": {},
+          "surveillance": {}
+        }
+      },
+      "requestedAirspeed": {
+        "nasAirspeed": {}
+      },
+      "originator": {},
+      "interimAltitude": {},
+      "requestedAltitude": {
+        "simple": {},
+        "vfrPlus": {},
+        "vfrOnTopPlus": {}
+      }
+    }
+  }
+]

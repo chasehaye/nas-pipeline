@@ -117,7 +117,11 @@ type Position struct {
 
 	Altitude Measurement `xml:"altitude" json:"altitude,omitempty"`
 
-	Location Location `xml:"location" json:"location"`
+	// The actual position sits under a nested <position> wrapper
+	// (position/position/location/pos), not as a direct child, so it needs the
+	// path expression. Bound to "location" alone it silently came back empty
+	// while targetPosition (a real direct child) populated.
+	Location Location `xml:"position>location" json:"location"`
 
 	TargetAltitude Measurement `xml:"targetAltitude" json:"targetAltitude,omitempty"`
 
@@ -127,14 +131,12 @@ type Position struct {
 }
 
 type ActualSpeed struct {
-	Surveillance string `xml:",chardata" json:"surveillance,omitempty"`
-	UOM          string `xml:"uom,attr" json:"uom,omitempty"`
+	Surveillance Measurement `xml:"surveillance" json:"surveillance,omitempty"`
 }
 
 type TrackVelocity struct {
-	X   string `xml:",chardata" json:"x,omitempty"`
-	Y   string `xml:",chardata" json:"y,omitempty"`
-	UOM string `xml:"uom,attr" json:"uom,omitempty"`
+	X Measurement `xml:"x" json:"x,omitempty"`
+	Y Measurement `xml:"y" json:"y,omitempty"`
 }
 
 type Location struct {

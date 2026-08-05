@@ -1,0 +1,16 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: processor/go.mod
+          cache-dependency-path: processor/go.sum
+      - name: Test processor
+        working-directory: processor
+        run: go test -race -count=1 ./...
