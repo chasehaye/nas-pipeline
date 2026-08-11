@@ -29,11 +29,11 @@ help:
 	@echo -  make services   run all services together (one terminal)
 	@echo ------------------------------------------------------------------------------------------
 	@echo -  make bridge     run the bridge service    (Spring Boot; own terminal)
-	@echo -  make processor  run the processor service (own terminal)
+	@echo -  make normalizer  run the normalizer service (own terminal)
 	@echo -  make filter     run the filter service    (own terminal)
 	@echo -  make redis-service  run the redis writer  (own terminal)
 	@echo ------------------------------------------------------------------------------------------
-	@echo -  make test       run processor tests (go test ./...)
+	@echo -  make test       run normalizer tests (go test ./...)
 	@echo ------------------------------------------------------------------------------------------
 
 # ---------- infra (toggle via docker compose) ----------
@@ -47,15 +47,15 @@ down:
 # ---------- run all services at once, in this terminal ----------
 .PHONY: services
 services:
-	$(MAKE) -j4 bridge processor filter redis-service
+	$(MAKE) -j4 bridge normalizer filter redis-service
 
 # ---------- services: run each in its own terminal, any order ----------
-.PHONY: bridge processor filter redis-service
+.PHONY: bridge normalizer filter redis-service
 bridge:
 	cd bridge && $(MVNW) spring-boot:run
 
-processor:
-	cd processor && go run ./cmd/processor
+normalizer:
+	cd normalizer && go run ./cmd/normalizer
 
 filter:
 	cd filter && go run ./cmd/filter
@@ -66,4 +66,4 @@ redis-service:
 # ---------- test ----------
 .PHONY: test
 test:
-	cd processor && go test $(GOTEST_FLAGS) ./...
+	cd normalizer && go test $(GOTEST_FLAGS) ./...
