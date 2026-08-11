@@ -20,10 +20,6 @@ func main() {
 
 	cfg := config.Load()
 
-	if err := kafka.EnsureTopic(cfg.Brokers, cfg.FilteredTopic, 1, 1); err != nil {
-		log.Fatal(err)
-	}
-
 	consumer := kafka.NewConsumer(kafka.ConsumerConfig{
 		Brokers: cfg.Brokers,
 		Topic:   cfg.NormalizedTopic,
