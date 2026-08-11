@@ -32,6 +32,8 @@ help:
 	@echo -  make normalizer  run the normalizer service (own terminal)
 	@echo -  make filter     run the filter service    (own terminal)
 	@echo -  make cache-writer  run the redis writer  (own terminal)
+	@echo -  make api         run the read API (Gin, reads Redis; own terminal)
+	@echo -  make web         run the front-end map (Vite dev server, http://localhost:5173)
 	@echo ------------------------------------------------------------------------------------------
 	@echo -  make test       run normalizer tests (go test ./...)
 	@echo ------------------------------------------------------------------------------------------
@@ -47,10 +49,10 @@ down:
 # ---------- run all services at once, in this terminal ----------
 .PHONY: services
 services:
-	$(MAKE) -j4 bridge normalizer filter cache-writer
+	$(MAKE) -j5 bridge normalizer filter cache-writer api
 
 # ---------- services: run each in its own terminal, any order ----------
-.PHONY: bridge normalizer filter cache-writer
+.PHONY: bridge normalizer filter cache-writer api
 bridge:
 	cd bridge && $(MVNW) spring-boot:run
 
@@ -62,6 +64,14 @@ filter:
 
 cache-writer:
 	cd cache-writer && go run ./cmd/cache-writer
+
+api:
+	cd api && go run ./cmd/api
+
+# ---------- front-end (Vite dev server on :5173; run `npm install` in web/ once) ----------
+.PHONY: web
+web:
+	cd web && npm run dev
 
 # ---------- test ----------
 .PHONY: test
