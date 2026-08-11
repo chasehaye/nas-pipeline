@@ -23,10 +23,6 @@ func NewConsumer(cfg ConsumerConfig) *Consumer {
 			Brokers: strings.Split(cfg.Brokers, ","),
 			Topic:   cfg.Topic,
 			GroupID: cfg.Group,
-			// Start at the most recent point on FIRST run (no committed offset
-			// yet). We only care about current positions, not history. On a
-			// restart the group resumes from its last commit instead; any
-			// slightly-stale replay is harmless because writes are upserts.
 			StartOffset: kafka.LastOffset,
 			MinBytes:    1,
 			MaxBytes:    10 << 20,

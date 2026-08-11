@@ -20,7 +20,10 @@ type Fetcher interface {
 
 type Writer interface {
 	UpsertFlight(ctx context.Context, f flight.Flight) error
+	DeleteFlight(ctx context.Context, gufi string) error
 }
+
+const statusActive = "ACTIVE"
 
 type Pipeline struct {
 	fetcher Fetcher
@@ -62,8 +65,16 @@ func (p *Pipeline) Run(ctx context.Context) error {
 			continue
 		}
 
-		// No usable position means the flight isn't airborne (flight-plan-only
-		// record). Skip it so the active set stays "flights in the air".
+		if f.Status != statusActive {
+			if err := p.writer.DeleteFlight(ctx, f.Gufi); err != nil {
+				log.Printf("redis delete error (will retry): %v", err)
+				continue
+			}
+			stats.Removed++
+			p.commit(ctx, msg)
+			continue
+		}
+
 		if !f.HasPosition {
 			stats.NoPosition++
 			p.commit(ctx, msg)
@@ -71,8 +82,6 @@ func (p *Pipeline) Run(ctx context.Context) error {
 		}
 
 		if err := p.writer.UpsertFlight(ctx, f); err != nil {
-			// Don't commit: leave the offset so this message is retried after
-			// Redis recovers, rather than silently losing the update.
 			log.Printf("redis upsert error (will retry): %v", err)
 			continue
 		}

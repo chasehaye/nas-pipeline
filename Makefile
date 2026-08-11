@@ -31,7 +31,7 @@ help:
 	@echo -  make bridge     run the bridge service    (Spring Boot; own terminal)
 	@echo -  make normalizer  run the normalizer service (own terminal)
 	@echo -  make filter     run the filter service    (own terminal)
-	@echo -  make redis-service  run the redis writer  (own terminal)
+	@echo -  make cache-writer  run the redis writer  (own terminal)
 	@echo ------------------------------------------------------------------------------------------
 	@echo -  make test       run normalizer tests (go test ./...)
 	@echo ------------------------------------------------------------------------------------------
@@ -47,10 +47,10 @@ down:
 # ---------- run all services at once, in this terminal ----------
 .PHONY: services
 services:
-	$(MAKE) -j4 bridge normalizer filter redis-service
+	$(MAKE) -j4 bridge normalizer filter cache-writer
 
 # ---------- services: run each in its own terminal, any order ----------
-.PHONY: bridge normalizer filter redis-service
+.PHONY: bridge normalizer filter cache-writer
 bridge:
 	cd bridge && $(MVNW) spring-boot:run
 
@@ -60,8 +60,8 @@ normalizer:
 filter:
 	cd filter && go run ./cmd/filter
 
-redis-service:
-	cd redis-service && go run ./cmd/redis-service
+cache-writer:
+	cd cache-writer && go run ./cmd/cache-writer
 
 # ---------- test ----------
 .PHONY: test

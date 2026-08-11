@@ -2,22 +2,24 @@ package flight
 
 import (
 	"encoding/json"
+	"math"
 	"strconv"
 	"strings"
 )
 
-// Position is the current location of a flight, pulled from the latest
-// enRoute position report in a FIXM message.
+
 type Position struct {
 	Lat          float64
 	Lon          float64
 	AltValue     string
 	AltUOM       string
 	PositionTime string
+
+	Heading    float64
+	SpeedKt    float64
+	HasHeading bool
 }
 
-// Flight is the slim projection we store per GUFI. It intentionally mirrors
-// only the fields the active-flights view needs, not the full FIXM model.
 type Flight struct {
 	Gufi         string
 	CallSign     string
@@ -28,8 +30,7 @@ type Flight struct {
 	HasPosition  bool
 }
 
-// element mirrors just the subset of the fixm.Flight JSON we read. Field names
-// track the json tags in processor/internal/fixm/models.go.
+
 type element struct {
 	Flight struct {
 		Timestamp            string `json:"timestamp"`
@@ -56,6 +57,14 @@ type element struct {
 					SRSName string `json:"srsName"`
 					Pos     string `json:"pos"`
 				} `json:"location"`
+				TrackVelocity struct {
+					X struct {
+						Value string `json:"value"`
+					} `json:"x"`
+					Y struct {
+						Value string `json:"value"`
+					} `json:"y"`
+				} `json:"trackVelocity"`
 			} `json:"positions"`
 		} `json:"enRoute"`
 	} `json:"flight"`
@@ -75,15 +84,14 @@ func Parse(payload []byte) (Flight, error) {
 		Timestamp:    e.Flight.Timestamp,
 	}
 
-	// A message can carry several position reports; take the most recent one
-	// that actually has a location. positionTime is RFC3339, so lexical
-	// comparison orders it correctly.
 	var best struct {
 		time string
 		lat  float64
 		lon  float64
 		alt  string
 		uom  string
+		vx   string
+		vy   string
 		ok   bool
 	}
 	for _, p := range e.Flight.EnRoute.Positions {
@@ -97,25 +105,49 @@ func Parse(payload []byte) (Flight, error) {
 		best.time = p.PositionTime
 		best.lat, best.lon = lat, lon
 		best.alt, best.uom = p.Altitude.Value, p.Altitude.UOM
+		best.vx, best.vy = p.TrackVelocity.X.Value, p.TrackVelocity.Y.Value
 		best.ok = true
 	}
 
 	if best.ok {
 		f.HasPosition = true
-		f.Position = Position{
+		pos := Position{
 			Lat:          best.lat,
 			Lon:          best.lon,
 			AltValue:     best.alt,
 			AltUOM:       best.uom,
 			PositionTime: best.time,
 		}
+		if hdg, spd, ok := velocity(best.vx, best.vy); ok {
+			pos.Heading = hdg
+			pos.SpeedKt = spd
+			pos.HasHeading = true
+		}
+		f.Position = pos
 	}
 
 	return f, nil
 }
 
-// parsePos reads a GML pos string. FIXM positions use EPSG:4326, which is
-// latitude-then-longitude order, e.g. "40.63980 -73.77890".
+func velocity(xs, ys string) (heading, speedKt float64, ok bool) {
+	x, err := strconv.ParseFloat(strings.TrimSpace(xs), 64)
+	if err != nil {
+		return 0, 0, false
+	}
+	y, err := strconv.ParseFloat(strings.TrimSpace(ys), 64)
+	if err != nil {
+		return 0, 0, false
+	}
+	if x == 0 && y == 0 {
+		return 0, 0, false
+	}
+	h := math.Atan2(x, y) * 180 / math.Pi
+	if h < 0 {
+		h += 360
+	}
+	return math.Round(h*10) / 10, math.Round(math.Hypot(x, y)*10) / 10, true
+}
+
 func parsePos(pos string) (lat, lon float64, ok bool) {
 	fields := strings.Fields(pos)
 	if len(fields) < 2 {

@@ -104,7 +104,21 @@ services:
       kafka:
         condition: service_healthy
 
+  # Redis UI. Not required. Browse flight:* hashes, TTLs, memory.
+  # On first load add a database with host "redis", port 6379.
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: nas-redis-insight
+    ports:
+      - "5540:5540"
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - redisinsight-data:/data
+
 volumes:
   kafka-data:
   redis-data:
   postgres-data:
+  redisinsight-data:

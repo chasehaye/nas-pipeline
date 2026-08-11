@@ -33,9 +33,6 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Wait for Redis to be reachable before consuming, so a not-yet-ready
-	// Redis on boot doesn't crash the service. Kafka reachability is handled
-	// by kafka-go's reader, which blocks and reconnects on its own.
 	waitForRedis(ctx, st)
 
 	log.Printf("redis-service: %s -> redis %s (group %q, ttl %s)",
