@@ -25,6 +25,14 @@
             "estimated": {},
             "controlled": {}
           }
+        },
+        "takeoffAlternateAerodrome": {},
+        "departureAerodrome": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
+          }
         }
       },
       "arrival": {
@@ -34,6 +42,13 @@
             "actual": {},
             "estimated": {},
             "controlled": {}
+          }
+        },
+        "arrivalAerodrome": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
           }
         }
       },
@@ -76,7 +91,13 @@
             }
           }
         ],
-        "boundaryCrossings": {}
+        "boundaryCrossings": {},
+        "pointout": {
+          "originatingUnit": {}
+        },
+        "beaconCodeAssignment": {},
+        "cleared": {},
+        "expectedFurtherClearanceTime": {}
       },
       "operator": {
         "operatingOrganization": {
@@ -101,12 +122,30 @@
           "above": {},
           "below": {}
         },
+        "vfr": {},
         "vfrPlus": {},
-        "vfrOnTopPlus": {}
+        "vfrOnTopPlus": {},
+        "altFixAlt": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
+          },
+          "post": {},
+          "pre": {}
+        }
       },
       "agreed": {
         "route": {
-          "expandedRoute": {}
+          "expandedRoute": {},
+          "nasadaptedArrivalRoute": {},
+          "adaptedDepartureRoute": {},
+          "adaptedArrivalDepartureRoute": {},
+          "holdFix": {
+            "distance": {},
+            "radial": {},
+            "location": {}
+          }
         }
       },
       "aircraftDescription": {
@@ -115,7 +154,8 @@
           "communication": {},
           "navigation": {},
           "surveillance": {}
-        }
+        },
+        "accuracy": {}
       },
       "requestedAirspeed": {
         "nasAirspeed": {}
@@ -124,8 +164,15 @@
       "interimAltitude": {},
       "requestedAltitude": {
         "simple": {},
+        "vfr": {},
         "vfrPlus": {},
         "vfrOnTopPlus": {}
+      },
+      "routeToRevisedDestination": {
+        "route": {}
+      },
+      "flightIdentificationPrevious": {
+        "aircraftIdentification": ""
       }
     }
   },
@@ -154,6 +201,14 @@
             "estimated": {},
             "controlled": {}
           }
+        },
+        "takeoffAlternateAerodrome": {},
+        "departureAerodrome": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
+          }
         }
       },
       "arrival": {
@@ -164,10 +219,23 @@
             "estimated": {},
             "controlled": {}
           }
+        },
+        "arrivalAerodrome": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
+          }
         }
       },
       "enRoute": {
-        "boundaryCrossings": {}
+        "boundaryCrossings": {},
+        "pointout": {
+          "originatingUnit": {}
+        },
+        "beaconCodeAssignment": {},
+        "cleared": {},
+        "expectedFurtherClearanceTime": {}
       },
       "operator": {
         "operatingOrganization": {
@@ -192,12 +260,30 @@
           "above": {},
           "below": {}
         },
+        "vfr": {},
         "vfrPlus": {},
-        "vfrOnTopPlus": {}
+        "vfrOnTopPlus": {},
+        "altFixAlt": {
+          "point": {
+            "location": {},
+            "distance": {},
+            "radial": {}
+          },
+          "post": {},
+          "pre": {}
+        }
       },
       "agreed": {
         "route": {
-          "expandedRoute": {}
+          "expandedRoute": {},
+          "nasadaptedArrivalRoute": {},
+          "adaptedDepartureRoute": {},
+          "adaptedArrivalDepartureRoute": {},
+          "holdFix": {
+            "distance": {},
+            "radial": {},
+            "location": {}
+          }
         }
       },
       "aircraftDescription": {
@@ -206,7 +292,8 @@
           "communication": {},
           "navigation": {},
           "surveillance": {}
-        }
+        },
+        "accuracy": {}
       },
       "requestedAirspeed": {
         "nasAirspeed": {}
@@ -215,8 +302,15 @@
       "interimAltitude": {},
       "requestedAltitude": {
         "simple": {},
+        "vfr": {},
         "vfrPlus": {},
         "vfrOnTopPlus": {}
+      },
+      "routeToRevisedDestination": {
+        "route": {}
+      },
+      "flightIdentificationPrevious": {
+        "aircraftIdentification": ""
       }
     }
   }
