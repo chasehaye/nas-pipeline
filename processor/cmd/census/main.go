@@ -1,5 +1,5 @@
 // Command census reconstructs the shape of the FIXM feed from the data
-// itself and prints it as an annotated tree.
+// itself and prints it as a JSON-like nested tree.
 //
 // A flat list of paths tells you what exists but makes you rebuild the
 // hierarchy mentally. This renders what the XML actually looks like:
@@ -213,63 +213,125 @@ func (c *census) flush() {
 
 // ---------- rendering ----------
 
-func (c *census) report(w io.Writer) {
-	fmt.Fprintf(w, "FIXM observed shape\n")
-	fmt.Fprintf(w, "envelopes: %d    flights: %d\n\n", c.envelopes, c.flights)
-	fmt.Fprintf(w, "%s\n", strings.Repeat("=", 100))
-	fmt.Fprintf(w, "  pct    = share of flights carrying this element\n")
-	fmt.Fprintf(w, "  >      = nesting depth below <flight>; no arrows means a direct child\n")
-	fmt.Fprintf(w, "  [xN]   = seen up to N times in one flight, so it is a slice not a single value\n")
-	fmt.Fprintf(w, "  @attr  = attribute of the element above it\n")
-	fmt.Fprintf(w, "  *      = full value set listed in the ENUMERATED section at the end\n")
-	fmt.Fprintf(w, "%s\n\n", strings.Repeat("=", 100))
+func (c *census) report(w io.Writer, showPct, color bool) {
+	fmt.Fprintf(w, "// FIXM observed shape  (envelopes: %d, flights: %d)\n", c.envelopes, c.flights)
+	fmt.Fprintf(w, "// nested like JSON: <element> { ... }, leaves show a sample value.\n")
+	fmt.Fprintf(w, "//   @name  = XML attribute (struct tag `,attr`)\n")
+	fmt.Fprintf(w, "//   #text  = the element's own text when it also has attributes/children\n")
+	fmt.Fprintf(w, "//   [xN]   = seen up to N times in one flight, so it is a slice not a single value\n")
+	fmt.Fprintf(w, "//   *      = full value set listed in the ENUMERATED section at the end\n")
+	if showPct {
+		fmt.Fprintf(w, "//   // NN%% = share of flights carrying the field (-pct)\n")
+	}
+	fmt.Fprintf(w, "\n")
 
-	c.render(w, c.root, 0)
+	c.render(w, c.root, 0, showPct, color)
 
-	fmt.Fprintf(w, "\n\n%s\n", strings.Repeat("=", 100))
+	fmt.Fprintf(w, "\n%s\n", strings.Repeat("=", 100))
 	fmt.Fprintf(w, "ENUMERATED VALUE SETS\n")
 	fmt.Fprintf(w, "%s\n", strings.Repeat("=", 100))
 	c.renderEnums(w, c.root, "")
 }
 
-func (c *census) render(w io.Writer, n *node, depth int) {
-	arrows := strings.Repeat(">", depth)
-	indent := strings.Repeat("  ", depth)
+func (c *census) render(w io.Writer, n *node, depth int, showPct, color bool) {
+	ind := strings.Repeat("  ", depth)
 
 	repeat := ""
 	if n.maxRepeat > 1 {
 		repeat = fmt.Sprintf(" [x%d]", n.maxRepeat)
 	}
 
-	text := ""
-	if n.hasText {
-		text = "  = " + truncate(n.sampleText, 40)
+	attrNames := sortedAttrNames(n)
+	isContainer := len(n.children) > 0 || len(attrNames) > 0
+
+	// A pure leaf renders as   name: "sample"
+	if !isContainer {
+		line := fmt.Sprintf("%s%s%s: %s%s%s",
+			ind, n.name, repeat, leafValue(n), enumMark(n), c.pctComment(n.flights, showPct))
+		fmt.Fprintln(w, paint(depth, line, color))
+		return
 	}
 
-	fmt.Fprintf(w, "%6.2f%%  %-8s %s<%s>%s%s\n",
-		c.pct(n.flights), arrows, indent, n.name, repeat, text)
-	var attrNames []string
-	for k := range n.attrs {
-		attrNames = append(attrNames, k)
-	}
-	sort.Slice(attrNames, func(i, j int) bool {
-		return n.attrs[attrNames[i]].flights > n.attrs[attrNames[j]].flights
-	})
+	// A container opens a brace block:   name [xN] {
+	fmt.Fprintln(w, paint(depth,
+		fmt.Sprintf("%s%s%s {%s", ind, n.name, repeat, c.pctComment(n.flights, showPct)), color))
 
+	// Attributes first, most common first, marked with @ (they map to `,attr`).
+	// They belong to this element, so they share its depth color.
 	for _, k := range attrNames {
 		a := n.attrs[k]
-		marker := " "
+		mark := ""
 		if a.values != nil {
-			marker = "*"
+			mark = " *"
 		}
-		fmt.Fprintf(w, "%6.2f%%  %-8s %s  %s@%-24s = %s\n",
-			c.pct(a.flights), arrows, indent, marker, a.name,
-			truncate(a.sample, 38))
+		line := fmt.Sprintf("%s  @%s: %s%s%s",
+			ind, a.name, quote(a.sample), mark, c.pctComment(a.flights, showPct))
+		fmt.Fprintln(w, paint(depth, line, color))
+	}
+
+	// Mixed content: element has attributes/children but also its own text.
+	if n.hasText {
+		fmt.Fprintln(w, paint(depth, fmt.Sprintf("%s  #text: %s", ind, quote(n.sampleText)), color))
 	}
 
 	for _, name := range n.order {
-		c.render(w, n.children[name], depth+1)
+		c.render(w, n.children[name], depth+1, showPct, color)
 	}
+
+	fmt.Fprintln(w, paint(depth, fmt.Sprintf("%s}", ind), color))
+}
+
+// depthColors is a red -> orange -> yellow -> green -> cyan -> blue -> violet
+// ramp in 256-color ANSI, indexed by nesting depth (cycles when deeper than
+// the ramp). Each nesting level gets its own band so the braces read at a glance.
+var depthColors = []int{196, 202, 208, 214, 220, 226, 190, 154, 118, 82, 48, 51, 45, 39, 33, 99, 129, 165, 201}
+
+func paint(depth int, s string, on bool) string {
+	if !on {
+		return s
+	}
+	code := depthColors[depth%len(depthColors)]
+	return fmt.Sprintf("\x1b[38;5;%dm%s\x1b[0m", code, s)
+}
+
+func sortedAttrNames(n *node) []string {
+	var names []string
+	for k := range n.attrs {
+		names = append(names, k)
+	}
+	sort.Slice(names, func(i, j int) bool {
+		return n.attrs[names[i]].flights > n.attrs[names[j]].flights
+	})
+	return names
+}
+
+// leafValue is the sample text of a leaf element, or "" for an empty element
+// (the XML equivalent of a JSON {} / null field).
+func leafValue(n *node) string {
+	if !n.hasText {
+		return `""`
+	}
+	return quote(n.sampleText)
+}
+
+func quote(s string) string {
+	return `"` + truncate(s, 60) + `"`
+}
+
+// enumMark flags a leaf whose text has a small, fixed value set, pointing the
+// reader at the ENUMERATED section (same * meaning as on attributes).
+func enumMark(n *node) string {
+	if n.hasText && len(n.textValues) > 1 && len(n.textValues) < 40 {
+		return " *"
+	}
+	return ""
+}
+
+func (c *census) pctComment(flights int, show bool) string {
+	if !show {
+		return ""
+	}
+	return fmt.Sprintf("   // %.0f%%", c.pct(flights))
 }
 
 func (c *census) renderEnums(w io.Writer, n *node, path string) {
@@ -363,6 +425,8 @@ func main() {
 	limit := flag.Int("limit", 0, "stop after N envelopes, 0 for all")
 	idle := flag.Duration("idle", 5*time.Second, "stop after this long with no new messages")
 	out := flag.String("out", "", "write report to this file instead of stdout")
+	pct := flag.Bool("pct", false, "annotate every field with the % of flights carrying it")
+	color := flag.Bool("color", true, "color each nesting depth (auto-off when -out writes a file)")
 	flag.Parse()
 
 	reader := kafka.NewReader(kafka.ReaderConfig{
@@ -426,7 +490,8 @@ func main() {
 		log.Printf("writing report to %s", *out)
 	}
 
-	c.report(w)
+	// Color would corrupt a file; keep it terminal-only.
+	c.report(w, *pct, *color && *out == "")
 }
 
 func envOr(k, def string) string {

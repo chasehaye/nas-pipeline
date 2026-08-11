@@ -5,7 +5,6 @@ services:
     image: apache/kafka:3.9.0
     container_name: nas-kafka
     ports:
-      # 9092 is for clients running on your host (the bridge, for now).
       - "9092:9092"
     environment:
       KAFKA_NODE_ID: 1
@@ -13,30 +12,22 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
 
-      # Two listeners: INTERNAL for containers talking to each other by
-      # service name, EXTERNAL for processes on your host via localhost.
-      # Getting this wrong is the single most common Kafka-in-Docker problem.
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://kafka:9093
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
 
-      # Single broker, so replication factor must be 1.
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
-      # Your FIXM collections hit 370KB. Default max is 1MB, which would
-      # be fine, but raise it so a burst of large batches can't fail sends.
       KAFKA_MESSAGE_MAX_BYTES: 10485760
       KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
 
-      # Retention: how far back you can replay. 7 days at your volume is
-      # a lot of disk (~1TB uncompressed), so start at 2 and raise it once
-      # you know what compression buys you.
+      # Retention: how far back you can replay
       KAFKA_LOG_RETENTION_HOURS: 48
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     volumes:
       - kafka-data:/var/lib/kafka/data
     healthcheck:
@@ -46,14 +37,33 @@ services:
       retries: 10
       start_period: 30s
 
+  kafka-init:
+    image: apache/kafka:3.9.0
+    container_name: nas-kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        BS=kafka:29092
+        create() {
+          /opt/kafka/bin/kafka-topics.sh --bootstrap-server $$BS \
+            --create --if-not-exists --topic "$$1" \
+            --partitions "$$2" --replication-factor 1 \
+            --config retention.ms=172800000
+        }
+        create fixm.raw 1
+        create fixm.normalized 1
+        create fixm.filtered 1
+        echo "topics ready"
+
   redis:
     image: redis:7-alpine
     container_name: nas-redis
     ports:
       - "6379:6379"
-    # appendonly gives you durability across restarts. Current aircraft
-    # state is rebuildable from Kafka, but not losing it on every
-    # docker compose down is convenient.
     command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
@@ -80,8 +90,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # Kafka UI. Not required, but being able to see topics, partitions, and
-  # actual message contents in a browser saves a lot of CLI fumbling early on.
+  # Kafka UI. Not required
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: nas-kafka-ui
