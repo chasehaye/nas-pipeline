@@ -1,0 +1,20 @@
+# bridge — files kept OUT of the Docker build context (smaller, faster builds;
+# secrets never enter an image layer). The Dockerfile copies only what it needs.
+
+# repo / build meta
+.git
+.gitignore
+.gitattributes
+.dockerignore
+Dockerfile
+*.md
+
+# secrets
+.env
+.env.*
+
+# local Maven build output
+target/
+
+# logs
+*.log

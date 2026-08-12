@@ -1,0 +1,23 @@
+# web — files kept OUT of the Docker build context (smaller, faster builds;
+# secrets never enter an image layer). node_modules is huge and is reinstalled
+# by `npm ci` in the build stage.
+
+# repo / build meta
+.git
+.gitignore
+.gitattributes
+.dockerignore
+Dockerfile
+*.md
+
+# secrets
+.env
+.env.*
+
+# local build output / deps
+node_modules
+dist
+.vite
+
+# logs
+*.log

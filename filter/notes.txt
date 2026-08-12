@@ -1,1 +1,0 @@
-upload via ssh make sure to upload tailing with something like file name .temp then rename to expected format so you dont run into concurrency issues

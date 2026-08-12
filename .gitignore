@@ -1,47 +1,37 @@
-# Secrets
+# Root .gitignore — universal rules + the Go services (the majority language).
+# The Java service (bridge/) and the web app (web/) keep their own .gitignore
+# for their toolchains. Line-ending rules live in .gitattributes.
+#
+# Patterns have no leading slash, so they match at ANY depth -- one entry here
+# covers every nested service (e.g. `.env` catches api/.env, web/.env, ...).
+
+# --- Secrets ---
 .env
 *.local.yml
 application-local.yml
 
-# Java / Maven
-target/
-*.class
-*.jar
-!.mvn/wrapper/maven-wrapper.jar
-.mvn/timing.properties
-
-# Go
+# --- Go build output (all Go services) ---
 bin/
 *.exe
 *.test
 *.out
 vendor/
 
-# IDE
+# --- Data / CUI: the LADD Industry file is CUI; never commit anything here ---
+data/
+
+# --- Editors ---
 .vscode/
 .idea/
 *.iml
 
-# OS
-Thumbs.db
+# --- OS ---
 .DS_Store
+Thumbs.db
 
-# Data
+# --- Logs / scratch ---
 *.log
 logs/
 captured/
-
-
-# Normalize line endings
-* text=auto
-
-# Windows scripts
-*.cmd text eol=crlf
-*.bat text eol=crlf
-
-# Unix scripts
-*.sh text eol=lf
-
-
-
 private-drafts/
+/deploy

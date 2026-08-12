@@ -1,0 +1,10 @@
+# Normalize line endings across the Windows + Linux/CI mix.
+* text=auto
+
+# Shell scripts and the Maven wrapper must stay LF (they run in Linux images).
+*.sh text eol=lf
+mvnw text eol=lf
+
+# Windows scripts stay CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf
