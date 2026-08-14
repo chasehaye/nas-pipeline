@@ -41,4 +41,4 @@ jobs:
               ProxyCommand cloudflared access ssh --hostname %h
               StrictHostKeyChecking no
           EOF
-          ssh "$SERVER_HOST" "cd '$APP_DIR' && ./deploy/deploy.sh"
+          ssh "$SERVER_HOST" "cd '$APP_DIR' && git pull origin main && bash deploy/deploy.sh"
