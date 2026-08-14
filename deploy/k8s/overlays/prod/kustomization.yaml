@@ -25,3 +25,13 @@ patches:
       - op: replace
         path: /data/GO_ENV
         value: prod
+  - target:
+      kind: Service
+      name: web
+    patch: |
+      - op: add
+        path: /spec/type
+        value: LoadBalancer
+      - op: replace
+        path: /spec/ports/0/port
+        value: 15000
