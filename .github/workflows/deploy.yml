@@ -1,0 +1,44 @@
+name: deploy
+
+# CD: SSH into the k3s server through the Cloudflare tunnel and run the in-repo
+# deploy script (build images -> import into k3s -> apply prod overlay -> roll
+# out). The script does its own `git pull`, so the server always builds the
+# just-pushed commit.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {} # manual "Run workflow" button
+
+# Never run two deploys at once.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install cloudflared
+        run: |
+          curl -L --output cloudflared.deb \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared.deb
+
+      - name: Deploy over SSH
+        env:
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          APP_DIR: ${{ secrets.APP_DIR }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat > ~/.ssh/config <<EOF
+          Host $SERVER_HOST
+              User $SERVER_USER
+              IdentityFile ~/.ssh/deploy_key
+              ProxyCommand cloudflared access ssh --hostname %h
+              StrictHostKeyChecking no
+          EOF
+          ssh "$SERVER_HOST" "cd '$APP_DIR' && ./deploy/deploy.sh"

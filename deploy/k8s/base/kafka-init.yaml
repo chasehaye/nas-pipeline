@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-init
+  namespace: nas
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kafka-init
+          image: apache/kafka:3.9.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              BS=kafka:29092
+              echo "waiting for kafka at $BS ..."
+              until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server $BS >/dev/null 2>&1; do
+                sleep 3
+              done
+              create() {
+                /opt/kafka/bin/kafka-topics.sh --bootstrap-server $BS \
+                  --create --if-not-exists --topic "$1" \
+                  --partitions "$2" --replication-factor 1 \
+                  --config retention.ms=1209600000
+              }
+              create fixm.raw 1
+              create fixm.normalized 1
+              create fixm.filtered 1
+              echo "topics ready"

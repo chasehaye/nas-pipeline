@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: normalizer-config
+  namespace: nas
+data:
+  KAFKA_BROKERS: "kafka:29092"
+  KAFKA_TOPIC_RAW: "fixm.raw"
+  KAFKA_TOPIC_NORMALIZED: "fixm.normalized"
+  KAFKA_GROUP: "normalizer"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: normalizer
+  namespace: nas
+  labels: { app: normalizer }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: normalizer } }
+  template:
+    metadata:
+      labels: { app: normalizer }
+    spec:
+      containers:
+        - name: normalizer
+          image: nas-normalizer:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: normalizer-config }

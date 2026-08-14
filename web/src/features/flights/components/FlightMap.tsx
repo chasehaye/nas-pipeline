@@ -12,7 +12,10 @@ function toGeoJSON(flights: Flight[]): FeatureCollection {
     type: 'FeatureCollection',
     features: flights.map((f) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [f.lon, f.lat] },
+      geometry: {
+        type: 'Point',
+        coordinates: [f.lon, f.lat],
+      },
       properties: {
         gufi: f.gufi,
         callSign: f.callSign,
@@ -26,35 +29,58 @@ function toGeoJSON(flights: Flight[]): FeatureCollection {
 
 function addPlaneIcon(map: MaplibreMap) {
   if (map.hasImage('plane')) return
+
   const size = 24
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
+
   const ctx = canvas.getContext('2d')
   if (!ctx) return
+
   ctx.translate(size / 2, size / 2)
   ctx.beginPath()
-  ctx.moveTo(0, -10) // nose
-  ctx.lineTo(7, 9) // right wing
-  ctx.lineTo(0, 5) // tail notch
-  ctx.lineTo(-7, 9) // left wing
+  ctx.moveTo(0, -10)
+  ctx.lineTo(7, 9)
+  ctx.lineTo(0, 5)
+  ctx.lineTo(-7, 9)
   ctx.closePath()
+
   ctx.fillStyle = '#111827'
   ctx.strokeStyle = '#ffffff'
   ctx.lineWidth = 1
+
   ctx.fill()
   ctx.stroke()
-  map.addImage('plane', ctx.getImageData(0, 0, size, size), { pixelRatio: 2 })
+
+  map.addImage(
+    'plane',
+    ctx.getImageData(0, 0, size, size),
+    { pixelRatio: 2 },
+  )
 }
 
 function setLabelsVisible(map: MaplibreMap, visible: boolean) {
   const layers = map.getStyle()?.layers
   if (!layers) return
+
   for (const layer of layers) {
     if (layer.id === 'aircraft') continue
-    const layout = (layer as { layout?: Record<string, unknown> }).layout
-    if (layer.type === 'symbol' && layout && 'text-field' in layout) {
-      map.setLayoutProperty(layer.id, 'visibility', visible ? 'visible' : 'none')
+
+    const layout = (
+      layer as { layout?: Record<string, unknown> }
+    ).layout
+
+    if (
+      layer.type === 'symbol' &&
+      layout &&
+      'text-field' in layout
+    ) {
+      map.setLayoutProperty(
+        layer.id,
+        'visibility',
+        visible ? 'visible' : 'none',
+      )
     }
   }
 }
@@ -64,38 +90,68 @@ interface FlightMapProps {
   onSelect?: (gufi: string) => void
 }
 
-export function FlightMap({ flights, onSelect }: FlightMapProps) {
+export function FlightMap({
+  flights,
+  onSelect,
+}: FlightMapProps) {
   const mapRef = useRef<MapRef>(null)
   const [showLabels, setShowLabels] = useState(true)
-  const data = useMemo(() => toGeoJSON(flights), [flights])
+
+  const data = useMemo(
+    () => toGeoJSON(flights),
+    [flights],
+  )
 
   function handleClick(e: MapLayerMouseEvent) {
     const gufi = e.features?.[0]?.properties?.gufi
-    if (gufi && onSelect) onSelect(String(gufi))
+
+    if (gufi && onSelect) {
+      onSelect(String(gufi))
+    }
   }
 
   function toggleLabels() {
     const next = !showLabels
     setShowLabels(next)
+
     const map = mapRef.current?.getMap()
-    if (map) setLabelsVisible(map, next)
+
+    if (map) {
+      setLabelsVisible(map, next)
+    }
   }
 
   return (
     <div className="relative h-full w-full">
       <Map
         ref={mapRef}
-        initialViewState={{ longitude: -98, latitude: 39, zoom: 4 }}
+        initialViewState={{
+          longitude: -98,
+          latitude: 39,
+          zoom: 4,
+        }}
         mapStyle={MAP_STYLE}
         maxPitch={0}
         dragRotate={false}
         touchPitch={false}
-        onLoad={(e) => addPlaneIcon(e.target as MaplibreMap)}
+        onLoad={(e) => {
+          const map = e.target as MaplibreMap
+
+          addPlaneIcon(map)
+          map.resize()
+        }}
         interactiveLayerIds={['aircraft']}
         onClick={handleClick}
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          width: '100%',
+          height: '100%',
+        }}
       >
-        <Source id="flights" type="geojson" data={data}>
+        <Source
+          id="flights"
+          type="geojson"
+          data={data}
+        >
           <Layer
             id="aircraft"
             type="symbol"

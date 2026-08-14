@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filter-config
+  namespace: nas
+data:
+  KAFKA_BROKERS: "kafka:29092"
+  KAFKA_TOPIC_NORMALIZED: "fixm.normalized"
+  KAFKA_TOPIC_FILTERED: "fixm.filtered"
+  KAFKA_GROUP: "filter"
+  LADD_DIR: "/data/ladd/active"
+  LADD_MAX_AGE: "216h"
+  LADD_CHECK_EVERY: "1h"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filter
+  namespace: nas
+  labels: { app: filter }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: filter } }
+  template:
+    metadata:
+      labels: { app: filter }
+    spec:
+      containers:
+        - name: filter
+          image: nas-filter:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: filter-config }
+          volumeMounts:
+            - name: ladd
+              mountPath: /data/ladd/active
+              readOnly: true
+      volumes:
+        - name: ladd
+          secret:
+            secretName: ladd

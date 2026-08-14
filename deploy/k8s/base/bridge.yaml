@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridge
+  namespace: nas
+  labels: { app: bridge }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: bridge } }
+  template:
+    metadata:
+      labels: { app: bridge }
+    spec:
+      containers:
+        - name: bridge
+          image: nas-bridge:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: KAFKA_BROKERS, value: "kafka:29092" }
+          envFrom:
+            - secretRef: { name: swim }
