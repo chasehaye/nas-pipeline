@@ -13,3 +13,4 @@ resources:
   - api-config.yaml
   - api.yaml
   - web.yaml
+  - ladd-admin.yaml

@@ -1,0 +1,27 @@
+# ladd-admin — files kept OUT of the Docker build context (smaller, faster
+# builds; key material never enters an image layer).
+
+# repo / build meta
+.git
+.gitignore
+.gitattributes
+.dockerignore
+Dockerfile
+*.md
+
+# secrets & key material — must never enter the build context
+.env
+.env.*
+*.key
+*.age
+keys/
+identity*.txt
+
+# local Go build output
+bin/
+*.exe
+*.test
+*.out
+
+# logs
+*.log

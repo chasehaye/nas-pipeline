@@ -15,7 +15,7 @@
 # credentials). The script warns if they're missing.
 set -euo pipefail
 
-ALL_SERVICES=(api normalizer cache-writer filter web bridge)
+ALL_SERVICES=(api normalizer cache-writer filter web bridge ladd-admin)
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OVERLAY="deploy/k8s/overlays/prod"
 NS=nas

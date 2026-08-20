@@ -9,6 +9,7 @@
 .env
 *.local.yml
 application-local.yml
+keys/
 
 # --- Go build output (all Go services) ---
 bin/

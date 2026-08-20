@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ladd-admin
+  namespace: nas
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ladd-admin
+  namespace: nas
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["ladd"]
+    verbs: ["get", "update"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ladd-admin
+  namespace: nas
+subjects:
+  - kind: ServiceAccount
+    name: ladd-admin
+    namespace: nas
+roleRef:
+  kind: Role
+  name: ladd-admin
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ladd-admin
+  namespace: nas
+  labels: { app: ladd-admin }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: ladd-admin } }
+  template:
+    metadata:
+      labels: { app: ladd-admin }
+    spec:
+      serviceAccountName: ladd-admin
+      containers:
+        - name: ladd-admin
+          image: nas-ladd-admin:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8092
+          volumeMounts:
+            - name: keys
+              mountPath: /keys # age identity lands at /keys/identity.txt
+              readOnly: true
+      volumes:
+        - name: keys
+          secret:
+            secretName: ladd-admin-keys # the age PRIVATE key (created by hand)
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ladd-admin
+  namespace: nas
+spec:
+  selector:
+    app: ladd-admin
+  ports:
+    - port: 8092
+      targetPort: 8092
