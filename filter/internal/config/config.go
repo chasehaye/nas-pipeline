@@ -42,7 +42,7 @@ func Load() Config {
 		MaxAge:      envDuration("LADD_MAX_AGE", 9*24*time.Hour),
 		CheckEvery:  envDuration("LADD_CHECK_EVERY", time.Hour),
 
-		Workers: envInt("FILTER_WORKERS", 1000),
+		Workers: envInt("FILTER_WORKERS", 10000),
 	}
 }
 
