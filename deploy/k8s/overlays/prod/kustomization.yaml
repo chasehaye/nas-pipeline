@@ -35,3 +35,13 @@ patches:
       - op: replace
         path: /spec/ports/0/port
         value: 15000
+  - target:
+      kind: Service
+      name: ladd-admin
+    patch: |
+      - op: add
+        path: /spec/type
+        value: LoadBalancer
+      - op: replace
+        path: /spec/ports/0/port
+        value: 15002
