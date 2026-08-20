@@ -4,6 +4,8 @@
 #   ./deploy/deploy.sh              # pull, build ALL images, import, apply, roll out
 #   ./deploy/deploy.sh api web      # only rebuild/roll out these services (faster)
 #   SKIP_PULL=1 ./deploy/deploy.sh  # skip git pull (deploy current working tree)
+#   NO_CACHE=0 ./deploy/deploy.sh   # use Docker's build cache (faster); default
+#                                     forces a full --no-cache rebuild of every image
 # What it does:
 #   1. git pull (latest manifests + source)
 #   2. docker build each selected service
@@ -42,9 +44,19 @@ if [ "${SKIP_PULL:-0}" != "1" ]; then
 fi
 
 # 2 + 3. build each image and import it into k3s's containerd
+# NO_CACHE=1 (default) forces a full rebuild of every image, so a deploy always
+# reflects the latest source. Set NO_CACHE=0 for faster cached builds once the
+# code stabilizes. This only affects image builds — k8s ConfigMaps/Secrets/env
+# are untouched.
+NO_CACHE="${NO_CACHE:-1}"
+build_args=()
+if [ "$NO_CACHE" = "1" ]; then
+  build_args=(--no-cache)
+fi
+
 for svc in "${SERVICES[@]}"; do
   echo "==> build nas-$svc:latest"
-  docker build -t "nas-$svc:latest" "./$svc"
+  docker build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
   echo "==> import nas-$svc into k3s"
   docker save "nas-$svc:latest" | $CTR images import -
 done

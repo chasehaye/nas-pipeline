@@ -35,7 +35,7 @@ help:
 	@echo -  make api         run the read API (Gin, reads Redis; own terminal)
 	@echo -  make web         run the front-end map (Vite dev server, http://localhost:5173)
 	@echo ------------------------------------------------------------------------------------------
-	@echo -  make test       run normalizer tests (go test ./...)
+	@echo -  make test       run unit tests for all Go modules (go test ./...)
 	@echo ------------------------------------------------------------------------------------------
 
 # ---------- infra (toggle via docker compose) ----------
@@ -76,4 +76,8 @@ web:
 # ---------- test ----------
 .PHONY: test
 test:
+	cd ladd-admin && go test $(GOTEST_FLAGS) ./...
 	cd normalizer && go test $(GOTEST_FLAGS) ./...
+	cd filter && go test $(GOTEST_FLAGS) ./...
+	cd cache-writer && go test $(GOTEST_FLAGS) ./...
+	cd api && go test $(GOTEST_FLAGS) ./...

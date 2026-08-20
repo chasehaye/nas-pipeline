@@ -1,16 +1,30 @@
-name: CI
+name: ci
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
-  test:
+  unit:
+    name: unit tests (${{ matrix.module }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - ladd-admin
+          - normalizer
+          - filter
+          - cache-writer
+          - api
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
-          go-version-file: processor/go.mod
-          cache-dependency-path: processor/go.sum
-      - name: Test processor
-        working-directory: processor
+          go-version-file: ${{ matrix.module }}/go.mod
+          cache-dependency-path: ${{ matrix.module }}/go.sum
+
+      - name: go test
+        working-directory: ${{ matrix.module }}
         run: go test -race -count=1 ./...
