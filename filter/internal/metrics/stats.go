@@ -3,14 +3,15 @@ package metrics
 import (
 	"fmt"
 	"time"
+	"sync/atomic" 
 )
 
 type Stats struct {
-	Flights     int64
-	BytesRead   int64
-	ParseErrors int64
-	Blocked     int64
-	Forwarded   int64
+	Flights     atomic.Int64
+	BytesRead   atomic.Int64
+	ParseErrors atomic.Int64
+	Blocked     atomic.Int64
+	Forwarded   atomic.Int64
 	start       time.Time
 }
 
@@ -19,17 +20,18 @@ func NewStats() *Stats {
 }
 
 func (s *Stats) megabytes() float64 {
-	return float64(s.BytesRead) / 1024 / 1024
+	return float64(s.BytesRead.Load()) / 1024 / 1024
 }
 
 func (s *Stats) Progress() string {
 	elapsed := time.Since(s.start).Seconds()
+	flights := s.Flights.Load()
 	return fmt.Sprintf("flights=%d  %.0f/sec  forwarded=%d  blocked=%d  %d parse errors",
-		s.Flights, float64(s.Flights)/elapsed, s.Forwarded, s.Blocked, s.ParseErrors)
+		flights, float64(flights)/elapsed, s.Forwarded.Load(), s.Blocked.Load(), s.ParseErrors.Load())
 }
 
 func (s *Stats) Summary() string {
 	return fmt.Sprintf("stopped: %d flights, %.1f MB, forwarded=%d, blocked=%d, %d parse errors, %s elapsed",
-		s.Flights, s.megabytes(), s.Forwarded, s.Blocked, s.ParseErrors,
+		s.Flights.Load(), s.megabytes(), s.Forwarded.Load(), s.Blocked.Load(), s.ParseErrors.Load(),
 		time.Since(s.start).Round(time.Millisecond))
 }

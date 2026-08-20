@@ -31,7 +31,7 @@ func main() {
 	})
 	defer producer.Close()
 
-	if err := pipeline.New(consumer, producer).Run(context.Background()); err != nil {
+	if err := pipeline.New(consumer, producer, cfg.Workers).Run(context.Background()); err != nil {
 		log.Fatal(err)
 	}
 }

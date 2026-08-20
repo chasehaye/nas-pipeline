@@ -77,7 +77,7 @@ func main() {
 		}
 	}()
 
-	if err := pipeline.New(consumer, producer, store).Run(ctx); err != nil {
+	if err := pipeline.New(consumer, producer, store, cfg.Workers).Run(ctx); err != nil {
 		log.Fatal(err)
 	}
 }

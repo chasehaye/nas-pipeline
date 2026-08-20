@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -18,6 +19,8 @@ type Config struct {
 	LADDArchive string        // superseded files are moved here and kept for audit
 	MaxAge      time.Duration // staleness limit measured from a file's PUBLICATION date
 	CheckEvery  time.Duration // how often the reloader promotes from staging and re-scans active
+
+	Workers int // number of concurrent processing workers
 }
 
 func Load() Config {
@@ -38,7 +41,18 @@ func Load() Config {
 		LADDArchive: envOr("LADD_ARCHIVE_DIR", filepath.Join(parent, "archived")),
 		MaxAge:      envDuration("LADD_MAX_AGE", 9*24*time.Hour),
 		CheckEvery:  envDuration("LADD_CHECK_EVERY", time.Hour),
+
+		Workers: envInt("FILTER_WORKERS", 100),
 	}
+}
+
+func envInt(key string, fallback int) int {
+	if value := os.Getenv(key); value != "" {
+		if n, err := strconv.Atoi(value); err == nil {
+			return n
+		}
+	}
+	return fallback
 }
 
 func envOr(key, fallback string) string {
