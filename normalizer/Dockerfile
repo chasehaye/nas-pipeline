@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build ----
-FROM golang:1.26 AS build
+FROM golang:1.26.1 AS build
 WORKDIR /src
 # Copy manifests first so `go mod download` is cached across code-only changes.
 COPY go.mod go.sum ./
