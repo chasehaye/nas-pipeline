@@ -1,5 +1,8 @@
 # Postgres on its own drive (drive2), separate from kafka/redis.
-# Server setup: mkdir -p /mnt/drive2/nas/postgres && chown 70:70 it, set <node-name>.
+# Server setup (one-time, on the storage node):
+#   sudo mkdir -p /mnt/drive2/nas/postgres && sudo chown 70:70 /mnt/drive2/nas/postgres
+#   sudo k3s kubectl label node <node> nas-storage=postgres
+# The label (not the hostname) pins this PV, so the node name stays out of git.
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -24,7 +27,7 @@ spec:
     required:
       nodeSelectorTerms:
         - matchExpressions:
-            - key: kubernetes.io/hostname
+            - key: nas-storage
               operator: In
               values:
-                - <node-name>          # kubectl get nodes
+                - postgres
