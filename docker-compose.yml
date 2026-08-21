@@ -77,13 +77,16 @@ services:
     image: timescale/timescaledb:latest-pg16
     container_name: nas-postgres
     ports:
-      - "5432:5432"
+      # Host 5433 -> container 5432: a native PostgreSQL already owns host 5432.
+      - "5433:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-naspipeline}
       POSTGRES_USER: ${POSTGRES_USER:-naspipeline}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      # Schema is applied by database-writer's embedded migrations on startup,
+      # not here — so this needs no init mount.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-naspipeline}"]
       interval: 10s
@@ -116,6 +119,19 @@ services:
         condition: service_healthy
     volumes:
       - redisinsight-data:/data
+
+  # Postgres/TimescaleDB UI. Not required. Auto-connects to the history DB.
+  # Browse flights + positions and run SQL at http://localhost:8081
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: nas-pgweb
+    ports:
+      - "8081:8081"
+    environment:
+      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER:-naspipeline}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-naspipeline}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   kafka-data:

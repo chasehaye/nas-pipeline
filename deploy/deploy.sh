@@ -17,7 +17,7 @@
 # credentials). The script warns if they're missing.
 set -euo pipefail
 
-ALL_SERVICES=(api normalizer cache-writer filter web bridge ladd-admin)
+ALL_SERVICES=(api normalizer cache-writer filter web bridge ladd-admin database-writer)
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OVERLAY="deploy/k8s/overlays/prod"
 NS=nas
@@ -65,14 +65,18 @@ done
 echo "==> kubectl apply -k $OVERLAY"
 $KUBECTL apply -k "$OVERLAY"
 
-# secret sanity check (manual uploads; filter/bridge crashloop without them)
-for s in ladd swim; do
+# secret sanity check (manual uploads; dependents crashloop without them)
+for s in ladd swim postgres; do
   if ! $KUBECTL get secret "$s" -n "$NS" >/dev/null 2>&1; then
     echo "!!  WARNING: secret '$s' is missing in namespace '$NS'."
     if [ "$s" = "ladd" ]; then
       echo "    kubectl create secret generic ladd -n $NS --from-file=filter/data/ladd/active/<LADD_file>.txt"
-    else
+    elif [ "$s" = "swim" ]; then
       echo "    kubectl create secret generic swim -n $NS --from-env-file=bridge/.env"
+    else
+      echo "    kubectl create secret generic postgres -n $NS \\"
+      echo "      --from-literal=POSTGRES_PASSWORD='<pw>' \\"
+      echo "      --from-literal=DATABASE_URL='postgres://naspipeline:<pw>@postgres:5432/naspipeline?sslmode=disable'"
     fi
   fi
 done

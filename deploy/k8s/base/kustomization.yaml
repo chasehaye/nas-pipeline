@@ -6,10 +6,12 @@ resources:
   - kafka.yaml
   - kafka-init.yaml
   - redis.yaml
+  - postgres.yaml
   - bridge.yaml
   - normalizer.yaml
   - filter.yaml
   - cache-writer.yaml
+  - database-writer.yaml
   - api-config.yaml
   - api.yaml
   - web.yaml

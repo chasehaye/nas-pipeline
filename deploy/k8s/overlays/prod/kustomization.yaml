@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - postgres-local-storage.yaml
 patches:
   - target:
       kind: StatefulSet
@@ -45,3 +46,13 @@ patches:
       - op: replace
         path: /spec/ports/0/port
         value: 15002
+  - target:
+      kind: PersistentVolumeClaim
+      name: postgres-data
+    patch: |
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 1Ti
+      - op: add
+        path: /spec/storageClassName
+        value: postgres-local

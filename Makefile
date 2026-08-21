@@ -26,12 +26,13 @@ help:
 	@echo -  make up         start infra (Kafka/Redis/Postgres) + create topics
 	@echo -  make down       stop infra
 	@echo -------------------------------------------------------------------------------------------
-	@echo -  make services   run all services together (one terminal)
+	@echo -  make services   run all services (separate windows on Windows)
 	@echo ------------------------------------------------------------------------------------------
 	@echo -  make bridge     run the bridge service    (Spring Boot; own terminal)
 	@echo -  make normalizer  run the normalizer service (own terminal)
 	@echo -  make filter     run the filter service    (own terminal)
 	@echo -  make cache-writer  run the redis writer  (own terminal)
+	@echo -  make database-writer  run the postgres/timescale writer (own terminal)
 	@echo -  make api         run the read API (Gin, reads Redis; own terminal)
 	@echo -  make web         run the front-end map (Vite dev server, http://localhost:5173)
 	@echo ------------------------------------------------------------------------------------------
@@ -46,13 +47,20 @@ up:
 down:
 	docker compose down
 
-# ---------- run all services at once, in this terminal ----------
+# ---------- run all services at once ----------
+# Windows: one PowerShell window per service (separate, readable logs).
+# Other:   parallel in this one terminal (interleaved logs, Ctrl-C stops all).
 .PHONY: services
+ifeq ($(OS),Windows_NT)
 services:
-	$(MAKE) -j5 bridge normalizer filter cache-writer api
+	powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev-services.ps1
+else
+services:
+	$(MAKE) -j6 bridge normalizer filter cache-writer database-writer api
+endif
 
 # ---------- services: run each in its own terminal, any order ----------
-.PHONY: bridge normalizer filter cache-writer api
+.PHONY: bridge normalizer filter cache-writer database-writer api
 bridge:
 	cd bridge && $(MVNW) spring-boot:run
 
@@ -64,6 +72,9 @@ filter:
 
 cache-writer:
 	cd cache-writer && go run ./cmd/cache-writer
+
+database-writer:
+	cd database-writer && go run ./cmd/database-writer
 
 api:
 	cd api && go run ./cmd/api
@@ -80,4 +91,5 @@ test:
 	cd normalizer && go test $(GOTEST_FLAGS) ./...
 	cd filter && go test $(GOTEST_FLAGS) ./...
 	cd cache-writer && go test $(GOTEST_FLAGS) ./...
+	cd database-writer && go test $(GOTEST_FLAGS) ./...
 	cd api && go test $(GOTEST_FLAGS) ./...

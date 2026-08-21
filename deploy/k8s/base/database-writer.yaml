@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-writer-config
+  namespace: nas
+data:
+  KAFKA_BROKERS: "kafka:29092"
+  KAFKA_TOPIC_FILTERED: "fixm.filtered"
+  KAFKA_GROUP: "database-writer"
+  DB_WRITER_BATCH_SIZE: "500"
+  DB_WRITER_FLUSH_TIMEOUT: "1s"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-writer
+  namespace: nas
+  labels: { app: database-writer }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: database-writer } }
+  template:
+    metadata:
+      labels: { app: database-writer }
+    spec:
+      containers:
+        - name: database-writer
+          image: nas-database-writer:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: database-writer-config }
+          env:
+            # From the Secret (embeds the password).
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef: { name: postgres, key: DATABASE_URL }

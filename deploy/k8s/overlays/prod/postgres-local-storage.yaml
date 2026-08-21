@@ -1,0 +1,30 @@
+# Postgres on its own drive (drive2), separate from kafka/redis.
+# Server setup: mkdir -p /mnt/drive2/nas/postgres && chown 70:70 it, set <node-name>.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: postgres-local
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: ["ReadWriteOnce"]
+  persistentVolumeReclaimPolicy: Retain   # keep data if the PVC is deleted
+  storageClassName: postgres-local
+  local:
+    path: /mnt/drive2/nas/postgres
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - <node-name>          # kubectl get nodes
