@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/apps
+
+patches:
+  - target: { kind: ConfigMap, name: api-config }
+    patch: |
+      - op: replace
+        path: /data/GO_ENV
+        value: prod
+  - target: { kind: Service, name: web }
+    patch: |
+      - op: add
+        path: /spec/type
+        value: LoadBalancer
+      - op: replace
+        path: /spec/ports/0/port
+        value: 15000
+  - target: { kind: Service, name: ladd-admin }
+    patch: |
+      - op: add
+        path: /spec/type
+        value: LoadBalancer
+      - op: replace
+        path: /spec/ports/0/port
+        value: 15002

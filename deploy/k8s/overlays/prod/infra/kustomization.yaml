@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/infra
+  - postgres-local-storage.yaml
+
+patches:
+  - target: { kind: StatefulSet, name: kafka }
+    patch: |
+      - op: replace
+        path: /spec/volumeClaimTemplates/0/spec/resources/requests/storage
+        value: 500Gi
+  - target: { kind: PersistentVolumeClaim, name: redis-data }
+    patch: |
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 2Gi
+  # Postgres on its own drive (see postgres-local-storage.yaml).
+  - target: { kind: PersistentVolumeClaim, name: postgres-data }
+    patch: |
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 1Ti
+      - op: add
+        path: /spec/storageClassName
+        value: postgres-local
