@@ -116,6 +116,8 @@ export function FlightMap({
 }: FlightMapProps) {
   const mapRef = useRef<MapRef>(null)
   const [showLabels, setShowLabels] = useState(true)
+  const [cursor, setCursor] = useState('')
+  const hoveredId = useRef<string | number | undefined>(undefined)
 
   const data = useMemo(
     () => toGeoJSON(flights),
@@ -133,6 +135,30 @@ export function FlightMap({
     if (gufi && onSelect) {
       onSelect(String(gufi))
     }
+  }
+
+  // Track the hovered plane via feature-state so its icon-color can react.
+  function setHover(id: string | number | undefined) {
+    const map = mapRef.current?.getMap()
+    if (!map) return
+    if (hoveredId.current !== undefined && hoveredId.current !== id) {
+      map.setFeatureState({ source: 'flights', id: hoveredId.current }, { hover: false })
+    }
+    hoveredId.current = id
+    if (id !== undefined) {
+      map.setFeatureState({ source: 'flights', id }, { hover: true })
+    }
+  }
+
+  function handleMouseMove(e: MapLayerMouseEvent) {
+    const id = e.features?.[0]?.id
+    setCursor(id !== undefined ? 'pointer' : '')
+    setHover(id)
+  }
+
+  function handleMouseLeave() {
+    setCursor('')
+    setHover(undefined)
   }
 
   function toggleLabels() {
@@ -167,6 +193,9 @@ export function FlightMap({
         }}
         interactiveLayerIds={['aircraft']}
         onClick={handleClick}
+        cursor={cursor}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         style={{
           width: '100%',
           height: '100%',
@@ -186,7 +215,7 @@ export function FlightMap({
               'line-join': 'round',
             }}
             paint={{
-              'line-color': '#2563eb',
+              'line-color': '#1e293b',
               'line-width': 2,
               'line-opacity': 0.85,
             }}
@@ -197,6 +226,7 @@ export function FlightMap({
           id="flights"
           type="geojson"
           data={data}
+          promoteId="gufi"
         >
           <Layer
             id="aircraft"
@@ -222,17 +252,23 @@ export function FlightMap({
             paint={{
               // Altitude (feet) → color. Gray = on the ground / no altitude,
               // then a smooth orange -> purple climb through the bands.
+              // Yellow on hover, otherwise the altitude gradient.
               'icon-color': [
-                'interpolate',
-                ['linear'],
-                ['get', 'alt'],
-                0, '#9ca3af',
-                1000, '#f97316',
-                10000, '#fb7185',
-                20000, '#ec4899',
-                30000, '#d946ef',
-                40000, '#a855f7',
-                50000, '#7c3aed',
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                '#facc15',
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['get', 'alt'],
+                  0, '#9ca3af',
+                  1000, '#f97316',
+                  10000, '#fb7185',
+                  20000, '#ec4899',
+                  30000, '#d946ef',
+                  40000, '#a855f7',
+                  50000, '#7c3aed',
+                ],
               ],
               'icon-halo-color': '#111827',
               'icon-halo-width': 1,
