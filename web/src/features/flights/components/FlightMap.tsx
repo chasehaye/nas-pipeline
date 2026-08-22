@@ -204,7 +204,16 @@ export function FlightMap({
             source="flights"
             layout={{
               'icon-image': 'plane',
-              'icon-size': 0.8,
+              // Grow the icon as you zoom in (clamped at both ends).
+              'icon-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                4, 0.8,
+                7, 1.3,
+                10, 2.2,
+                14, 3.2,
+              ],
               'icon-rotate': ['get', 'heading'],
               'icon-rotation-alignment': 'map',
               'icon-allow-overlap': true,
