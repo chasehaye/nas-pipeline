@@ -1,4 +1,4 @@
-package store
+package live
 
 import (
 	"context"
@@ -26,7 +26,6 @@ func New(addr, password string, db int, prefix string) *Store {
 func (s *Store) Ping(ctx context.Context) error { return s.rdb.Ping(ctx).Err() }
 func (s *Store) Close() error                    { return s.rdb.Close() }
 
-
 type Flight struct {
 	Gufi         string  `json:"gufi"`
 	CallSign     string  `json:"callSign"`
@@ -42,7 +41,6 @@ type Flight struct {
 	Timestamp    string  `json:"timestamp,omitempty"`
 	UpdatedAt    string  `json:"updatedAt,omitempty"`
 }
-
 
 func (s *Store) ListFlights(ctx context.Context) ([]Flight, error) {
 	var keys []string

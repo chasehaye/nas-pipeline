@@ -72,8 +72,11 @@ const insertPositionSQL = `
 INSERT INTO positions (time, gufi, lat, lon, alt, heading, speed_kt, status)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
-// RecordBatch writes a whole batch in one transaction (one fsync). Flights are
-// applied in order so the FK chain and per-GUFI counters stay correct.
+// RecordBatch writes a whole batch in one transaction, pipelined via pgx.Batch:
+// all statements are sent in a single round-trip instead of one at a time, so
+// throughput isn't bound by per-statement network latency. Queue order is
+// airports -> flights -> positions (the FK chain), and flights stay in message
+// order so the per-GUFI status_time counters remain correct.
 func (s *Store) RecordBatch(ctx context.Context, flights []flight.Flight) error {
 	if len(flights) == 0 {
 		return nil
@@ -85,55 +88,72 @@ func (s *Store) RecordBatch(ctx context.Context, flights []flight.Flight) error 
 	}
 	defer tx.Rollback(ctx)
 
+	batch := &pgx.Batch{}
+
+	// Airports first (FK parents), deduped across the batch — a batch of
+	// hundreds of flights usually touches only a few dozen distinct airports.
+	airports := make(map[string]flight.Coord, len(flights))
 	for _, f := range flights {
-		if err := recordOne(ctx, tx, f); err != nil {
-			return err
+		addAirport(airports, f.Origin, f.OriginCoord)
+		addAirport(airports, f.Destination, f.DestinationCoord)
+	}
+	for code, c := range airports {
+		batch.Queue(upsertAirportSQL, code, nfloat(c.Lat, c.OK), nfloat(c.Lon, c.OK))
+	}
+
+	// Flights, in message order.
+	for _, f := range flights {
+		stime := parseTimeOr(f.Timestamp, time.Now().UTC())
+		batch.Queue(upsertFlightSQL,
+			f.Gufi, nz(f.CallSign), nz(f.Registration), nz(f.AircraftType),
+			nz(f.Origin), nz(f.Destination), nz(f.Status), stime,
+			ntime(f.ActualDepartureTime), ntime(f.ActualArrivalTime),
+		)
+	}
+
+	// Positions (FK children of flights).
+	for _, f := range flights {
+		if !f.HasPosition {
+			continue
 		}
-	}
-
-	return tx.Commit(ctx)
-}
-
-func recordOne(ctx context.Context, tx pgx.Tx, f flight.Flight) error {
-	if f.Origin != "" {
-		if err := upsertAirport(ctx, tx, f.Origin, f.OriginCoord); err != nil {
-			return err
-		}
-	}
-	if f.Destination != "" && f.Destination != f.Origin {
-		if err := upsertAirport(ctx, tx, f.Destination, f.DestinationCoord); err != nil {
-			return err
-		}
-	}
-
-	stime := parseTimeOr(f.Timestamp, time.Now().UTC())
-	if _, err := tx.Exec(ctx, upsertFlightSQL,
-		f.Gufi, nz(f.CallSign), nz(f.Registration), nz(f.AircraftType),
-		nz(f.Origin), nz(f.Destination), nz(f.Status), stime,
-		ntime(f.ActualDepartureTime), ntime(f.ActualArrivalTime),
-	); err != nil {
-		return err
-	}
-
-	if f.HasPosition {
+		stime := parseTimeOr(f.Timestamp, time.Now().UTC())
 		ptime := parseTimeOr(f.Position.Time, stime)
-		if _, err := tx.Exec(ctx, insertPositionSQL,
+		batch.Queue(insertPositionSQL,
 			ptime, f.Gufi, f.Position.Lat, f.Position.Lon,
 			nfloat(f.Position.Alt, f.Position.HasAlt),
 			nfloat(f.Position.Heading, f.Position.HasHeading),
 			nfloat(f.Position.SpeedKt, f.Position.HasHeading),
 			nz(f.Status),
-		); err != nil {
+		)
+	}
+
+	br := tx.SendBatch(ctx, batch)
+	for i := 0; i < batch.Len(); i++ {
+		if _, err := br.Exec(); err != nil {
+			br.Close()
 			return err
 		}
 	}
+	if err := br.Close(); err != nil {
+		return err
+	}
 
-	return nil
+	return tx.Commit(ctx)
 }
 
-func upsertAirport(ctx context.Context, tx pgx.Tx, code string, c flight.Coord) error {
-	_, err := tx.Exec(ctx, upsertAirportSQL, code, nfloat(c.Lat, c.OK), nfloat(c.Lon, c.OK))
-	return err
+// addAirport records a distinct airport code, preferring an entry that carries
+// coordinates over one that doesn't.
+func addAirport(m map[string]flight.Coord, code string, c flight.Coord) {
+	if code == "" {
+		return
+	}
+	if existing, ok := m[code]; ok {
+		if !existing.OK && c.OK {
+			m[code] = c
+		}
+		return
+	}
+	m[code] = c
 }
 
 func nz(s string) any {

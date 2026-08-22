@@ -1,11 +1,28 @@
-import { FlightMap, useFlights } from './features/flights'
+import { useState } from 'react'
+import {
+  FlightMap,
+  FlightSidebar,
+  AltitudeLegend,
+  useFlights,
+  useFlightRecord,
+} from './features/flights'
 
 function App() {
   const { flights, count, error, lastUpdated } = useFlights(4000)
+  const [selected, setSelected] = useState<string | null>(null)
+  const {
+    data: record,
+    loading: recordLoading,
+    error: recordError,
+  } = useFlightRecord(selected)
 
   return (
     <div className="relative h-full w-full">
-      <FlightMap flights={flights} />
+      <FlightMap
+        flights={flights}
+        track={record?.track}
+        onSelect={setSelected}
+      />
 
       <div className="absolute flex flex-col items-center left-3 top-3 z-10 rounded-lg bg-gray-900/80 px-4 py-2 text-white shadow-lg backdrop-blur">
         <div className="text-sm font-semibold">- live traffic -</div>
@@ -22,6 +39,17 @@ function App() {
           )}
         </div>
       </div>
+
+      <AltitudeLegend />
+
+      {selected && (
+        <FlightSidebar
+          record={record}
+          loading={recordLoading}
+          error={recordError}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   )
 }

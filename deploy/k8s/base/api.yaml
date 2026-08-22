@@ -22,6 +22,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-config
+          env:
+            # Postgres durable read path (embeds the password).
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef: { name: postgres, key: DATABASE_URL }
           ports:
             - containerPort: 8090
 

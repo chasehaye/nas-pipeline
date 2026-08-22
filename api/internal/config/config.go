@@ -18,6 +18,8 @@ type Config struct {
 	RedisDB       int
 	KeyPrefix     string // must match the cache-writer's REDIS_KEY_PREFIX
 
+	DatabaseURL string // Postgres durable store; /durable routes are skipped if unreachable
+
 	CORSOrigins []string // allowed browser origins; ["*"] = any
 }
 
@@ -32,6 +34,8 @@ func Load() Config {
 		RedisPassword: envOr("REDIS_PASSWORD", ""),
 		RedisDB:       envInt("REDIS_DB", 0),
 		KeyPrefix:     envOr("REDIS_KEY_PREFIX", "flight:"),
+
+		DatabaseURL: envOr("DATABASE_URL", "postgres://naspipeline:changeme@localhost:5433/naspipeline?sslmode=disable"),
 
 		CORSOrigins: splitCSV(envOr("CORS_ORIGINS", "*")),
 	}

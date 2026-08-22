@@ -22,7 +22,7 @@ func Load() Config {
 		FilteredTopic: envOr("KAFKA_TOPIC_FILTERED", "fixm.filtered"),
 		Group:         envOr("KAFKA_GROUP", "database-writer"),
 		DatabaseURL:   envOr("DATABASE_URL", "postgres://naspipeline:changeme@localhost:5433/naspipeline?sslmode=disable"),
-		BatchSize:     envInt("DB_WRITER_BATCH_SIZE", 500),
+		BatchSize:     envInt("DB_WRITER_BATCH_SIZE", 1000),
 		FlushTimeout:  envDuration("DB_WRITER_FLUSH_TIMEOUT", time.Second),
 	}
 }

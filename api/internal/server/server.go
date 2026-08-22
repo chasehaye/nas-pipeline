@@ -1,4 +1,4 @@
-package router
+package server
 
 import (
 	"context"
@@ -8,12 +8,17 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 
-	"github.com/chasehaye/nas-pipeline/api/internal/handlers"
-	"github.com/chasehaye/nas-pipeline/api/internal/router/routes"
-	"github.com/chasehaye/nas-pipeline/api/internal/store"
+	"github.com/chasehaye/nas-pipeline/api/internal/durable"
+	"github.com/chasehaye/nas-pipeline/api/internal/health"
+	"github.com/chasehaye/nas-pipeline/api/internal/live"
 )
 
-func Setup(st *store.Store, corsOrigins []string, reqTimeout time.Duration) *gin.Engine {
+func Setup(
+	liveStore *live.Store,
+	durableStore *durable.Store,
+	corsOrigins []string,
+	reqTimeout time.Duration,
+) *gin.Engine {
 	r := gin.New()
 	r.Use(
 		gin.Recovery(),
@@ -22,15 +27,17 @@ func Setup(st *store.Store, corsOrigins []string, reqTimeout time.Duration) *gin
 		corsMiddleware(corsOrigins),
 	)
 
-	health := handlers.NewHealthHandler(st)
-	r.GET("/healthz", health.Healthz)
+	r.GET("/healthz", health.NewHandler(liveStore).Healthz)
 
+	live.Routes(r, liveStore)
 
-	routes.RedisRouter(r, st)
+	// Durable (Postgres) routes are registered only when it's reachable.
+	if durableStore != nil {
+		durable.Routes(r, durableStore)
+	}
 
 	return r
 }
-
 
 func timeoutMiddleware(d time.Duration) gin.HandlerFunc {
 	return func(c *gin.Context) {

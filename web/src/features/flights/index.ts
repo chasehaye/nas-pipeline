@@ -1,3 +1,12 @@
 export { FlightMap } from './components/FlightMap'
+export { FlightSidebar } from './components/FlightSidebar'
+export { AltitudeLegend } from './components/AltitudeLegend'
 export { useFlights } from './hooks/useFlights'
-export type { Flight, FlightsResponse } from './types'
+export { useFlightRecord } from './hooks/useFlightRecord'
+export type {
+  Flight,
+  FlightsResponse,
+  FlightRecord,
+  FlightMeta,
+  TrackPoint,
+} from './types'

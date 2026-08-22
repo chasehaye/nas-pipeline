@@ -3,7 +3,7 @@ import { Map, Source, Layer } from 'react-map-gl/maplibre'
 import type { MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre'
 import type { Map as MaplibreMap } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
-import type { Flight } from '../types'
+import type { Flight, TrackPoint } from '../types'
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
 
@@ -46,17 +46,15 @@ function addPlaneIcon(map: MaplibreMap) {
   ctx.lineTo(-7, 9)
   ctx.closePath()
 
-  ctx.fillStyle = '#111827'
-  ctx.strokeStyle = '#ffffff'
-  ctx.lineWidth = 1
-
+  // SDF: only the alpha/shape matters; the fill color is replaced at render
+  // time by the layer's data-driven icon-color (altitude).
+  ctx.fillStyle = '#000000'
   ctx.fill()
-  ctx.stroke()
 
   map.addImage(
     'plane',
     ctx.getImageData(0, 0, size, size),
-    { pixelRatio: 2 },
+    { pixelRatio: 2, sdf: true },
   )
 }
 
@@ -85,13 +83,35 @@ function setLabelsVisible(map: MaplibreMap, visible: boolean) {
   }
 }
 
+function trackToGeoJSON(track: TrackPoint[]): FeatureCollection {
+  const coordinates = track
+    .filter((p) => p.lon != null && p.lat != null)
+    .map((p) => [p.lon as number, p.lat as number])
+
+  return {
+    type: 'FeatureCollection',
+    features:
+      coordinates.length >= 2
+        ? [
+            {
+              type: 'Feature',
+              geometry: { type: 'LineString', coordinates },
+              properties: {},
+            },
+          ]
+        : [],
+  }
+}
+
 interface FlightMapProps {
   flights: Flight[]
+  track?: TrackPoint[]
   onSelect?: (gufi: string) => void
 }
 
 export function FlightMap({
   flights,
+  track,
   onSelect,
 }: FlightMapProps) {
   const mapRef = useRef<MapRef>(null)
@@ -100,6 +120,11 @@ export function FlightMap({
   const data = useMemo(
     () => toGeoJSON(flights),
     [flights],
+  )
+
+  const trackData = useMemo(
+    () => trackToGeoJSON(track ?? []),
+    [track],
   )
 
   function handleClick(e: MapLayerMouseEvent) {
@@ -148,6 +173,27 @@ export function FlightMap({
         }}
       >
         <Source
+          id="track"
+          type="geojson"
+          data={trackData}
+        >
+          <Layer
+            id="track-line"
+            type="line"
+            source="track"
+            layout={{
+              'line-cap': 'round',
+              'line-join': 'round',
+            }}
+            paint={{
+              'line-color': '#2563eb',
+              'line-width': 2,
+              'line-opacity': 0.85,
+            }}
+          />
+        </Source>
+
+        <Source
           id="flights"
           type="geojson"
           data={data}
@@ -163,6 +209,24 @@ export function FlightMap({
               'icon-rotation-alignment': 'map',
               'icon-allow-overlap': true,
               'icon-ignore-placement': true,
+            }}
+            paint={{
+              // Altitude (feet) → color. Gray = on the ground / no altitude,
+              // then a smooth orange -> purple climb through the bands.
+              'icon-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'alt'],
+                0, '#9ca3af',
+                1000, '#f97316',
+                10000, '#fb7185',
+                20000, '#ec4899',
+                30000, '#d946ef',
+                40000, '#a855f7',
+                50000, '#7c3aed',
+              ],
+              'icon-halo-color': '#111827',
+              'icon-halo-width': 1,
             }}
           />
         </Source>
