@@ -7,9 +7,6 @@ import type { Flight, TrackPoint } from '../types'
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
 
-// Camera bounds: [west, south, east, north].
-const US_BOUNDS: [number, number, number, number] = [-136, 12, -56, 56]
-
 function toGeoJSON(flights: Flight[]): FeatureCollection {
   return {
     type: 'FeatureCollection',
@@ -185,7 +182,6 @@ export function FlightMap({
           zoom: 4,
         }}
         mapStyle={MAP_STYLE}
-        maxBounds={US_BOUNDS}
         minZoom={3}
         maxPitch={0}
         dragRotate={false}
