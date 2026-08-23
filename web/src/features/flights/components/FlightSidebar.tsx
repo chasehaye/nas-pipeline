@@ -32,7 +32,9 @@ export function FlightSidebar({
   const f = record?.flight
 
   return (
-    <div className="absolute right-0 top-0 z-20 flex h-full w-80 flex-col bg-gray-900/95 text-white shadow-xl backdrop-blur">
+    <div className="absolute z-20 flex flex-col bg-gray-900/95 text-white shadow-xl backdrop-blur
+      inset-x-0 bottom-0 max-h-[40vh] rounded-t-xl
+      md:inset-x-auto md:right-0 md:top-0 md:bottom-0 md:h-full md:w-80 md:max-h-none md:rounded-none">
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div>
           <div className="text-lg font-semibold">

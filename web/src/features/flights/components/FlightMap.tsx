@@ -5,7 +5,10 @@ import type { Map as MaplibreMap } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import type { Flight, TrackPoint } from '../types'
 
-const MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
+const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+
+// Camera bounds: [west, south, east, north].
+const US_BOUNDS: [number, number, number, number] = [-136, 12, -56, 56]
 
 function toGeoJSON(flights: Flight[]): FeatureCollection {
   return {
@@ -182,6 +185,8 @@ export function FlightMap({
           zoom: 4,
         }}
         mapStyle={MAP_STYLE}
+        maxBounds={US_BOUNDS}
+        minZoom={3}
         maxPitch={0}
         dragRotate={false}
         touchPitch={false}
@@ -215,9 +220,9 @@ export function FlightMap({
               'line-join': 'round',
             }}
             paint={{
-              'line-color': '#1e293b',
+              'line-color': '#e2e8f0',
               'line-width': 2,
-              'line-opacity': 0.85,
+              'line-opacity': 0.9,
             }}
           />
         </Source>
@@ -239,10 +244,10 @@ export function FlightMap({
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                4, 0.8,
-                7, 1.3,
-                10, 2.2,
-                14, 3.2,
+                4, 0.6,
+                7, 1.4,
+                10, 2.4,
+                14, 4.8,
               ],
               'icon-rotate': ['get', 'heading'],
               'icon-rotation-alignment': 'map',
@@ -252,16 +257,16 @@ export function FlightMap({
             paint={{
               // Altitude (feet) → color. Gray = on the ground / no altitude,
               // then a smooth orange -> purple climb through the bands.
-              // Yellow on hover, otherwise the altitude gradient.
+              // Gold on hover, otherwise the altitude gradient.
               'icon-color': [
                 'case',
                 ['boolean', ['feature-state', 'hover'], false],
-                '#facc15',
+                '#ffffff',
                 [
                   'interpolate',
                   ['linear'],
                   ['get', 'alt'],
-                  0, '#9ca3af',
+                  0, '#c2410c',
                   1000, '#f97316',
                   10000, '#fb7185',
                   20000, '#ec4899',
