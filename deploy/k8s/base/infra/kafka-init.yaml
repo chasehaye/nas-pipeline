@@ -20,16 +20,20 @@ spec:
               until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server $BS >/dev/null 2>&1; do
                 sleep 3
               done
+              # $3 = per-partition size cap in bytes; defaults to 100 GiB.
               create() {
+                bytes="${3:-107374182400}"
                 /opt/kafka/bin/kafka-topics.sh --bootstrap-server $BS \
                   --create --if-not-exists --topic "$1" \
                   --partitions "$2" --replication-factor 1 \
-                  --config retention.ms=604800000
+                  --config retention.ms=604800000 \
+                  --config retention.bytes="$bytes"
               }
-              create fixm.raw 1
-              create fixm.normalized 1
+              # Main pipeline topics: 350 GiB. DLQs: default 100 GiB.
+              create fixm.raw 1 375809638400
+              create fixm.normalized 1 375809638400
               create fixm.normalized.dlq 1
-              create fixm.filtered 1
+              create fixm.filtered 1 375809638400
               create fixm.filtered.dlq 1
               create cache-writer.dlq 1
               create database-writer.dlq 1
