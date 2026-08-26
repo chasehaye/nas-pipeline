@@ -1,6 +1,6 @@
 {
-  "uid": "normalizer",
-  "title": "Normalizer",
+  "uid": "api",
+  "title": "API",
   "tags": ["nas-pipeline"],
   "timezone": "browser",
   "schemaVersion": 39,
@@ -13,13 +13,13 @@
     {
       "id": 1,
       "type": "timeseries",
-      "title": "Throughput",
+      "title": "Request rate by status",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
-          "unit": "cps",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "unit": "reqps",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 15, "stacking": { "mode": "normal" } }
         },
         "overrides": []
       },
@@ -31,21 +31,15 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_envelopes_processed_total[1m])",
-          "legendFormat": "envelopes/s"
-        },
-        {
-          "refId": "B",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_flights_published_total[1m])",
-          "legendFormat": "flights/s"
+          "expr": "sum by (status) (rate(api_http_requests_total[1m]))",
+          "legendFormat": "{{status}}"
         }
       ]
     },
     {
       "id": 2,
       "type": "timeseries",
-      "title": "Process latency (percentiles)",
+      "title": "Request latency p99 by route",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
@@ -63,77 +57,48 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.50, rate(normalizer_process_duration_seconds_bucket[5m]))",
-          "legendFormat": "p50"
-        },
-        {
-          "refId": "B",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.95, rate(normalizer_process_duration_seconds_bucket[5m]))",
-          "legendFormat": "p95"
-        },
-        {
-          "refId": "C",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.99, rate(normalizer_process_duration_seconds_bucket[5m]))",
-          "legendFormat": "p99"
+          "expr": "histogram_quantile(0.99, sum by (le, route) (rate(api_http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{route}}"
         }
       ]
     },
     {
       "id": 3,
       "type": "timeseries",
-      "title": "Error & dead-letter rate",
+      "title": "Server error rate (5xx)",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
-          "unit": "cps",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "unit": "reqps",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 20 },
+          "color": { "mode": "fixed", "fixedColor": "red" }
         },
         "overrides": []
       },
       "options": {
         "legend": { "displayMode": "list", "placement": "bottom", "calcs": [] },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": { "mode": "single", "sort": "none" }
       },
       "targets": [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_parse_errors_total[5m])",
-          "legendFormat": "parse (poison)"
-        },
-        {
-          "refId": "B",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_publish_errors_total[5m])",
-          "legendFormat": "publish (transient)"
-        },
-        {
-          "refId": "C",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_dlq_published_total[5m])",
-          "legendFormat": "dead-lettered"
+          "expr": "sum(rate(api_http_requests_total{status=~\"5..\"}[5m]))",
+          "legendFormat": "5xx/s"
         }
       ]
     },
     {
       "id": 4,
       "type": "stat",
-      "title": "DLQ published (total)",
+      "title": "Requests/s",
       "gridPos": { "h": 8, "w": 6, "x": 12, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "red", "value": 1 }
-            ]
-          },
+          "unit": "reqps",
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "blue", "value": null } ] },
           "mappings": []
         },
         "overrides": []
@@ -149,8 +114,8 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "normalizer_dlq_published_total",
-          "legendFormat": "dlq"
+          "expr": "sum(rate(api_http_requests_total[1m]))",
+          "legendFormat": "req/s"
         }
       ]
     },
@@ -193,35 +158,8 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "up{job=\"normalizer\"}",
+          "expr": "up{job=\"api\"}",
           "legendFormat": "up"
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "type": "timeseries",
-      "title": "Consumer lag",
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 16 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 20 },
-          "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 5000 }, { "color": "red", "value": 50000 } ] }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": { "displayMode": "list", "placement": "bottom", "calcs": ["lastNotNull", "max"] },
-        "tooltip": { "mode": "single", "sort": "none" }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(kafka_consumergroup_lag{consumergroup=\"normalizer\"})",
-          "legendFormat": "lag (messages behind)"
         }
       ]
     }

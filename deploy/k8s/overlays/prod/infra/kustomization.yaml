@@ -25,3 +25,12 @@ patches:
       - op: add
         path: /spec/storageClassName
         value: postgres-local
+  # Expose Grafana on the node so it can be viewed locally on the server.
+  - target: { kind: Service, name: grafana }
+    patch: |
+      - op: add
+        path: /spec/type
+        value: LoadBalancer
+      - op: replace
+        path: /spec/ports/0/port
+        value: 15001

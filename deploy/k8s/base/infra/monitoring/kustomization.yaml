@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Stable ConfigMap names (no hash suffix) so the Deployment volume references
+# resolve. Re-apply + `rollout restart deploy/grafana` to pick up edits.
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - prometheus.yaml
+  - kafka-exporter.yaml
+  - grafana.yaml
+
+# Config + dashboards baked into ConfigMaps from the files in this directory.
+configMapGenerator:
+  - name: prometheus-config
+    files:
+      - prometheus.yml
+  - name: grafana-datasources
+    files:
+      - grafana-datasource.yml
+  - name: grafana-dashboards-provider
+    files:
+      - grafana-dashboards-provider.yml
+  - name: grafana-dashboards
+    files:
+      - dashboards/api.json
+      - dashboards/cache-writer.json
+      - dashboards/database-writer.json
+      - dashboards/filter.json
+      - dashboards/normalizer.json

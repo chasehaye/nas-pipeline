@@ -1,0 +1,37 @@
+# Prometheus scrape config for the cluster. Unlike the local compose config
+# (host.docker.internal), this discovers pods via the Kubernetes API.
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: kafka-exporter
+    static_configs:
+      - targets: ["kafka-exporter:9308"]
+
+  # Services opt in with pod annotations (see each Deployment):
+  #   prometheus.io/scrape: "true"
+  #   prometheus.io/port:   "2112"   (api uses 8090)
+  # The `job` label is set to the pod's `app` label so dashboards that query
+  # up{job="normalizer"} etc. work unchanged.
+  - job_name: nas-pods
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: [nas]
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: "true"
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: replace
+        target_label: job

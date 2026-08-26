@@ -26,6 +26,9 @@ spec:
   template:
     metadata:
       labels: { app: cache-writer }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2112"
     spec:
       containers:
         - name: cache-writer

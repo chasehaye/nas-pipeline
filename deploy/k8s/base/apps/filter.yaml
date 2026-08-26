@@ -27,6 +27,9 @@ spec:
   template:
     metadata:
       labels: { app: filter }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2112"
     spec:
       containers:
         - name: filter

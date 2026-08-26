@@ -1,6 +1,6 @@
 {
-  "uid": "normalizer",
-  "title": "Normalizer",
+  "uid": "database-writer",
+  "title": "Database Writer",
   "tags": ["nas-pipeline"],
   "timezone": "browser",
   "schemaVersion": 39,
@@ -31,21 +31,27 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_envelopes_processed_total[1m])",
-          "legendFormat": "envelopes/s"
+          "expr": "rate(database_writer_messages_total[1m])",
+          "legendFormat": "in/s"
         },
         {
           "refId": "B",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_flights_published_total[1m])",
-          "legendFormat": "flights/s"
+          "expr": "rate(database_writer_recorded_total[1m])",
+          "legendFormat": "recorded/s"
+        },
+        {
+          "refId": "C",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(database_writer_positions_total[1m])",
+          "legendFormat": "positions/s"
         }
       ]
     },
     {
       "id": 2,
       "type": "timeseries",
-      "title": "Process latency (percentiles)",
+      "title": "Batch write latency (percentiles)",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
@@ -63,19 +69,19 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.50, rate(normalizer_process_duration_seconds_bucket[5m]))",
+          "expr": "histogram_quantile(0.50, rate(database_writer_batch_duration_seconds_bucket[5m]))",
           "legendFormat": "p50"
         },
         {
           "refId": "B",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.95, rate(normalizer_process_duration_seconds_bucket[5m]))",
+          "expr": "histogram_quantile(0.95, rate(database_writer_batch_duration_seconds_bucket[5m]))",
           "legendFormat": "p95"
         },
         {
           "refId": "C",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.99, rate(normalizer_process_duration_seconds_bucket[5m]))",
+          "expr": "histogram_quantile(0.99, rate(database_writer_batch_duration_seconds_bucket[5m]))",
           "legendFormat": "p99"
         }
       ]
@@ -83,7 +89,7 @@
     {
       "id": 3,
       "type": "timeseries",
-      "title": "Error & dead-letter rate",
+      "title": "Error, batch-fail & dead-letter rate",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
@@ -101,19 +107,19 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_parse_errors_total[5m])",
+          "expr": "rate(database_writer_parse_errors_total[5m])",
           "legendFormat": "parse (poison)"
         },
         {
           "refId": "B",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_publish_errors_total[5m])",
-          "legendFormat": "publish (transient)"
+          "expr": "rate(database_writer_batch_write_errors_total[5m])",
+          "legendFormat": "batch write (transient)"
         },
         {
           "refId": "C",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(normalizer_dlq_published_total[5m])",
+          "expr": "rate(database_writer_dlq_published_total[5m])",
           "legendFormat": "dead-lettered"
         }
       ]
@@ -149,7 +155,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "normalizer_dlq_published_total",
+          "expr": "database_writer_dlq_published_total",
           "legendFormat": "dlq"
         }
       ]
@@ -193,7 +199,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "up{job=\"normalizer\"}",
+          "expr": "up{job=\"database-writer\"}",
           "legendFormat": "up"
         }
       ]
@@ -220,7 +226,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(kafka_consumergroup_lag{consumergroup=\"normalizer\"})",
+          "expr": "sum(kafka_consumergroup_lag{consumergroup=\"database-writer\"})",
           "legendFormat": "lag (messages behind)"
         }
       ]

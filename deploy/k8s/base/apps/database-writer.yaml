@@ -25,6 +25,9 @@ spec:
   template:
     metadata:
       labels: { app: database-writer }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2112"
     spec:
       containers:
         - name: database-writer

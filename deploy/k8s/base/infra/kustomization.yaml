@@ -8,3 +8,4 @@ resources:
   - kafka-init.yaml
   - redis.yaml
   - postgres.yaml
+  - monitoring

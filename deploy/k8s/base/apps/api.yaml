@@ -14,6 +14,9 @@ spec:
     metadata:
       labels:
         app: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8090"
     spec:
       containers:
         - name: api

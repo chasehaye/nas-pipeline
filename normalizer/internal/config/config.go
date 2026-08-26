@@ -39,7 +39,7 @@ func Load() Config {
 		),
 		Group: envOr(
 			"KAFKA_GROUP",
-			"processor",
+			"normalizer",
 		),
 		Workers: envInt("NORMALIZER_WORKERS", runtime.NumCPU()),
 		OpsAddr: envOr("OPS_ADDR", ":2112"),
