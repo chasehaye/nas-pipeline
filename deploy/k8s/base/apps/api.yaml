@@ -29,6 +29,14 @@ spec:
                 secretKeyRef: { name: postgres, key: DATABASE_URL }
           ports:
             - containerPort: 8090
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8090 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: 8090 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
 
 ---
 apiVersion: v1

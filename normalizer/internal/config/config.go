@@ -11,15 +11,18 @@ type Config struct {
 
 	RawTopic        string
 	NormalizedTopic string
+	DLQTopic        string // dead-letter topic for poison (unparseable) envelopes
 	Group           string
 
 	Workers int // number of concurrent processing workers (CPU-bound; ~NumCPU)
+
+	OpsAddr string // host:port for the ops endpoint (/metrics, /healthz, /readyz)
 }
 
 func Load() Config {
 	return Config{
 		Brokers: envOr(
-			"KAFKA_BROKERS", 
+			"KAFKA_BROKERS",
 			"localhost:9092",
 		),
 		RawTopic: envOr(
@@ -30,11 +33,16 @@ func Load() Config {
 			"KAFKA_TOPIC_NORMALIZED",
 			"fixm.normalized",
 		),
+		DLQTopic: envOr(
+			"KAFKA_TOPIC_NORMALIZED_DLQ",
+			"fixm.normalized.dlq",
+		),
 		Group: envOr(
 			"KAFKA_GROUP",
 			"processor",
 		),
 		Workers: envInt("NORMALIZER_WORKERS", runtime.NumCPU()),
+		OpsAddr: envOr("OPS_ADDR", ":2112"),
 	}
 }
 

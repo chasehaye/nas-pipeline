@@ -2,11 +2,9 @@ package ladd
 
 import "strings"
 
-
 type Set struct {
 	entries map[string]struct{}
 }
-
 
 func NewSet(ids []string) *Set {
 	m := make(map[string]struct{}, len(ids))

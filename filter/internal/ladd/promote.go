@@ -80,7 +80,6 @@ func moveInto(destDir, srcPath string) error {
 	return os.Remove(srcPath)
 }
 
-
 func uniquePath(path string) string {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		return path

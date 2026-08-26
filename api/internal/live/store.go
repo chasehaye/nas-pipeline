@@ -24,7 +24,7 @@ func New(addr, password string, db int, prefix string) *Store {
 }
 
 func (s *Store) Ping(ctx context.Context) error { return s.rdb.Ping(ctx).Err() }
-func (s *Store) Close() error                    { return s.rdb.Close() }
+func (s *Store) Close() error                   { return s.rdb.Close() }
 
 type Flight struct {
 	Gufi         string  `json:"gufi"`

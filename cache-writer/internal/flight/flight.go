@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-
 type Position struct {
 	Lat          float64
 	Lon          float64
@@ -29,7 +28,6 @@ type Flight struct {
 	Position     Position
 	HasPosition  bool
 }
-
 
 type element struct {
 	Flight struct {

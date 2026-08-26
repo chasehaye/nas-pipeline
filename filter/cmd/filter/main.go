@@ -2,10 +2,15 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
+	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/ops"
 
 	"github.com/chasehaye/nas-pipeline/filter/internal/config"
 	"github.com/chasehaye/nas-pipeline/filter/internal/kafka"
@@ -14,11 +19,22 @@ import (
 )
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	if err := godotenv.Load(); err != nil {
-		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+		slog.Info("no .env file loaded; using environment and defaults", "err", err)
 	}
 
 	cfg := config.Load()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Ops endpoint (/metrics, /healthz, /readyz); readiness pings Kafka.
+	go ops.Serve(ctx, cfg.OpsAddr, func(c context.Context) error {
+		return kafkax.Ping(c, cfg.Brokers)
+	})
 
 	consumer := kafka.NewConsumer(kafka.ConsumerConfig{
 		Brokers: cfg.Brokers,
@@ -33,6 +49,10 @@ func main() {
 	})
 	defer producer.Close()
 
+	// Dead-letter writer for poison (unparseable) messages.
+	dlq := kafkax.NewDLQ(cfg.Brokers, cfg.DLQTopic)
+	defer dlq.Close()
+
 	store := ladd.NewStore(cfg.MaxAge)
 
 	dirs := ladd.Dirs{
@@ -41,22 +61,18 @@ func main() {
 		Archived: cfg.LADDArchive,
 	}
 
-
 	if promoted, err := ladd.Promote(dirs); err != nil {
-		log.Printf("LADD promote on startup failed (%v)", err)
+		slog.Warn("LADD promote on startup failed", "err", err)
 	} else if promoted != "" {
-		log.Printf("LADD promoted from staging: %s", promoted)
+		slog.Info("LADD promoted from staging", "file", promoted)
 	}
 
 	if set, effective, err := ladd.LoadLatest(dirs.Active); err != nil {
-		log.Printf("LADD list not loaded from %s (%v)", dirs.Active, err)
+		slog.Warn("LADD list not loaded", "dir", dirs.Active, "err", err)
 	} else {
 		store.Swap(set, effective)
-		log.Printf("LADD list loaded: %d entries, effective %s", set.Len(), effective.Format("2006-01-02"))
+		slog.Info("LADD list loaded", "entries", set.Len(), "effective", effective.Format("2006-01-02"))
 	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	go func() {
 		t := time.NewTicker(cfg.CheckEvery)
@@ -68,16 +84,17 @@ func main() {
 			case <-t.C:
 				swapped, err := store.Reload(dirs)
 				if err != nil {
-					log.Printf("ladd reload issue (keeping current list): %v", err)
+					slog.Warn("ladd reload issue (keeping current list)", "err", err)
 				}
 				if swapped {
-					log.Print("ladd list reloaded (newer file promoted and picked up)")
+					slog.Info("ladd list reloaded (newer file promoted and picked up)")
 				}
 			}
 		}
 	}()
 
-	if err := pipeline.New(consumer, producer, store, cfg.Workers).Run(ctx); err != nil {
-		log.Fatal(err)
+	if err := pipeline.New(consumer, producer, dlq, store, cfg.Workers).Run(ctx); err != nil {
+		slog.Error("pipeline stopped", "err", err)
+		os.Exit(1)
 	}
 }

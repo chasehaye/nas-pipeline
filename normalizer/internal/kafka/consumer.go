@@ -7,18 +7,15 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-
 type ConsumerConfig struct {
 	Brokers string
 	Topic   string
 	Group   string
 }
 
-
 type Consumer struct {
 	reader *kafka.Reader
 }
-
 
 func NewConsumer(cfg ConsumerConfig) *Consumer {
 
@@ -40,13 +37,9 @@ func NewConsumer(cfg ConsumerConfig) *Consumer {
 	}
 }
 
-
-
 func (c *Consumer) Close() error {
 	return c.reader.Close()
 }
-
-
 
 func (c *Consumer) Fetch(
 	ctx context.Context,
@@ -54,8 +47,6 @@ func (c *Consumer) Fetch(
 
 	return c.reader.FetchMessage(ctx)
 }
-
-
 
 func (c *Consumer) Commit(
 	ctx context.Context,

@@ -69,7 +69,17 @@ fi
 
 for svc in "${SERVICES[@]}"; do
   echo "==> [$svc] build + import"
-  docker build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
+  case "$svc" in
+    bridge|web)
+      # Self-contained: build with the service dir as context.
+      docker build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
+      ;;
+    *)
+      # Go services import the shared ./platform module, so the build context
+      # must be the repo root; select the service's Dockerfile with -f.
+      docker build "${build_args[@]}" -t "nas-$svc:latest" -f "./$svc/Dockerfile" .
+      ;;
+  esac
   docker save "nas-$svc:latest" | $CTR images import -
   echo "==> [$svc] rollout"
   $KUBECTL rollout restart "deploy/$svc" -n "$NS"

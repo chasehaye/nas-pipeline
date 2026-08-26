@@ -20,8 +20,8 @@ type Producer struct {
 func NewProducer(cfg ProducerConfig) *Producer {
 	return &Producer{
 		writer: &kafka.Writer{
-			Addr:  kafka.TCP(strings.Split(cfg.Brokers, ",")...),
-			Topic: cfg.Topic,
+			Addr:         kafka.TCP(strings.Split(cfg.Brokers, ",")...),
+			Topic:        cfg.Topic,
 			Balancer:     &kafka.Hash{},
 			BatchTimeout: 10 * time.Millisecond,
 		},

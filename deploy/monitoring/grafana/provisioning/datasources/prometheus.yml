@@ -1,0 +1,14 @@
+# Auto-provisioned Grafana datasource: Grafana connects to Prometheus on the
+# compose network at startup, so there is no manual "Add data source" step.
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    # Stable uid so provisioned dashboards can reference this datasource by uid.
+    uid: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+
+    editable: true

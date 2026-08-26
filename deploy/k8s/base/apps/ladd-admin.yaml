@@ -52,6 +52,14 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8092
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8092 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: 8092 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
           volumeMounts:
             - name: keys
               mountPath: /keys # age identity lands at /keys/identity.txt

@@ -12,6 +12,7 @@ type Config struct {
 
 	NormalizedTopic string
 	FilteredTopic   string
+	DLQTopic        string // dead-letter topic for poison (unparseable) messages
 	Group           string
 
 	LADDDir     string        // active dir: holds the in-effect LADD_Industry_Filter_*.txt; newest date wins
@@ -20,7 +21,8 @@ type Config struct {
 	MaxAge      time.Duration // staleness limit measured from a file's PUBLICATION date
 	CheckEvery  time.Duration // how often the reloader promotes from staging and re-scans active
 
-	Workers int // number of concurrent processing workers
+	Workers int    // number of concurrent processing workers
+	OpsAddr string // host:port for the ops endpoint (/metrics, /healthz, /readyz)
 }
 
 func Load() Config {
@@ -34,6 +36,7 @@ func Load() Config {
 		Brokers:         envOr("KAFKA_BROKERS", "localhost:9092"),
 		NormalizedTopic: envOr("KAFKA_TOPIC_NORMALIZED", "fixm.normalized"),
 		FilteredTopic:   envOr("KAFKA_TOPIC_FILTERED", "fixm.filtered"),
+		DLQTopic:        envOr("KAFKA_TOPIC_FILTERED_DLQ", "fixm.filtered.dlq"),
 		Group:           envOr("KAFKA_GROUP", "filter"),
 
 		LADDDir:     active,
@@ -43,6 +46,7 @@ func Load() Config {
 		CheckEvery:  envDuration("LADD_CHECK_EVERY", time.Hour),
 
 		Workers: envInt("FILTER_WORKERS", 1000),
+		OpsAddr: envOr("OPS_ADDR", ":2113"),
 	}
 }
 

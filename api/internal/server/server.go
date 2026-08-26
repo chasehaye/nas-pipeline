@@ -8,9 +8,12 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 
+	platformhealth "github.com/chasehaye/nas-pipeline/platform/health"
+	platformmetrics "github.com/chasehaye/nas-pipeline/platform/metrics"
+
 	"github.com/chasehaye/nas-pipeline/api/internal/durable"
-	"github.com/chasehaye/nas-pipeline/api/internal/health"
 	"github.com/chasehaye/nas-pipeline/api/internal/live"
+	"github.com/chasehaye/nas-pipeline/api/internal/metrics"
 )
 
 func Setup(
@@ -22,12 +25,25 @@ func Setup(
 	r := gin.New()
 	r.Use(
 		gin.Recovery(),
+		metrics.Middleware(), // record RED metrics for every request
 		timeoutMiddleware(reqTimeout),
-		gzip.Gzip(gzip.DefaultCompression),
+		// Exclude /metrics: promhttp gzips itself; compressing again double-gzips
+		// the scrape and Prometheus can't parse it.
+		gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedPaths([]string{"/metrics"})),
 		corsMiddleware(corsOrigins),
 	)
 
-	r.GET("/healthz", health.NewHandler(liveStore).Healthz)
+	// Ops surface on the same server; readiness gates on the stores.
+	r.GET("/metrics", gin.WrapH(platformmetrics.Handler()))
+	r.GET("/healthz", gin.WrapF(platformhealth.Live))
+
+	checks := []platformhealth.Check{
+		func(ctx context.Context) error { return liveStore.Ping(ctx) },
+	}
+	if durableStore != nil {
+		checks = append(checks, func(ctx context.Context) error { return durableStore.Ping(ctx) })
+	}
+	r.GET("/readyz", gin.WrapF(platformhealth.Ready(checks...)))
 
 	live.Routes(r, liveStore)
 

@@ -5,7 +5,6 @@ import (
 	"fmt"
 )
 
-
 func EncodeOne(m Message) ([]byte, error) {
 	data, err := json.Marshal(m)
 	if err != nil {

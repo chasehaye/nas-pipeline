@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/joho/godotenv"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
+	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/ops"
 
 	"github.com/chasehaye/nas-pipeline/processor/internal/config"
 	"github.com/chasehaye/nas-pipeline/processor/internal/kafka"
@@ -12,11 +17,22 @@ import (
 )
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	if err := godotenv.Load(); err != nil {
-		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+		slog.Info("no .env file loaded; using environment and defaults", "err", err)
 	}
 
 	cfg := config.Load()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Ops endpoint (/metrics, /healthz, /readyz); readiness pings Kafka.
+	go ops.Serve(ctx, cfg.OpsAddr, func(c context.Context) error {
+		return kafkax.Ping(c, cfg.Brokers)
+	})
 
 	consumer := kafka.NewConsumer(kafka.ConsumerConfig{
 		Brokers: cfg.Brokers,
@@ -31,7 +47,12 @@ func main() {
 	})
 	defer producer.Close()
 
-	if err := pipeline.New(consumer, producer, cfg.Workers).Run(context.Background()); err != nil {
-		log.Fatal(err)
+	// Dead-letter writer for poison (unparseable) envelopes.
+	dlq := kafkax.NewDLQ(cfg.Brokers, cfg.DLQTopic)
+	defer dlq.Close()
+
+	if err := pipeline.New(consumer, producer, dlq, cfg.Workers).Run(ctx); err != nil {
+		slog.Error("pipeline stopped", "err", err)
+		os.Exit(1)
 	}
 }

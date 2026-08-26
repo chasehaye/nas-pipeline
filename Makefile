@@ -23,8 +23,9 @@ endif
 help:
 	@echo "nas-pipeline targets:"
 	@echo ------------------------------------------------------------------------------------------
-	@echo -  make up         start infra (Kafka/Redis/Postgres) + create topics
+	@echo -  make up         start infra (Kafka/Redis/Postgres/Prometheus/Grafana) + create topics
 	@echo -  make down       stop infra
+	@echo "                  Grafana http://localhost:3000 - Prometheus http://localhost:9090"
 	@echo -------------------------------------------------------------------------------------------
 	@echo -  make services   run all services (separate windows on Windows)
 	@echo ------------------------------------------------------------------------------------------
@@ -87,6 +88,7 @@ web:
 # ---------- test ----------
 .PHONY: test
 test:
+	cd platform && go test $(GOTEST_FLAGS) ./...
 	cd ladd-admin && go test $(GOTEST_FLAGS) ./...
 	cd normalizer && go test $(GOTEST_FLAGS) ./...
 	cd filter && go test $(GOTEST_FLAGS) ./...

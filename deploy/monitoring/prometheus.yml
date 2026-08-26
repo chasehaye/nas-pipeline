@@ -1,0 +1,41 @@
+# Prometheus scrape config for local dev.
+#
+# Services run on the HOST (make services), while Prometheus runs in the compose
+# network — so it reaches the normalizer's /metrics through host.docker.internal,
+# which the compose file maps to the host gateway.
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  # Prometheus scraping itself — handy sanity check that scraping works at all.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: normalizer
+    static_configs:
+      - targets: ["host.docker.internal:2112"]
+
+  - job_name: filter
+    static_configs:
+      - targets: ["host.docker.internal:2113"]
+
+  - job_name: cache-writer
+    static_configs:
+      - targets: ["host.docker.internal:2114"]
+
+  - job_name: database-writer
+    static_configs:
+      - targets: ["host.docker.internal:2115"]
+
+  # api is an HTTP service: /metrics is on its main server port, not a side port.
+  - job_name: api
+    static_configs:
+      - targets: ["host.docker.internal:8090"]
+
+  # Consumer-group lag for every consumer. Runs in the compose network, so it's
+  # reachable by service name (not host.docker.internal).
+  - job_name: kafka-exporter
+    static_configs:
+      - targets: ["kafka-exporter:9308"]

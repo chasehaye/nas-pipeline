@@ -28,5 +28,9 @@ spec:
               }
               create fixm.raw 1
               create fixm.normalized 1
+              create fixm.normalized.dlq 1
               create fixm.filtered 1
+              create fixm.filtered.dlq 1
+              create cache-writer.dlq 1
+              create database-writer.dlq 1
               echo "topics ready"

@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Brokers       string
 	FilteredTopic string
+	DLQTopic      string // dead-letter topic for poison (unparseable) messages
 	Group         string
 
 	RedisAddr     string
@@ -17,12 +18,15 @@ type Config struct {
 
 	FlightTTL time.Duration
 	KeyPrefix string // redis key prefix, e.g. "flight:"
+
+	OpsAddr string // host:port for the ops endpoint (/metrics, /healthz, /readyz)
 }
 
 func Load() Config {
 	return Config{
 		Brokers:       envOr("KAFKA_BROKERS", "localhost:9092"),
 		FilteredTopic: envOr("KAFKA_TOPIC_FILTERED", "fixm.filtered"),
+		DLQTopic:      envOr("KAFKA_TOPIC_CACHE_DLQ", "cache-writer.dlq"),
 		Group:         envOr("KAFKA_GROUP", "redis-writer"),
 
 		RedisAddr:     envOr("REDIS_ADDR", "localhost:6379"),
@@ -31,6 +35,8 @@ func Load() Config {
 
 		FlightTTL: envDuration("FLIGHT_TTL", 3*time.Minute),
 		KeyPrefix: envOr("REDIS_KEY_PREFIX", "flight:"),
+
+		OpsAddr: envOr("OPS_ADDR", ":2114"),
 	}
 }
 

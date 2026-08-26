@@ -20,9 +20,9 @@ type Consumer struct {
 func NewConsumer(cfg ConsumerConfig) *Consumer {
 	return &Consumer{
 		reader: kafka.NewReader(kafka.ReaderConfig{
-			Brokers: strings.Split(cfg.Brokers, ","),
-			Topic:   cfg.Topic,
-			GroupID: cfg.Group,
+			Brokers:     strings.Split(cfg.Brokers, ","),
+			Topic:       cfg.Topic,
+			GroupID:     cfg.Group,
 			StartOffset: kafka.LastOffset,
 			MinBytes:    1,
 			MaxBytes:    10 << 20,

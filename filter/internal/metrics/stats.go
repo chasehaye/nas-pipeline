@@ -1,9 +1,9 @@
 package metrics
 
 import (
-	"fmt"
+	"log/slog"
+	"sync/atomic"
 	"time"
-	"sync/atomic" 
 )
 
 type Stats struct {
@@ -23,15 +23,24 @@ func (s *Stats) megabytes() float64 {
 	return float64(s.BytesRead.Load()) / 1024 / 1024
 }
 
-func (s *Stats) Progress() string {
-	elapsed := time.Since(s.start).Seconds()
+// LogValue implements slog.LogValuer so a *Stats logs as a structured group.
+func (s *Stats) LogValue() slog.Value {
+	elapsed := time.Since(s.start)
+	secs := elapsed.Seconds()
 	flights := s.Flights.Load()
-	return fmt.Sprintf("flights=%d  %.0f/sec  forwarded=%d  blocked=%d  %d parse errors",
-		flights, float64(flights)/elapsed, s.Forwarded.Load(), s.Blocked.Load(), s.ParseErrors.Load())
-}
 
-func (s *Stats) Summary() string {
-	return fmt.Sprintf("stopped: %d flights, %.1f MB, forwarded=%d, blocked=%d, %d parse errors, %s elapsed",
-		s.Flights.Load(), s.megabytes(), s.Forwarded.Load(), s.Blocked.Load(), s.ParseErrors.Load(),
-		time.Since(s.start).Round(time.Millisecond))
+	perSec := 0.0
+	if secs > 0 {
+		perSec = float64(flights) / secs
+	}
+
+	return slog.GroupValue(
+		slog.Int64("flights", flights),
+		slog.Float64("mb", s.megabytes()),
+		slog.Float64("per_sec", perSec),
+		slog.Int64("forwarded", s.Forwarded.Load()),
+		slog.Int64("blocked", s.Blocked.Load()),
+		slog.Int64("parse_errors", s.ParseErrors.Load()),
+		slog.Duration("elapsed", elapsed.Round(time.Millisecond)),
+	)
 }

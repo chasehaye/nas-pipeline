@@ -22,7 +22,7 @@ func New(ctx context.Context, dsn string) (*Store, error) {
 }
 
 func (s *Store) Ping(ctx context.Context) error { return s.pool.Ping(ctx) }
-func (s *Store) Close()                          { s.pool.Close() }
+func (s *Store) Close()                         { s.pool.Close() }
 
 // Flight is a flight's stored metadata. Nullable columns are pointers so they
 // serialize as absent rather than zero values.

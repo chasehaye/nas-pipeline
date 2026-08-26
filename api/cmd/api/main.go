@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+
+	"github.com/chasehaye/nas-pipeline/platform/log"
 
 	"github.com/chasehaye/nas-pipeline/api/internal/config"
 	"github.com/chasehaye/nas-pipeline/api/internal/durable"
@@ -14,6 +17,9 @@ import (
 )
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	_ = godotenv.Load()
 
 	cfg := config.Load()
@@ -24,7 +30,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := liveStore.Ping(ctx); err != nil {
-		log.Fatalf("redis unreachable at %s: %v", cfg.RedisAddr, err)
+		slog.Error("redis unreachable", "addr", cfg.RedisAddr, "err", err)
+		os.Exit(1)
 	}
 
 	// Durable (Postgres) is optional: if it's unreachable the live map still
@@ -34,12 +41,13 @@ func main() {
 		defer durableStore.Close()
 	}
 
-	log.Printf("Server: listening on %s, reading redis %s (prefix %q)",
-		cfg.HTTPAddr, cfg.RedisAddr, cfg.KeyPrefix)
+	slog.Info("api starting",
+		"addr", cfg.HTTPAddr, "redis", cfg.RedisAddr, "prefix", cfg.KeyPrefix)
 
 	r := server.Setup(liveStore, durableStore, cfg.CORSOrigins, cfg.RequestTimeout)
 	if err := r.Run(cfg.HTTPAddr); err != nil {
-		log.Fatal(err)
+		slog.Error("server stopped", "err", err)
+		os.Exit(1)
 	}
 }
 
@@ -52,14 +60,14 @@ func connectDatabase(dsn string) *durable.Store {
 
 	d, err := durable.New(ctx, dsn)
 	if err != nil {
-		log.Printf("durable disabled: postgres connect failed: %v", err)
+		slog.Warn("durable disabled: postgres connect failed", "err", err)
 		return nil
 	}
 	if err := d.Ping(ctx); err != nil {
-		log.Printf("durable disabled: postgres unreachable: %v", err)
+		slog.Warn("durable disabled: postgres unreachable", "err", err)
 		d.Close()
 		return nil
 	}
-	log.Print("durable: postgres reachable, /durable routes enabled")
+	slog.Info("durable: postgres reachable, /durable routes enabled")
 	return d
 }

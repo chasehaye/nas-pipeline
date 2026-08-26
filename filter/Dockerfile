@@ -1,12 +1,15 @@
 # syntax=docker/dockerfile:1
 
 # ---- build ----
+# Build context is the REPO ROOT so the shared platform module is available.
+# Build with:  docker build -f filter/Dockerfile .
 FROM golang:1.26.1 AS build
 WORKDIR /src
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -p=1 -trimpath -ldflags="-s -w" \
+COPY platform/ ./platform/
+COPY filter/go.mod filter/go.sum ./filter/
+RUN cd filter && go mod download
+COPY filter/ ./filter/
+RUN cd filter && CGO_ENABLED=0 GOOS=linux go build -p=1 -trimpath -ldflags="-s -w" \
     -o /out/filter ./cmd/filter
 
 # ---- runtime ----

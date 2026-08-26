@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"fmt"
+	"log/slog"
 	"time"
 )
 
@@ -19,14 +19,24 @@ func NewStats() *Stats { return &Stats{start: time.Now()} }
 
 func (s *Stats) megabytes() float64 { return float64(s.BytesRead) / 1024 / 1024 }
 
-func (s *Stats) Progress() string {
-	elapsed := time.Since(s.start).Seconds()
-	return fmt.Sprintf("messages=%d  %.0f/sec  recorded=%d  positions=%d  skipped=%d  %d parse errors",
-		s.Messages, float64(s.Messages)/elapsed, s.Recorded, s.Positions, s.Skipped, s.ParseErrors)
-}
+// LogValue implements slog.LogValuer so a *Stats logs as a structured group.
+func (s *Stats) LogValue() slog.Value {
+	elapsed := time.Since(s.start)
+	secs := elapsed.Seconds()
 
-func (s *Stats) Summary() string {
-	return fmt.Sprintf("stopped: %d messages, %.1f MB, recorded=%d, positions=%d, skipped=%d, %d parse errors, %s elapsed",
-		s.Messages, s.megabytes(), s.Recorded, s.Positions, s.Skipped, s.ParseErrors,
-		time.Since(s.start).Round(time.Millisecond))
+	perSec := 0.0
+	if secs > 0 {
+		perSec = float64(s.Messages) / secs
+	}
+
+	return slog.GroupValue(
+		slog.Int64("messages", s.Messages),
+		slog.Float64("mb", s.megabytes()),
+		slog.Float64("per_sec", perSec),
+		slog.Int64("recorded", s.Recorded),
+		slog.Int64("positions", s.Positions),
+		slog.Int64("skipped", s.Skipped),
+		slog.Int64("parse_errors", s.ParseErrors),
+		slog.Duration("elapsed", elapsed.Round(time.Millisecond)),
+	)
 }

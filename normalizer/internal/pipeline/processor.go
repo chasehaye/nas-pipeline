@@ -2,7 +2,7 @@ package pipeline
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"sync"
@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
 
 	"github.com/chasehaye/nas-pipeline/processor/internal/fixm"
 	"github.com/chasehaye/nas-pipeline/processor/internal/metrics"
@@ -30,28 +32,32 @@ type Publisher interface {
 	Publish(ctx context.Context, msgs ...kafka.Message) error
 }
 
+type DLQPublisher interface {
+	Publish(ctx context.Context, orig kafka.Message, stage, class, cause string) error
+}
+
 type Processor struct {
 	fetcher   Fetcher
 	publisher Publisher
+	dlq       DLQPublisher
 	workers   int
 	batchSize int
 }
 
-func New(fetcher Fetcher, publisher Publisher, workers int) *Processor {
+func New(fetcher Fetcher, publisher Publisher, dlq DLQPublisher, workers int) *Processor {
 	if workers < 1 {
 		workers = 1
 	}
 	return &Processor{
 		fetcher:   fetcher,
 		publisher: publisher,
+		dlq:       dlq,
 		workers:   workers,
 		batchSize: defaultBatchSize,
 	}
 }
 
-// job = one raw envelope to process, tagged with the batch's WaitGroup (to
-// signal done) and the batch's failure flag (set if its flights fail to
-// publish, to gate the commit).
+// job = one envelope tagged with its batch's WaitGroup and shared failure flag.
 type job struct {
 	msg    kafka.Message
 	wg     *sync.WaitGroup
@@ -64,8 +70,6 @@ func (p *Processor) Run(ctx context.Context) error {
 
 	stats := metrics.NewStats()
 
-	// One shared channel; N persistent workers pull from it concurrently. The
-	// per-envelope work (XML parse -> encode -> publish) is CPU-heavy
 	jobs := make(chan job, p.batchSize)
 	var pool sync.WaitGroup
 	for i := 0; i < p.workers; i++ {
@@ -81,23 +85,22 @@ func (p *Processor) Run(ctx context.Context) error {
 	defer func() {
 		close(jobs)
 		pool.Wait()
-		log.Print(stats.Summary())
+		slog.Info("shutting down", "stats", stats)
 	}()
 
 	for {
 		batch, err := p.readBatch(ctx)
 		if err != nil {
 			if ctx.Err() != nil {
-				return nil // shutdown: deferred cleanup runs
+				return nil
 			}
-			log.Printf("consume error: %v", err)
+			slog.Error("consume error", "err", err)
 			continue
 		}
 		if len(batch) == 0 {
 			continue
 		}
 
-		// Fan the batch out to the workers, then wait for ALL of it to finish.
 		var wg sync.WaitGroup
 		var failed atomic.Bool
 		wg.Add(len(batch))
@@ -106,20 +109,17 @@ func (p *Processor) Run(ctx context.Context) error {
 		}
 		wg.Wait()
 
-		// Commit ONLY after the whole batch is published, and only if nothing
-		// failed (else leave it uncommitted to reprocess on restart).
+		// Commit the batch only if nothing failed; otherwise reprocess on restart.
 		if failed.Load() {
-			log.Print("batch had publish errors; not committing (will reprocess)")
+			slog.Warn("batch had publish errors; not committing (will reprocess)")
 			continue
 		}
-		// Single partition: messages arrive in offset order, so the last one is
-		// the highest offset — committing it checkpoints the whole batch.
 		p.commit(ctx, batch[len(batch)-1])
 	}
 }
 
 // readBatch blocks for the first envelope, then drains up to batchSize more
-// until full OR flushTimeout elapses — so light traffic never stalls.
+// until full or flushTimeout elapses.
 func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	first, err := p.fetcher.Fetch(ctx)
 	if err != nil {
@@ -133,46 +133,78 @@ func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	for len(batch) < p.batchSize {
 		msg, err := p.fetcher.Fetch(dctx)
 		if err != nil {
-			break // timeout or cancel: flush the partial batch
+			break
 		}
 		batch = append(batch, msg)
 	}
 	return batch, nil
 }
 
-// process = parse one envelope into flights and publish them (original logic,
-// now run by a worker). One envelope in -> many flights out.
 func (p *Processor) process(ctx context.Context, msg kafka.Message, stats *metrics.Stats, failed *atomic.Bool) {
+	start := time.Now()
+	defer func() { metrics.ProcessDuration.Observe(time.Since(start).Seconds()) }()
+
 	n := stats.Envelopes.Add(1)
+	metrics.EnvelopesProcessed.Inc()
 	stats.BytesRead.Add(int64(len(msg.Value)))
 	if n%1000 == 0 {
-		log.Print(stats.Progress())
+		slog.Info("progress", "stats", stats)
 	}
 
+	// Parse / encode failures are poison → dead-letter, don't retry.
 	flights, err := fixm.ParseEnvelope(msg.Value)
 	if err != nil {
 		stats.ParseErrors.Add(1)
-		log.Printf("process error offset %d: %v", msg.Offset, err)
-		return // dropped, but legitimately "done"
-	}
-
-	if err := p.publishFlights(ctx, flights); err != nil {
-		log.Printf("publish error offset %d: %v", msg.Offset, err)
-		failed.Store(true) // gate the batch commit
+		metrics.ParseErrors.Inc()
+		p.deadLetter(ctx, msg, "parse", err, failed)
 		return
 	}
+
+	msgs, err := encodeFlights(flights)
+	if err != nil {
+		p.deadLetter(ctx, msg, "encode", err, failed)
+		return
+	}
+	if len(msgs) == 0 {
+		return
+	}
+
+	// Publish failure is transient → retry; if still failing, gate the commit.
+	err = kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
+		return p.publisher.Publish(ctx, msgs...)
+	})
+	if err != nil {
+		metrics.PublishErrors.Inc()
+		slog.Error("publish failed after retries", "offset", msg.Offset, "err", err)
+		failed.Store(true)
+		return
+	}
+
+	metrics.FlightsPublished.Add(float64(len(msgs)))
 }
 
-func (p *Processor) publishFlights(ctx context.Context, flights []fixm.Message) error {
+// deadLetter quarantines a poison message. A failed DLQ write is transient, so
+// gate the commit rather than lose the message.
+func (p *Processor) deadLetter(ctx context.Context, msg kafka.Message, reason string, cause error, failed *atomic.Bool) {
+	if err := p.dlq.Publish(ctx, msg, "normalizer", "poison", cause.Error()); err != nil {
+		slog.Error("dlq publish failed", "offset", msg.Offset, "reason", reason, "err", err)
+		failed.Store(true)
+		return
+	}
+	metrics.DLQPublished.Inc()
+	slog.Warn("dead-lettered poison envelope", "offset", msg.Offset, "reason", reason, "err", cause)
+}
+
+func encodeFlights(flights []fixm.Message) ([]kafka.Message, error) {
 	if len(flights) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	msgs := make([]kafka.Message, 0, len(flights))
 	for _, f := range flights {
 		data, err := fixm.EncodeOne(f)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		msgs = append(msgs, kafka.Message{
 			Key:   []byte(f.Flight.Gufi.Code),
@@ -180,11 +212,11 @@ func (p *Processor) publishFlights(ctx context.Context, flights []fixm.Message) 
 		})
 	}
 
-	return p.publisher.Publish(ctx, msgs...)
+	return msgs, nil
 }
 
 func (p *Processor) commit(ctx context.Context, msg kafka.Message) {
 	if err := p.fetcher.Commit(ctx, msg); err != nil {
-		log.Printf("commit error: %v", err)
+		slog.Error("commit failed", "err", err)
 	}
 }

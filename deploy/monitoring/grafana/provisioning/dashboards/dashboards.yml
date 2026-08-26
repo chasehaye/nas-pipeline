@@ -1,0 +1,15 @@
+# Dashboard provider: load every dashboard JSON in the path below at startup.
+# allowUiUpdates:false keeps them read-only in the UI — git is the source of
+# truth. Edit the JSON file and Grafana reloads it (updateIntervalSeconds).
+apiVersion: 1
+
+providers:
+  - name: nas-pipeline
+    orgId: 1
+    type: file
+    disableDeletion: false
+    allowUiUpdates: false
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: false

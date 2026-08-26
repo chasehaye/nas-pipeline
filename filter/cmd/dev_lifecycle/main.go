@@ -33,8 +33,8 @@ import (
 // few fields this analysis needs.
 type element struct {
 	Flight struct {
-		Timestamp    string `json:"timestamp"`
-		Gufi         struct {
+		Timestamp string `json:"timestamp"`
+		Gufi      struct {
 			Code string `json:"code"`
 		} `json:"gufi"`
 		FlightStatus struct {

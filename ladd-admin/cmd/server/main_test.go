@@ -11,9 +11,9 @@ import (
 
 	"filippo.io/age"
 
+	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/api"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/config"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/crypto"
-	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/api"
 )
 
 type mockSecrets struct {

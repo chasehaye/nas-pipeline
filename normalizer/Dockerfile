@@ -1,14 +1,15 @@
 # syntax=docker/dockerfile:1
 
 # ---- build ----
+# Build context is the REPO ROOT so the shared platform module is available.
+# Build with:  docker build -f normalizer/Dockerfile .
 FROM golang:1.26.1 AS build
 WORKDIR /src
-# Copy manifests first so `go mod download` is cached across code-only changes.
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-# Static binary (CGO off) so it runs in a distroless/scratch image.
-RUN CGO_ENABLED=0 GOOS=linux go build -p=1 -trimpath -ldflags="-s -w" \
+COPY platform/ ./platform/
+COPY normalizer/go.mod normalizer/go.sum ./normalizer/
+RUN cd normalizer && go mod download
+COPY normalizer/ ./normalizer/
+RUN cd normalizer && CGO_ENABLED=0 GOOS=linux go build -p=1 -trimpath -ldflags="-s -w" \
     -o /out/normalizer ./cmd/normalizer
 
 # ---- runtime ----

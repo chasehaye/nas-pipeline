@@ -7,7 +7,9 @@ data:
   KAFKA_BROKERS: "kafka:29092"
   KAFKA_TOPIC_NORMALIZED: "fixm.normalized"
   KAFKA_TOPIC_FILTERED: "fixm.filtered"
+  KAFKA_TOPIC_FILTERED_DLQ: "fixm.filtered.dlq"
   KAFKA_GROUP: "filter"
+  OPS_ADDR: ":2112"
   LADD_DIR: "/data/ladd/active"
   LADD_MAX_AGE: "216h"
   LADD_CHECK_EVERY: "1h"
@@ -32,6 +34,17 @@ spec:
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef: { name: filter-config }
+          ports:
+            - containerPort: 2112
+              name: ops
+          livenessProbe:
+            httpGet: { path: /healthz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
           volumeMounts:
             - name: ladd
               mountPath: /data/ladd/active

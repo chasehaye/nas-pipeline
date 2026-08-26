@@ -56,7 +56,11 @@ services:
         }
         create fixm.raw 1
         create fixm.normalized 1
+        create fixm.normalized.dlq 1
         create fixm.filtered 1
+        create fixm.filtered.dlq 1
+        create cache-writer.dlq 1
+        create database-writer.dlq 1
         echo "topics ready"
 
   redis:
@@ -120,6 +124,48 @@ services:
     volumes:
       - redisinsight-data:/data
 
+  # Metrics store. Scrapes services' /metrics on an interval (pull model).
+  # UI + query console at http://localhost:9090 (try: rate(normalizer_envelopes_processed_total[1m])).
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: nas-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deploy/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    # Lets Prometheus reach host-run services (make services) at host.docker.internal.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Exposes Kafka consumer-group lag as Prometheus metrics. The broker owns lag
+  # (not the services), so this sidecar reads it and Prometheus scrapes it.
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    container_name: nas-kafka-exporter
+    command: ["--kafka.server=kafka:29092"]
+    ports:
+      - "9308:9308"
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  # Dashboards over Prometheus. http://localhost:3000 (anonymous admin in dev).
+  grafana:
+    image: grafana/grafana:latest
+    container_name: nas-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    volumes:
+      - ./deploy/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
   # Postgres/TimescaleDB UI. Not required. Auto-connects to the history DB.
   # Browse flights + positions and run SQL at http://localhost:8081
   pgweb:
@@ -138,3 +184,5 @@ volumes:
   redis-data:
   postgres-data:
   redisinsight-data:
+  prometheus-data:
+  grafana-data:

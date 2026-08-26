@@ -2,7 +2,6 @@ package flight
 
 import "encoding/json"
 
-
 type Ident struct {
 	CallSign     string
 	Registration string
@@ -22,13 +21,11 @@ type element struct {
 	} `json:"flight"`
 }
 
-
 type Message struct {
 	Raw   json.RawMessage
 	Ident Ident
 	Gufi  string
 }
-
 
 func Parse(payload []byte) (Message, error) {
 	var e element

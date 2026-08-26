@@ -5,7 +5,7 @@ import (
 	"crypto/ed25519"
 	"encoding/json"
 	"errors"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,11 +15,14 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"github.com/chasehaye/nas-pipeline/platform/health"
+	"github.com/chasehaye/nas-pipeline/platform/log"
+
+	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/api"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/config"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/crypto"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/ksecret"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/validate"
-	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/api"
 )
 
 type secretWriter interface {
@@ -34,31 +37,39 @@ type server struct {
 }
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	if err := godotenv.Load(); err != nil {
-		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+		slog.Info("no .env file loaded; using environment and defaults", "err", err)
 	}
 
 	cfg := config.Load()
 
 	identity, err := readIdentity(cfg.IdentityPath)
 	if err != nil {
-		log.Fatalf("load identity: %v", err)
+		slog.Error("load identity failed", "err", err)
+		os.Exit(1)
 	}
 
 	operatorPub, err := readOperatorPub(cfg.OperatorPubKey)
 	if err != nil {
-		log.Fatalf("load operator public key: %v", err)
+		slog.Error("load operator public key failed", "err", err)
+		os.Exit(1)
 	}
 
 	secrets, err := ksecret.New(cfg.SecretNS, cfg.SecretName)
 	if err != nil {
-		log.Fatalf("k8s client: %v", err)
+		slog.Error("k8s client init failed", "err", err)
+		os.Exit(1)
 	}
 
 	s := &server{cfg: cfg, identity: identity, operatorPub: operatorPub, secrets: secrets}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", s.health)
+	// Shared platform health probes: liveness always ok; readiness ok once serving.
+	mux.HandleFunc("GET /healthz", health.Live)
+	mux.Handle("GET /readyz", health.Ready())
 	mux.HandleFunc("POST /upload", s.upload)
 
 	srv := &http.Server{
@@ -71,9 +82,10 @@ func main() {
 	defer stop()
 
 	go func() {
-		log.Printf("ladd-admin listening on %s (secret %s/%s)", cfg.Addr, cfg.SecretNS, cfg.SecretName)
+		slog.Info("ladd-admin listening", "addr", cfg.Addr, "secret", cfg.SecretNS+"/"+cfg.SecretName)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("server: %v", err)
+			slog.Error("server stopped", "err", err)
+			os.Exit(1)
 		}
 	}()
 
@@ -81,11 +93,6 @@ func main() {
 	shutCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	_ = srv.Shutdown(shutCtx)
-}
-
-func (s *server) health(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
 }
 
 func (s *server) upload(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +111,7 @@ func (s *server) upload(w http.ResponseWriter, r *http.Request) {
 
 	plain, err := crypto.Decrypt(req.Ciphertext, s.identity)
 	if err != nil {
-		log.Printf("decrypt failed: %v", err)
+		slog.Warn("decrypt failed", "err", err)
 		writeJSON(w, http.StatusBadRequest, api.UploadResponse{Message: "decryption failed"})
 		return
 	}
@@ -116,12 +123,12 @@ func (s *server) upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := s.secrets.Replace(r.Context(), res.Name, plain); err != nil {
-		log.Printf("secret update failed: %v", err)
+		slog.Error("secret update failed", "err", err)
 		writeJSON(w, http.StatusInternalServerError, api.UploadResponse{Message: "failed to store list"})
 		return
 	}
 
-	log.Printf("LADD updated: %s (%d entries, effective %s)", res.Name, res.Entries, res.Date.Format("2006-01-02"))
+	slog.Info("LADD updated", "name", res.Name, "entries", res.Entries, "effective", res.Date.Format("2006-01-02"))
 	writeJSON(w, http.StatusOK, api.UploadResponse{OK: true, Entries: res.Entries, Message: "updated"})
 }
 

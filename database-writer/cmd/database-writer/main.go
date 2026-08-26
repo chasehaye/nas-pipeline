@@ -2,10 +2,15 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
+	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/ops"
 
 	"github.com/chasehaye/nas-pipeline/database-writer/internal/config"
 	"github.com/chasehaye/nas-pipeline/database-writer/internal/kafka"
@@ -14,8 +19,11 @@ import (
 )
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	if err := godotenv.Load(); err != nil {
-		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+		slog.Info("no .env file loaded; using environment and defaults", "err", err)
 	}
 
 	cfg := config.Load()
@@ -25,14 +33,26 @@ func main() {
 
 	st, err := store.New(ctx, cfg.DatabaseURL)
 	if err != nil {
-		log.Fatalf("postgres connect: %v", err)
+		slog.Error("postgres connect failed", "err", err)
+		os.Exit(1)
 	}
 	defer st.Close()
+
+	// Dead-letter writer for poison (unparseable) messages.
+	dlq := kafkax.NewDLQ(cfg.Brokers, cfg.DLQTopic)
+	defer dlq.Close()
+
+	// Ops endpoint (/metrics, /healthz, /readyz); readiness pings Kafka and Postgres.
+	go ops.Serve(ctx, cfg.OpsAddr,
+		func(c context.Context) error { return kafkax.Ping(c, cfg.Brokers) },
+		func(c context.Context) error { return st.Ping(c) },
+	)
 
 	waitForPostgres(ctx, st)
 
 	if err := st.Migrate(ctx); err != nil {
-		log.Fatalf("migrate: %v", err)
+		slog.Error("migrate failed", "err", err)
+		os.Exit(1)
 	}
 
 	consumer := kafka.NewConsumer(kafka.ConsumerConfig{
@@ -42,11 +62,12 @@ func main() {
 	})
 	defer consumer.Close()
 
-	log.Printf("database-writer: %s -> postgres (group %q, batch %d / %s)",
-		cfg.FilteredTopic, cfg.Group, cfg.BatchSize, cfg.FlushTimeout)
+	slog.Info("database-writer started",
+		"topic", cfg.FilteredTopic, "group", cfg.Group, "batch", cfg.BatchSize, "flush", cfg.FlushTimeout)
 
-	if err := pipeline.New(consumer, st, cfg.BatchSize, cfg.FlushTimeout).Run(ctx); err != nil {
-		log.Fatal(err)
+	if err := pipeline.New(consumer, st, dlq, cfg.BatchSize, cfg.FlushTimeout).Run(ctx); err != nil {
+		slog.Error("pipeline stopped", "err", err)
+		os.Exit(1)
 	}
 }
 
@@ -58,7 +79,7 @@ func waitForPostgres(ctx context.Context, st *store.Store) {
 		if err == nil {
 			return
 		}
-		log.Printf("postgres not ready (%v); retrying in 2s", err)
+		slog.Warn("postgres not ready; retrying in 2s", "err", err)
 		select {
 		case <-ctx.Done():
 			return

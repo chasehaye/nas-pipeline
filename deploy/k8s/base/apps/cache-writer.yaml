@@ -6,7 +6,9 @@ metadata:
 data:
   KAFKA_BROKERS: "kafka:29092"
   KAFKA_TOPIC_FILTERED: "fixm.filtered"
+  KAFKA_TOPIC_CACHE_DLQ: "cache-writer.dlq"
   KAFKA_GROUP: "redis-writer"
+  OPS_ADDR: ":2112"
   REDIS_ADDR: "redis:6379"
   REDIS_KEY_PREFIX: "flight:"
   FLIGHT_TTL: "3m"
@@ -31,3 +33,14 @@ spec:
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef: { name: cache-writer-config }
+          ports:
+            - containerPort: 2112
+              name: ops
+          livenessProbe:
+            httpGet: { path: /healthz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10

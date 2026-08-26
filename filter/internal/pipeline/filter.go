@@ -3,7 +3,7 @@ package pipeline
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"sync"
@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
 
 	"github.com/chasehaye/nas-pipeline/filter/internal/flight"
 	"github.com/chasehaye/nas-pipeline/filter/internal/ladd"
@@ -32,29 +34,34 @@ type Publisher interface {
 	Publish(ctx context.Context, key, data []byte) error
 }
 
+type DLQPublisher interface {
+	Publish(ctx context.Context, orig kafka.Message, stage, class, cause string) error
+}
+
 type Filter struct {
 	fetcher   Fetcher
 	publisher Publisher
+	dlq       DLQPublisher
 	blocklist *ladd.Store
 	workers   int
 	batchSize int
 }
 
-func New(fetcher Fetcher, publisher Publisher, blocklist *ladd.Store, workers int) *Filter {
+func New(fetcher Fetcher, publisher Publisher, dlq DLQPublisher, blocklist *ladd.Store, workers int) *Filter {
 	if workers < 1 {
 		workers = 1
 	}
 	return &Filter{
 		fetcher:   fetcher,
 		publisher: publisher,
+		dlq:       dlq,
 		blocklist: blocklist,
 		workers:   workers,
 		batchSize: defaultBatchSize,
 	}
 }
 
-// job = one message, tagged with the batch's WaitGroup (to signal done) and the
-// batch's failure flag (set if its publish fails, to gate the commit).
+// job = one message tagged with its batch's WaitGroup and shared failure flag.
 type job struct {
 	msg    kafka.Message
 	wg     *sync.WaitGroup
@@ -67,7 +74,6 @@ func (f *Filter) Run(ctx context.Context) error {
 
 	stats := metrics.NewStats()
 
-	// One shared channel; N persistent workers pull from it concurrently.
 	jobs := make(chan job, f.batchSize)
 	var pool sync.WaitGroup
 	for i := 0; i < f.workers; i++ {
@@ -80,14 +86,14 @@ func (f *Filter) Run(ctx context.Context) error {
 			}
 		}()
 	}
-	// On exit: close the channel so workers drain & stop, then wait for them.
 	defer func() {
 		close(jobs)
 		pool.Wait()
-		log.Print(stats.Summary())
+		slog.Info("shutting down", "stats", stats)
 	}()
 
 	for {
+		// Fail closed: refuse to forward traffic if the LADD list is missing/stale.
 		if ok, reason := f.blocklist.Ready(); !ok {
 			return fmt.Errorf("filter halted (fail-closed): %s", reason)
 		}
@@ -95,16 +101,15 @@ func (f *Filter) Run(ctx context.Context) error {
 		batch, err := f.readBatch(ctx)
 		if err != nil {
 			if ctx.Err() != nil {
-				return nil // shutdown: deferred cleanup runs
+				return nil
 			}
-			log.Printf("consume error: %v", err)
+			slog.Error("consume error", "err", err)
 			continue
 		}
 		if len(batch) == 0 {
 			continue
 		}
 
-		// Fan the batch out to the workers, then wait for ALL of it to finish.
 		var wg sync.WaitGroup
 		var failed atomic.Bool
 		wg.Add(len(batch))
@@ -113,20 +118,17 @@ func (f *Filter) Run(ctx context.Context) error {
 		}
 		wg.Wait()
 
-		// Commit ONLY after the whole batch is published, and only if nothing
-		// failed to publish (else leave it uncommitted to reprocess on restart).
+		// Commit the batch only if nothing failed; otherwise reprocess on restart.
 		if failed.Load() {
-			log.Print("batch had publish errors; not committing (will reprocess)")
+			slog.Warn("batch had publish errors; not committing (will reprocess)")
 			continue
 		}
-		// Single partition: messages arrive in offset order, so the last one is
-		// the highest offset — committing it checkpoints the whole batch.
 		f.commit(ctx, batch[len(batch)-1])
 	}
 }
 
 // readBatch blocks for the first message, then drains up to batchSize more until
-// full OR flushTimeout elapses - so light traffic never stalls waiting to fill.
+// full or flushTimeout elapses.
 func (f *Filter) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	first, err := f.fetcher.Fetch(ctx)
 	if err != nil {
@@ -140,43 +142,68 @@ func (f *Filter) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	for len(batch) < f.batchSize {
 		msg, err := f.fetcher.Fetch(dctx)
 		if err != nil {
-			break // timeout or cancel: flush the partial batch
+			break
 		}
 		batch = append(batch, msg)
 	}
 	return batch, nil
 }
 
-// process = the original per-message logic, unchanged, now run by a worker.
 func (f *Filter) process(ctx context.Context, msg kafka.Message, stats *metrics.Stats, failed *atomic.Bool) {
+	start := time.Now()
+	defer func() { metrics.ProcessDuration.Observe(time.Since(start).Seconds()) }()
+
 	n := stats.Flights.Add(1)
+	metrics.FlightsProcessed.Inc()
 	stats.BytesRead.Add(int64(len(msg.Value)))
 	if n%1000 == 0 {
-		log.Print(stats.Progress())
+		slog.Info("progress", "stats", stats)
 	}
 
+	// Parse failure is poison → dead-letter, don't retry.
 	m, err := flight.Parse(msg.Value)
 	if err != nil {
 		stats.ParseErrors.Add(1)
-		log.Printf("parse error offset %d (dropped): %v", msg.Offset, err)
-		return // dropped, but legitimately "done"
+		metrics.ParseErrors.Inc()
+		f.deadLetter(ctx, msg, "parse", err, failed)
+		return
 	}
 
+	// A blocked flight is intentionally suppressed, not an error.
 	if f.blocklist.Blocks(m.Ident.CallSign, m.Ident.Registration) {
 		stats.Blocked.Add(1)
-		return // intentionally not published
+		metrics.Blocked.Inc()
+		return
 	}
 
-	if err := f.publisher.Publish(ctx, []byte(m.Gufi), m.Raw); err != nil {
-		log.Printf("publish error offset %d: %v", msg.Offset, err)
-		failed.Store(true) // gate the batch commit
+	// Publish failure is transient → retry; if still failing, gate the commit.
+	err = kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
+		return f.publisher.Publish(ctx, []byte(m.Gufi), m.Raw)
+	})
+	if err != nil {
+		metrics.PublishErrors.Inc()
+		slog.Error("publish failed after retries", "offset", msg.Offset, "err", err)
+		failed.Store(true)
 		return
 	}
 	stats.Forwarded.Add(1)
+	metrics.Forwarded.Inc()
+}
+
+// deadLetter quarantines a poison message. A failed DLQ write is transient, so
+// gate the commit rather than lose the message.
+func (f *Filter) deadLetter(ctx context.Context, msg kafka.Message, reason string, cause error, failed *atomic.Bool) {
+	if err := f.dlq.Publish(ctx, msg, "filter", "poison", cause.Error()); err != nil {
+		slog.Error("dlq publish failed", "offset", msg.Offset, "reason", reason, "err", err)
+		failed.Store(true)
+		return
+	}
+	metrics.DLQPublished.Inc()
+	slog.Warn("dead-lettered poison message", "offset", msg.Offset, "reason", reason, "err", cause)
 }
 
 func (f *Filter) commit(ctx context.Context, msg kafka.Message) {
 	if err := f.fetcher.Commit(ctx, msg); err != nil {
-		log.Printf("commit error: %v", err)
+		slog.Error("commit failed", "err", err)
 	}
 }

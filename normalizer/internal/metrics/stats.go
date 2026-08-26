@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"fmt"
+	"log/slog"
 	"sync/atomic"
 	"time"
 )
@@ -21,15 +21,22 @@ func (s *Stats) megabytes() float64 {
 	return float64(s.BytesRead.Load()) / 1024 / 1024
 }
 
-func (s *Stats) Progress() string {
-	elapsed := time.Since(s.start).Seconds()
+// LogValue implements slog.LogValuer so a *Stats logs as a structured group.
+func (s *Stats) LogValue() slog.Value {
+	elapsed := time.Since(s.start)
+	secs := elapsed.Seconds()
 	envelopes := s.Envelopes.Load()
-	return fmt.Sprintf("envelopes=%d  %.1f MB  %.0f/sec  %d parse errors",
-		envelopes, s.megabytes(), float64(envelopes)/elapsed, s.ParseErrors.Load())
-}
 
-func (s *Stats) Summary() string {
-	return fmt.Sprintf("stopped: %d envelopes, %.1f MB, %d parse errors, %s elapsed",
-		s.Envelopes.Load(), s.megabytes(), s.ParseErrors.Load(),
-		time.Since(s.start).Round(time.Millisecond))
+	perSec := 0.0
+	if secs > 0 {
+		perSec = float64(envelopes) / secs
+	}
+
+	return slog.GroupValue(
+		slog.Int64("envelopes", envelopes),
+		slog.Float64("mb", s.megabytes()),
+		slog.Float64("per_sec", perSec),
+		slog.Int64("parse_errors", s.ParseErrors.Load()),
+		slog.Duration("elapsed", elapsed.Round(time.Millisecond)),
+	)
 }

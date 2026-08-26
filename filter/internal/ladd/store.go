@@ -27,7 +27,6 @@ func (s *Store) Swap(set *Set, effectiveDate time.Time) {
 	s.current.Store(&snapshot{set: set, effectiveDate: effectiveDate})
 }
 
-
 func (s *Store) Reload(d Dirs) (swapped bool, err error) {
 	_, perr := Promote(d)
 

@@ -2,10 +2,15 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+
+	"github.com/chasehaye/nas-pipeline/platform/kafkax"
+	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/ops"
 
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/config"
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/kafka"
@@ -14,8 +19,11 @@ import (
 )
 
 func main() {
+	// Shared platform: JSON structured logging as the process-wide default.
+	log.Init(os.Getenv("LOG_LEVEL"))
+
 	if err := godotenv.Load(); err != nil {
-		log.Printf("no .env file loaded (%v); using environment and defaults", err)
+		slog.Info("no .env file loaded; using environment and defaults", "err", err)
 	}
 
 	cfg := config.Load()
@@ -30,16 +38,27 @@ func main() {
 	st := store.New(cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDB, cfg.KeyPrefix, cfg.FlightTTL)
 	defer st.Close()
 
+	// Dead-letter writer for poison (unparseable) messages.
+	dlq := kafkax.NewDLQ(cfg.Brokers, cfg.DLQTopic)
+	defer dlq.Close()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	// Ops endpoint (/metrics, /healthz, /readyz); readiness pings Kafka and Redis.
+	go ops.Serve(ctx, cfg.OpsAddr,
+		func(c context.Context) error { return kafkax.Ping(c, cfg.Brokers) },
+		func(c context.Context) error { return st.Ping(c) },
+	)
+
 	waitForRedis(ctx, st)
 
-	log.Printf("redis-service: %s -> redis %s (group %q, ttl %s)",
-		cfg.FilteredTopic, cfg.RedisAddr, cfg.Group, cfg.FlightTTL)
+	slog.Info("cache-writer started",
+		"topic", cfg.FilteredTopic, "redis", cfg.RedisAddr, "group", cfg.Group, "ttl", cfg.FlightTTL)
 
-	if err := pipeline.New(consumer, st).Run(ctx); err != nil {
-		log.Fatal(err)
+	if err := pipeline.New(consumer, st, dlq).Run(ctx); err != nil {
+		slog.Error("pipeline stopped", "err", err)
+		os.Exit(1)
 	}
 }
 
@@ -51,7 +70,7 @@ func waitForRedis(ctx context.Context, st *store.Store) {
 		if err == nil {
 			return
 		}
-		log.Printf("redis not ready (%v); retrying in 2s", err)
+		slog.Warn("redis not ready; retrying in 2s", "err", err)
 		select {
 		case <-ctx.Done():
 			return

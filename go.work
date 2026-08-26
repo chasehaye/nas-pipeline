@@ -1,0 +1,14 @@
+go 1.26.1
+
+// Local multi-module workspace: services resolve the shared platform module
+// from the local ./platform path during host dev (make services). Docker builds
+// don't use this file — each service's go.mod has a replace directive for that.
+use (
+	./api
+	./cache-writer
+	./database-writer
+	./filter
+	./ladd-admin
+	./normalizer
+	./platform
+)

@@ -55,9 +55,9 @@ type node struct {
 	maxRepeat int
 
 	// leaf text content, if any
-	hasText     bool
-	sampleText  string
-	textValues  map[string]int
+	hasText    bool
+	sampleText string
+	textValues map[string]int
 
 	attrs    map[string]*attr
 	children map[string]*node
@@ -87,8 +87,8 @@ type census struct {
 	envelopes int
 	flights   int
 	root      *node
-	seen   map[*node]int
-	seenAt map[*attr]bool
+	seen      map[*node]int
+	seenAt    map[*attr]bool
 }
 
 func newCensus() *census {

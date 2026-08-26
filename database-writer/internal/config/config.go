@@ -9,21 +9,26 @@ import (
 type Config struct {
 	Brokers       string
 	FilteredTopic string
+	DLQTopic      string // dead-letter topic for poison (unparseable) messages
 	Group         string
 	DatabaseURL   string
 
 	BatchSize    int
 	FlushTimeout time.Duration
+
+	OpsAddr string // host:port for the ops endpoint (/metrics, /healthz, /readyz)
 }
 
 func Load() Config {
 	return Config{
 		Brokers:       envOr("KAFKA_BROKERS", "localhost:9092"),
 		FilteredTopic: envOr("KAFKA_TOPIC_FILTERED", "fixm.filtered"),
+		DLQTopic:      envOr("KAFKA_TOPIC_DB_DLQ", "database-writer.dlq"),
 		Group:         envOr("KAFKA_GROUP", "database-writer"),
 		DatabaseURL:   envOr("DATABASE_URL", "postgres://naspipeline:changeme@localhost:5433/naspipeline?sslmode=disable"),
 		BatchSize:     envInt("DB_WRITER_BATCH_SIZE", 1000),
 		FlushTimeout:  envDuration("DB_WRITER_FLUSH_TIMEOUT", time.Second),
+		OpsAddr:       envOr("OPS_ADDR", ":2115"),
 	}
 }
 

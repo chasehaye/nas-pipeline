@@ -6,7 +6,9 @@ metadata:
 data:
   KAFKA_BROKERS: "kafka:29092"
   KAFKA_TOPIC_FILTERED: "fixm.filtered"
+  KAFKA_TOPIC_DB_DLQ: "database-writer.dlq"
   KAFKA_GROUP: "database-writer"
+  OPS_ADDR: ":2112"
   DB_WRITER_BATCH_SIZE: "500"
   DB_WRITER_FLUSH_TIMEOUT: "1s"
 
@@ -35,3 +37,14 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef: { name: postgres, key: DATABASE_URL }
+          ports:
+            - containerPort: 2112
+              name: ops
+          livenessProbe:
+            httpGet: { path: /healthz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: 2112 }
+            initialDelaySeconds: 5
+            periodSeconds: 10

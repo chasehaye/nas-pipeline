@@ -25,18 +25,16 @@ func NewProducer(cfg ProducerConfig) *Producer {
 				strings.Split(cfg.Brokers, ",")...,
 			),
 
-			Topic: cfg.Topic,
-			Balancer: &kafka.Hash{},
+			Topic:        cfg.Topic,
+			Balancer:     &kafka.Hash{},
 			BatchTimeout: 10 * time.Millisecond,
 		},
 	}
 }
 
-
 func (p *Producer) Close() error {
 	return p.writer.Close()
 }
-
 
 func (p *Producer) Publish(
 	ctx context.Context,

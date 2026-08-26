@@ -25,7 +25,7 @@ func New(ctx context.Context, dsn string) (*Store, error) {
 }
 
 func (s *Store) Ping(ctx context.Context) error { return s.pool.Ping(ctx) }
-func (s *Store) Close()                          { s.pool.Close() }
+func (s *Store) Close()                         { s.pool.Close() }
 
 // Migrate applies any pending schema migrations.
 func (s *Store) Migrate(ctx context.Context) error { return migrate.Run(ctx, s.pool) }
