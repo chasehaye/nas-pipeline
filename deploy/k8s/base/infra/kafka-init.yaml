@@ -24,7 +24,7 @@ spec:
                 /opt/kafka/bin/kafka-topics.sh --bootstrap-server $BS \
                   --create --if-not-exists --topic "$1" \
                   --partitions "$2" --replication-factor 1 \
-                  --config retention.ms=1209600000
+                  --config retention.ms=604800000
               }
               create fixm.raw 1
               create fixm.normalized 1

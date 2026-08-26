@@ -40,7 +40,7 @@ spec:
             - { name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS, value: "0" }
             - { name: KAFKA_MESSAGE_MAX_BYTES, value: "10485760" }
             - { name: KAFKA_REPLICA_FETCH_MAX_BYTES, value: "10485760" }
-            - { name: KAFKA_LOG_RETENTION_HOURS, value: "336" }
+            - { name: KAFKA_LOG_RETENTION_HOURS, value: "168" }
             - { name: KAFKA_AUTO_CREATE_TOPICS_ENABLE, value: "false" }
             - { name: KAFKA_LOG_DIRS, value: "/var/lib/kafka/data" }
           volumeMounts:
