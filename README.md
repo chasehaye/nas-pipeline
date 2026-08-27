@@ -30,8 +30,8 @@ any one can be changed, scaled, or restarted independently.
 | `normalizer` | Go | FIXM XML → per-flight JSON → `fixm.normalized` | [README](normalizer/README.md) |
 | `filter` | Go | LADD compliance filter → `fixm.filtered` | [README](filter/README.md) |
 | `cache-writer` | Go | `fixm.filtered` → Redis (live current state) | [README](cache-writer/README.md) |
-| `database-writer` | Go | `fixm.filtered` → Postgres/TimescaleDB (history) — *planned* | — |
-| `api` | Go / Gin | REST read API over Redis (current state) | [README](api/README.md) |
+| `database-writer` | Go | `fixm.filtered` → Postgres/TimescaleDB (history) | — |
+| `api` | Go / Gin | REST read API over Redis (live) + Postgres (history) | [README](api/README.md) |
 | `web` | React / TS / MapLibre | web application (live flight map) | [README](web/README.md) |
 
 ### Control plane
@@ -57,8 +57,25 @@ the Secret.
    `fixm.filtered` — failing closed if the list is missing or stale.
 4. **cache-writer** keeps Redis a live, self-expiring view: one hash per flight
    with a TTL, so the keys in Redis *are* the aircraft currently in the air.
-5. **api** serves that view as JSON (read-only).
-6. **web** polls the api every few seconds and renders the MapLibre map.
+5. **database-writer** records each flight and position into Postgres/TimescaleDB
+   for durable history.
+6. **api** serves both the live view (Redis) and historical queries (Postgres) as JSON.
+7. **web** polls the api every few seconds and renders the MapLibre map.
+
+## Observability & reliability
+
+A shared **`platform/`** Go module gives every service the same production
+plumbing — imported, not copy-pasted:
+
+- **structured logging** (`log/slog`, JSON to stdout)
+- **Prometheus metrics** + Kubernetes **health probes** (`/metrics`, `/healthz`, `/readyz`)
+- **bounded retry** (exponential backoff + jitter) for transient failures
+- **dead-letter** publishing for poison messages → `*.dlq` topics
+
+Each consumer owns its own failure classification: *transient* errors retry,
+*poison* messages are dead-lettered, so one bad message can never stall a
+partition. Metrics are scraped by **Prometheus** and rendered in **Grafana**
+(a dashboard per service, plus consumer-group lag via **kafka-exporter**).
 
 ## Quick start (local dev)
 
@@ -70,7 +87,7 @@ make services    # run bridge, normalizer, filter, cache-writer, api
 make web         # run the front-end
 ```
 
-Local UIs: web `:5173` · API `:8090` · Kafka UI `:8080` · RedisInsight `:5540`.
+Local UIs: web `:5173` · API `:8090` · Grafana `:3000` · Kafka UI `:8080` · RedisInsight `:5540`.
 Run `make help` for all targets.
 
 ## Ports
