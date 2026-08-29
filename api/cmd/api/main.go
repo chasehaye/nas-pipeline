@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/observability"
 
 	"github.com/chasehaye/nas-pipeline/api/internal/config"
 	"github.com/chasehaye/nas-pipeline/api/internal/durable"
@@ -18,7 +18,7 @@ import (
 
 func main() {
 	// Shared platform: JSON structured logging as the process-wide default.
-	log.Init(os.Getenv("LOG_LEVEL"))
+	observability.InitLogging(os.Getenv("LOG_LEVEL"))
 
 	_ = godotenv.Load()
 

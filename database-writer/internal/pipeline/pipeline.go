@@ -16,7 +16,7 @@ import (
 	"github.com/chasehaye/nas-pipeline/database-writer/internal/metrics"
 )
 
-type Fetcher interface {
+type Consumer interface {
 	Fetch(ctx context.Context) (kafka.Message, error)
 	Commit(ctx context.Context, msg kafka.Message) error
 }
@@ -30,16 +30,16 @@ type DLQPublisher interface {
 }
 
 type Pipeline struct {
-	fetcher      Fetcher
+	consumer     Consumer
 	writer       Writer
 	dlq          DLQPublisher
 	batchSize    int
 	flushTimeout time.Duration
 }
 
-func New(fetcher Fetcher, writer Writer, dlq DLQPublisher, batchSize int, flushTimeout time.Duration) *Pipeline {
+func New(consumer Consumer, writer Writer, dlq DLQPublisher, batchSize int, flushTimeout time.Duration) *Pipeline {
 	return &Pipeline{
-		fetcher:      fetcher,
+		consumer:     consumer,
 		writer:       writer,
 		dlq:          dlq,
 		batchSize:    batchSize,
@@ -113,7 +113,7 @@ func (p *Pipeline) Run(ctx context.Context) error {
 			}
 		}
 
-		if err := p.fetcher.Commit(ctx, batch[len(batch)-1]); err != nil {
+		if err := p.consumer.Commit(ctx, batch[len(batch)-1]); err != nil {
 			slog.Error("commit failed", "err", err)
 		}
 
@@ -143,7 +143,7 @@ func (p *Pipeline) deadLetter(ctx context.Context, msg kafka.Message, cause erro
 func (p *Pipeline) readBatch(ctx context.Context) []kafka.Message {
 	batch := make([]kafka.Message, 0, p.batchSize)
 
-	msg, err := p.fetcher.Fetch(ctx)
+	msg, err := p.consumer.Fetch(ctx)
 	if err != nil {
 		return batch
 	}
@@ -152,7 +152,7 @@ func (p *Pipeline) readBatch(ctx context.Context) []kafka.Message {
 	deadline, cancel := context.WithTimeout(ctx, p.flushTimeout)
 	defer cancel()
 	for len(batch) < p.batchSize {
-		msg, err := p.fetcher.Fetch(deadline)
+		msg, err := p.consumer.Fetch(deadline)
 		if err != nil {
 			break
 		}

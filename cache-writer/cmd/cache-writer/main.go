@@ -9,8 +9,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/chasehaye/nas-pipeline/platform/kafkax"
-	"github.com/chasehaye/nas-pipeline/platform/log"
-	"github.com/chasehaye/nas-pipeline/platform/ops"
+	"github.com/chasehaye/nas-pipeline/platform/observability"
 
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/config"
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/kafka"
@@ -20,7 +19,7 @@ import (
 
 func main() {
 	// Shared platform: JSON structured logging as the process-wide default.
-	log.Init(os.Getenv("LOG_LEVEL"))
+	observability.InitLogging(os.Getenv("LOG_LEVEL"))
 
 	if err := godotenv.Load(); err != nil {
 		slog.Info("no .env file loaded; using environment and defaults", "err", err)
@@ -46,10 +45,7 @@ func main() {
 	defer cancel()
 
 	// Ops endpoint (/metrics, /healthz, /readyz); readiness pings Kafka and Redis.
-	go ops.Serve(ctx, cfg.OpsAddr,
-		func(c context.Context) error { return kafkax.Ping(c, cfg.Brokers) },
-		func(c context.Context) error { return st.Ping(c) },
-	)
+	go observability.Serve(ctx, cfg.OpsAddr, kafkax.ReadinessCheck(cfg.Brokers), st.Ping)
 
 	waitForRedis(ctx, st)
 

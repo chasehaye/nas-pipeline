@@ -8,8 +8,7 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 
-	platformhealth "github.com/chasehaye/nas-pipeline/platform/health"
-	platformmetrics "github.com/chasehaye/nas-pipeline/platform/metrics"
+	"github.com/chasehaye/nas-pipeline/platform/observability"
 
 	"github.com/chasehaye/nas-pipeline/api/internal/durable"
 	"github.com/chasehaye/nas-pipeline/api/internal/live"
@@ -34,16 +33,14 @@ func Setup(
 	)
 
 	// Ops surface on the same server; readiness gates on the stores.
-	r.GET("/metrics", gin.WrapH(platformmetrics.Handler()))
-	r.GET("/healthz", gin.WrapF(platformhealth.Live))
+	r.GET("/metrics", gin.WrapH(observability.MetricsHandler()))
+	r.GET("/healthz", gin.WrapF(observability.Live))
 
-	checks := []platformhealth.Check{
-		func(ctx context.Context) error { return liveStore.Ping(ctx) },
-	}
+	checks := []observability.Check{liveStore.Ping}
 	if durableStore != nil {
-		checks = append(checks, func(ctx context.Context) error { return durableStore.Ping(ctx) })
+		checks = append(checks, durableStore.Ping)
 	}
-	r.GET("/readyz", gin.WrapF(platformhealth.Ready(checks...)))
+	r.GET("/readyz", gin.WrapF(observability.Ready(checks...)))
 
 	live.Routes(r, liveStore)
 

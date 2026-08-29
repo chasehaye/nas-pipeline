@@ -23,7 +23,7 @@ const (
 	flushTimeout     = 200 * time.Millisecond
 )
 
-type Fetcher interface {
+type Consumer interface {
 	Fetch(ctx context.Context) (kafka.Message, error)
 	Commit(ctx context.Context, msg kafka.Message) error
 }
@@ -37,19 +37,19 @@ type DLQPublisher interface {
 }
 
 type Processor struct {
-	fetcher   Fetcher
+	consumer  Consumer
 	publisher Publisher
 	dlq       DLQPublisher
 	workers   int
 	batchSize int
 }
 
-func New(fetcher Fetcher, publisher Publisher, dlq DLQPublisher, workers int) *Processor {
+func New(consumer Consumer, publisher Publisher, dlq DLQPublisher, workers int) *Processor {
 	if workers < 1 {
 		workers = 1
 	}
 	return &Processor{
-		fetcher:   fetcher,
+		consumer:  consumer,
 		publisher: publisher,
 		dlq:       dlq,
 		workers:   workers,
@@ -121,7 +121,7 @@ func (p *Processor) Run(ctx context.Context) error {
 // readBatch blocks for the first envelope, then drains up to batchSize more
 // until full or flushTimeout elapses.
 func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
-	first, err := p.fetcher.Fetch(ctx)
+	first, err := p.consumer.Fetch(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	dctx, cancel := context.WithTimeout(ctx, flushTimeout)
 	defer cancel()
 	for len(batch) < p.batchSize {
-		msg, err := p.fetcher.Fetch(dctx)
+		msg, err := p.consumer.Fetch(dctx)
 		if err != nil {
 			break
 		}
@@ -216,7 +216,7 @@ func encodeFlights(flights []fixm.Message) ([]kafka.Message, error) {
 }
 
 func (p *Processor) commit(ctx context.Context, msg kafka.Message) {
-	if err := p.fetcher.Commit(ctx, msg); err != nil {
+	if err := p.consumer.Commit(ctx, msg); err != nil {
 		slog.Error("commit failed", "err", err)
 	}
 }

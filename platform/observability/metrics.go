@@ -1,4 +1,4 @@
-package metrics
+package observability
 
 import (
 	"net/http"
@@ -6,6 +6,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func Handler() http.Handler {
+func MetricsHandler() http.Handler {
 	return promhttp.Handler()
 }

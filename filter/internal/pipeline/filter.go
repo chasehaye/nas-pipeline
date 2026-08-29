@@ -25,7 +25,7 @@ const (
 	flushTimeout     = 200 * time.Millisecond
 )
 
-type Fetcher interface {
+type Consumer interface {
 	Fetch(ctx context.Context) (kafka.Message, error)
 	Commit(ctx context.Context, msg kafka.Message) error
 }
@@ -39,7 +39,7 @@ type DLQPublisher interface {
 }
 
 type Filter struct {
-	fetcher   Fetcher
+	consumer  Consumer
 	publisher Publisher
 	dlq       DLQPublisher
 	blocklist *ladd.Store
@@ -47,12 +47,12 @@ type Filter struct {
 	batchSize int
 }
 
-func New(fetcher Fetcher, publisher Publisher, dlq DLQPublisher, blocklist *ladd.Store, workers int) *Filter {
+func New(consumer Consumer, publisher Publisher, dlq DLQPublisher, blocklist *ladd.Store, workers int) *Filter {
 	if workers < 1 {
 		workers = 1
 	}
 	return &Filter{
-		fetcher:   fetcher,
+		consumer:  consumer,
 		publisher: publisher,
 		dlq:       dlq,
 		blocklist: blocklist,
@@ -130,7 +130,7 @@ func (f *Filter) Run(ctx context.Context) error {
 // readBatch blocks for the first message, then drains up to batchSize more until
 // full or flushTimeout elapses.
 func (f *Filter) readBatch(ctx context.Context) ([]kafka.Message, error) {
-	first, err := f.fetcher.Fetch(ctx)
+	first, err := f.consumer.Fetch(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func (f *Filter) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	dctx, cancel := context.WithTimeout(ctx, flushTimeout)
 	defer cancel()
 	for len(batch) < f.batchSize {
-		msg, err := f.fetcher.Fetch(dctx)
+		msg, err := f.consumer.Fetch(dctx)
 		if err != nil {
 			break
 		}
@@ -203,7 +203,7 @@ func (f *Filter) deadLetter(ctx context.Context, msg kafka.Message, reason strin
 }
 
 func (f *Filter) commit(ctx context.Context, msg kafka.Message) {
-	if err := f.fetcher.Commit(ctx, msg); err != nil {
+	if err := f.consumer.Commit(ctx, msg); err != nil {
 		slog.Error("commit failed", "err", err)
 	}
 }

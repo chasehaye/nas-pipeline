@@ -1,5 +1,4 @@
-// Package health provides Kubernetes liveness and readiness handlers.
-package health
+package observability
 
 import (
 	"context"

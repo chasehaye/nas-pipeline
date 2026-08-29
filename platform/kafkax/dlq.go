@@ -3,7 +3,6 @@ package kafkax
 import (
 	"context"
 	"encoding/json"
-	"strings"
 	"time"
 
 	"github.com/segmentio/kafka-go"
@@ -26,9 +25,8 @@ type DLQ struct {
 
 func NewDLQ(brokers, topic string) *DLQ {
 	return &DLQ{w: &kafka.Writer{
-		Addr:         kafka.TCP(strings.Split(brokers, ",")...),
+		Addr:         kafka.TCP(brokers),
 		Topic:        topic,
-		Balancer:     &kafka.LeastBytes{},
 		RequiredAcks: kafka.RequireAll,
 	}}
 }

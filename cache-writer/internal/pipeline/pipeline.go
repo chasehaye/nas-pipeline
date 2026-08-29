@@ -16,7 +16,7 @@ import (
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/metrics"
 )
 
-type Fetcher interface {
+type Consumer interface {
 	Fetch(ctx context.Context) (kafka.Message, error)
 	Commit(ctx context.Context, msg kafka.Message) error
 }
@@ -33,13 +33,13 @@ type DLQPublisher interface {
 const statusActive = "ACTIVE"
 
 type Pipeline struct {
-	fetcher Fetcher
-	writer  Writer
-	dlq     DLQPublisher
+	consumer Consumer
+	writer   Writer
+	dlq      DLQPublisher
 }
 
-func New(fetcher Fetcher, writer Writer, dlq DLQPublisher) *Pipeline {
-	return &Pipeline{fetcher: fetcher, writer: writer, dlq: dlq}
+func New(consumer Consumer, writer Writer, dlq DLQPublisher) *Pipeline {
+	return &Pipeline{consumer: consumer, writer: writer, dlq: dlq}
 }
 
 func (p *Pipeline) Run(ctx context.Context) error {
@@ -49,7 +49,7 @@ func (p *Pipeline) Run(ctx context.Context) error {
 	stats := metrics.NewStats()
 
 	for {
-		msg, err := p.fetcher.Fetch(ctx)
+		msg, err := p.consumer.Fetch(ctx)
 		if err != nil {
 			if ctx.Err() != nil {
 				slog.Info("shutting down", "stats", stats)
@@ -125,7 +125,7 @@ func (p *Pipeline) process(ctx context.Context, msg kafka.Message, stats *metric
 }
 
 func (p *Pipeline) commit(ctx context.Context, msg kafka.Message) {
-	if err := p.fetcher.Commit(ctx, msg); err != nil {
+	if err := p.consumer.Commit(ctx, msg); err != nil {
 		slog.Error("commit failed", "err", err)
 	}
 }

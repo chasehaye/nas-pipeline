@@ -2,7 +2,6 @@ package kafka
 
 import (
 	"context"
-	"strings"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -23,7 +22,7 @@ func NewConsumer(cfg ConsumerConfig) *Consumer {
 
 		reader: kafka.NewReader(
 			kafka.ReaderConfig{
-				Brokers: strings.Split(cfg.Brokers, ","),
+				Brokers: []string{cfg.Brokers},
 
 				Topic: cfg.Topic,
 

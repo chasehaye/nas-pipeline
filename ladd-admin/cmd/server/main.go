@@ -15,8 +15,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/chasehaye/nas-pipeline/platform/health"
-	"github.com/chasehaye/nas-pipeline/platform/log"
+	"github.com/chasehaye/nas-pipeline/platform/observability"
 
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/api"
 	"github.com/chasehaye/nas-pipeline/ladd-admin/internal/config"
@@ -38,7 +37,7 @@ type server struct {
 
 func main() {
 	// Shared platform: JSON structured logging as the process-wide default.
-	log.Init(os.Getenv("LOG_LEVEL"))
+	observability.InitLogging(os.Getenv("LOG_LEVEL"))
 
 	if err := godotenv.Load(); err != nil {
 		slog.Info("no .env file loaded; using environment and defaults", "err", err)
@@ -68,8 +67,8 @@ func main() {
 
 	mux := http.NewServeMux()
 	// Shared platform health probes: liveness always ok; readiness ok once serving.
-	mux.HandleFunc("GET /healthz", health.Live)
-	mux.Handle("GET /readyz", health.Ready())
+	mux.HandleFunc("GET /healthz", observability.Live)
+	mux.Handle("GET /readyz", observability.Ready())
 	mux.HandleFunc("POST /upload", s.upload)
 
 	srv := &http.Server{
