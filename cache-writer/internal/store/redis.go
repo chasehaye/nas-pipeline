@@ -21,6 +21,10 @@ func New(addr, password string, db int, prefix string, ttl time.Duration) *Store
 			Addr:     addr,
 			Password: password,
 			DB:       db,
+			// Lean on the client's own retry (no custom wrapper). Widen the
+			// default window so a brief Redis hiccup is absorbed here.
+			MaxRetries:      5,
+			MaxRetryBackoff: 2 * time.Second,
 		}),
 		prefix: prefix,
 		ttl:    ttl,

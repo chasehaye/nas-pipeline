@@ -10,8 +10,6 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/chasehaye/nas-pipeline/platform/kafkax"
-
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/flight"
 	"github.com/chasehaye/nas-pipeline/redis-service/internal/metrics"
 )
@@ -88,13 +86,12 @@ func (p *Pipeline) process(ctx context.Context, msg kafka.Message, stats *metric
 		return
 	}
 
-	// Non-active flight: drop from the cache. Redis errors are transient → retry.
+	// Non-active flight: drop from the cache. The Redis client retries with
+	// backoff; on final failure we don't commit, so the message reprocesses.
 	if f.Status != statusActive {
-		if err := kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
-			return p.writer.DeleteFlight(ctx, f.Gufi)
-		}); err != nil {
+		if err := p.writer.DeleteFlight(ctx, f.Gufi); err != nil {
 			metrics.WriteErrors.Inc()
-			slog.Error("redis delete failed after retries", "gufi", f.Gufi, "err", err)
+			slog.Error("redis delete failed", "gufi", f.Gufi, "err", err)
 			return
 		}
 		stats.Removed++
@@ -111,12 +108,11 @@ func (p *Pipeline) process(ctx context.Context, msg kafka.Message, stats *metric
 		return
 	}
 
-	// Active with a position: upsert. Redis errors are transient → retry.
-	if err := kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
-		return p.writer.UpsertFlight(ctx, f)
-	}); err != nil {
+	// Active with a position: upsert. The Redis client retries with backoff;
+	// on final failure we don't commit, so the message reprocesses.
+	if err := p.writer.UpsertFlight(ctx, f); err != nil {
 		metrics.WriteErrors.Inc()
-		slog.Error("redis upsert failed after retries", "gufi", f.Gufi, "err", err)
+		slog.Error("redis upsert failed", "gufi", f.Gufi, "err", err)
 		return
 	}
 	stats.Stored++

@@ -10,8 +10,6 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/chasehaye/nas-pipeline/platform/kafkax"
-
 	"github.com/chasehaye/nas-pipeline/database-writer/internal/flight"
 	"github.com/chasehaye/nas-pipeline/database-writer/internal/metrics"
 )
@@ -127,10 +125,9 @@ func (p *Pipeline) Run(ctx context.Context) error {
 // deadLetter best-effort quarantines a poison message; the batch commit proceeds
 // regardless, so a DLQ write failure is logged rather than allowed to stall history.
 func (p *Pipeline) deadLetter(ctx context.Context, msg kafka.Message, cause error) {
-	err := kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
-		return p.dlq.Publish(ctx, msg, "database-writer", "poison", cause.Error())
-	})
-	if err != nil {
+	// The Kafka client retries with backoff; DLQ is best-effort here, so the
+	// batch commit proceeds regardless of a final failure.
+	if err := p.dlq.Publish(ctx, msg, "database-writer", "poison", cause.Error()); err != nil {
 		slog.Error("dlq publish failed (message may be lost on commit)", "offset", msg.Offset, "err", err)
 		return
 	}

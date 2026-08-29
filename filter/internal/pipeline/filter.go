@@ -13,8 +13,6 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/chasehaye/nas-pipeline/platform/kafkax"
-
 	"github.com/chasehaye/nas-pipeline/filter/internal/flight"
 	"github.com/chasehaye/nas-pipeline/filter/internal/ladd"
 	"github.com/chasehaye/nas-pipeline/filter/internal/metrics"
@@ -176,13 +174,11 @@ func (f *Filter) process(ctx context.Context, msg kafka.Message, stats *metrics.
 		return
 	}
 
-	// Publish failure is transient → retry; if still failing, gate the commit.
-	err = kafkax.Do(ctx, kafkax.DefaultPolicy, func() error {
-		return f.publisher.Publish(ctx, []byte(m.Gufi), m.Raw)
-	})
-	if err != nil {
+	// Publish failure → gate the commit so the batch reprocesses. The Kafka
+	// client already retries with backoff; on final failure we don't commit.
+	if err := f.publisher.Publish(ctx, []byte(m.Gufi), m.Raw); err != nil {
 		metrics.PublishErrors.Inc()
-		slog.Error("publish failed after retries", "offset", msg.Offset, "err", err)
+		slog.Error("publish failed", "offset", msg.Offset, "err", err)
 		failed.Store(true)
 		return
 	}
