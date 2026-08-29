@@ -2,13 +2,11 @@
 # Deploy — run ON THE SERVER (k3s + docker). Apps only by default; infra opt-in.
 #
 #   ./deploy/deploy.sh                 # build + staggered-roll all app services
-#   ./deploy/deploy.sh api web         # only these
-#   SKIP_PULL=1 ./deploy/deploy.sh     # skip git pull
 #   NO_CACHE=1  ./deploy/deploy.sh     # clean rebuild (default: cached)
 #   APPLY_INFRA=1 ./deploy/deploy.sh   # also apply Kafka/Redis/Postgres/PV
 set -euo pipefail
 
-ALL_SERVICES=(api normalizer cache-writer filter web bridge ladd-admin database-writer)
+SERVICES=(api normalizer cache-writer filter web bridge ladd-admin database-writer)
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INFRA_OVERLAY="deploy/k8s/overlays/prod/infra"
 APPS_OVERLAY="deploy/k8s/overlays/prod/apps"
@@ -17,20 +15,12 @@ NS=nas
 KUBECTL="sudo k3s kubectl"
 CTR="sudo k3s ctr"
 
-if [ "$#" -gt 0 ]; then
-  SERVICES=("$@")
-else
-  SERVICES=("${ALL_SERVICES[@]}")
-fi
-
 cd "$REPO"
 echo "==> repo: $REPO"
 echo "==> services: ${SERVICES[*]}"
 
-if [ "${SKIP_PULL:-0}" != "1" ]; then
-  echo "==> git pull"
-  git pull origin main
-fi
+echo "==> git pull"
+git pull origin main
 
 $KUBECTL get namespace "$NS" >/dev/null 2>&1 || $KUBECTL create namespace "$NS"
 
