@@ -64,17 +64,35 @@ if [ "$NO_CACHE" = "1" ]; then
   build_args=(--no-cache)
 fi
 
+# Flaky-build-host stopgap: this server intermittently crashes the Go compiler
+# mid-build (suspected unstable RAM). Retry a failed build with backoff so a
+# transient fault doesn't abort the whole deploy; the growing delay doubles as a
+# cooldown if the instability is thermal.
+# NOTE: a bridge, not a fix -- stabilize the memory (BIOS XMP/EXPO off, then
+# memtest86+). A build that doesn't crash could still be silently bit-flipped.
+build_one() {
+  local svc="$1"; shift
+  docker "$@" && return 0
+  for d in 5 15 30 60; do
+    echo "!! [$svc] build failed -- retry in ${d}s (suspect flaky build host)"
+    sleep "$d"
+    docker "$@" && return 0
+  done
+  echo "!! [$svc] build failed after retries"
+  return 1
+}
+
 for svc in "${SERVICES[@]}"; do
   echo "==> [$svc] build + import"
   case "$svc" in
     bridge|web)
       # Self-contained: build with the service dir as context.
-      docker build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
+      build_one "$svc" build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
       ;;
     *)
       # Go services import the shared ./platform module, so the build context
       # must be the repo root; select the service's Dockerfile with -f.
-      docker build "${build_args[@]}" -t "nas-$svc:latest" -f "./$svc/Dockerfile" .
+      build_one "$svc" build "${build_args[@]}" -t "nas-$svc:latest" -f "./$svc/Dockerfile" .
       ;;
   esac
   docker save "nas-$svc:latest" | $CTR images import -
