@@ -4,10 +4,37 @@ name: deploy
 # deploy script (build images -> import into k3s -> apply prod overlay -> roll
 # out). The script does its own `git pull`, so the server always builds the
 # just-pushed commit.
+#
+# Push to main   -> deploy all app services, cached, apps only (the defaults).
+# Run workflow   -> manual button with overrides: target one service, force a
+#                   no-cache rebuild, and/or re-apply infra.
 on:
   push:
     branches: [main]
-  workflow_dispatch: {} # manual "Run workflow" button
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service to deploy"
+        type: choice
+        default: all
+        options:
+          - all
+          - api
+          - normalizer
+          - cache-writer
+          - filter
+          - web
+          - bridge
+          - ladd-admin
+          - database-writer
+      no_cache:
+        description: "Clean rebuild (no Docker layer cache)"
+        type: boolean
+        default: false
+      apply_infra:
+        description: "Also apply infra (Kafka/Redis/Postgres/monitoring)"
+        type: boolean
+        default: false
 
 # Never run two deploys at once.
 concurrency:
@@ -30,6 +57,11 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
           APP_DIR: ${{ secrets.APP_DIR }}
+          # On a plain push these inputs are empty, so everything falls back to
+          # the safe defaults: all services, cached, apps only.
+          SERVICE: ${{ github.event.inputs.service == 'all' && '' || github.event.inputs.service }}
+          NO_CACHE: ${{ github.event.inputs.no_cache == 'true' && '1' || '0' }}
+          APPLY_INFRA: ${{ github.event.inputs.apply_infra == 'true' && '1' || '0' }}
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/deploy_key
@@ -41,4 +73,6 @@ jobs:
               ProxyCommand cloudflared access ssh --hostname %h
               StrictHostKeyChecking no
           EOF
-          ssh "$SERVER_HOST" "cd '$APP_DIR' && git pull origin main && bash deploy/deploy.sh"
+          # git pull first so the *latest* deploy.sh runs (the script pulls again
+          # internally, which is a harmless fast-forward no-op).
+          ssh "$SERVER_HOST" "cd '$APP_DIR' && git pull origin main && NO_CACHE='$NO_CACHE' APPLY_INFRA='$APPLY_INFRA' bash deploy/deploy.sh $SERVICE"

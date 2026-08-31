@@ -2,6 +2,7 @@
 # Deploy — run ON THE SERVER (k3s + docker). Apps only by default; infra opt-in.
 #
 #   ./deploy/deploy.sh                 # build + staggered-roll all app services
+#   ./deploy/deploy.sh api filter      # only the named services
 #   NO_CACHE=1  ./deploy/deploy.sh     # clean rebuild (default: cached)
 #   APPLY_INFRA=1 ./deploy/deploy.sh   # also apply Kafka/Redis/Postgres/PV
 set -euo pipefail
@@ -14,6 +15,11 @@ NS=nas
 
 KUBECTL="sudo k3s kubectl"
 CTR="sudo k3s ctr"
+
+# Optional: restrict to the services named as arguments (default: all).
+if [ "$#" -gt 0 ]; then
+  SERVICES=("$@")
+fi
 
 cd "$REPO"
 echo "==> repo: $REPO"
