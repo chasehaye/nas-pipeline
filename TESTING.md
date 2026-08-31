@@ -105,18 +105,20 @@ publishes a **canned `fixm.raw`** sample straight to Kafka, and the real
 The only thing this can't verify is the live SWIM connection itself — that's
 inherent, and is confirmed in prod (or against a test SWIM subscription).
 
-## Staging (k3d rehearsal)
+## Staging (k3d rehearsal) — planned, not currently present
 
-The `deploy/k8s/overlays/dev` overlay is the rehearsal target: deploy to a local
-k3d cluster with the **synthetic injector** + **test secrets** to verify the
-Kubernetes deploy (manifests, RBAC, networking, rollouts) before shipping to the
-server — without touching real credentials or the live server.
+A local **k3d rehearsal** overlay (`deploy/k8s/overlays/dev`) was removed for now
+to keep the deploy surface small — we run a single prod cluster. When a deploy
+rehearsal is worth it, re-add a `dev` overlay that targets a local k3d cluster
+with a **synthetic injector** + **test secrets**, to verify the Kubernetes deploy
+(manifests, RBAC, networking, rollouts) without touching real credentials or the
+live server.
 
 ## Environments at a glance
 
 ```
-Compose + Makefile  →  k3d dev (overlays/dev)  →  server (prod)
-  code + unit tests     deploy rehearsal            production
-  (this is where            (synthetic data +
-   `make test` runs)         test secrets)
+Compose + Makefile  →  server (prod)          [ future: k3d dev rehearsal
+  code + unit tests     production               slots in between ]
+  (this is where
+   `make test` runs)
 ```

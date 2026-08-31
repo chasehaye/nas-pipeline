@@ -11,11 +11,6 @@ patches:
       - op: replace
         path: /spec/volumeClaimTemplates/0/spec/resources/requests/storage
         value: 500Gi
-  - target: { kind: PersistentVolumeClaim, name: redis-data }
-    patch: |
-      - op: replace
-        path: /spec/resources/requests/storage
-        value: 2Gi
   # Postgres on its own drive (see postgres-local-storage.yaml).
   - target: { kind: PersistentVolumeClaim, name: postgres-data }
     patch: |
