@@ -24,6 +24,7 @@ configMapGenerator:
       - grafana-dashboards-provider.yml
   - name: grafana-dashboards
     files:
+      - dashboards/overview.json
       - dashboards/api.json
       - dashboards/cache-writer.json
       - dashboards/database-writer.json

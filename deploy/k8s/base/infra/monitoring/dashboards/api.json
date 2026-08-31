@@ -158,7 +158,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "up{job=\"api\"}",
+          "expr": "max by (job) (up{job=\"api\"})",
           "legendFormat": "up"
         }
       ]
