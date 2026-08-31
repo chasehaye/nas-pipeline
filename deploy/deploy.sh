@@ -17,7 +17,8 @@ KUBECTL="sudo k3s kubectl"
 CTR="sudo k3s ctr"
 
 # Optional: restrict to the services named as arguments (default: all).
-if [ "$#" -gt 0 ]; then
+# A literal "all" means every service (CI passes "all" for a full deploy).
+if [ "$#" -gt 0 ] && [ "$1" != "all" ]; then
   SERVICES=("$@")
 fi
 

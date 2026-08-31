@@ -58,8 +58,11 @@ jobs:
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
           APP_DIR: ${{ secrets.APP_DIR }}
           # On a plain push these inputs are empty, so everything falls back to
-          # the safe defaults: all services, cached, apps only.
-          SERVICE: ${{ github.event.inputs.service == 'all' && '' || github.event.inputs.service }}
+          # the safe defaults: all services, cached, apps only. deploy.sh treats
+          # both "" and "all" as "every service" (don't use a `&& '' ||` ternary
+          # here: an empty-string true-branch is falsy in Actions expressions and
+          # silently falls through to the raw value).
+          SERVICE: ${{ github.event.inputs.service }}
           NO_CACHE: ${{ github.event.inputs.no_cache == 'true' && '1' || '0' }}
           APPLY_INFRA: ${{ github.event.inputs.apply_infra == 'true' && '1' || '0' }}
         run: |
