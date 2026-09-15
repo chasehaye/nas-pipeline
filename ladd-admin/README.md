@@ -4,12 +4,10 @@ Control-plane service + CLI for securely updating the **LADD** aircraft-block
 list from anywhere. The LADD Industry file is CUI, so every upload is:
 
 - **encrypted** to the server's public key on the operator's machine
-  (confidentiality — plaintext never touches the transport, Cloudflare, or any
+  (confidentiality: plaintext never touches the transport, Cloudflare, or any
   proxy; it is decrypted only inside the cluster), and
-- **signed** with the operator's private key (authenticity — the server rejects
+- **signed** with the operator's private key (authenticity: the server rejects
   anything not signed by the authorized operator).
-
----
 
 ## How it works
 
@@ -34,9 +32,7 @@ Two keypairs, each with one job:
 | **operator** (ed25519) | with the CLI (`--sign-key`) | in the cluster Secret | signatures |
 
 The server verifies the signature **before** it decrypts, and it **refuses to
-start** without the operator public key — authentication is not optional.
-
----
+start** without the operator public key: authentication is not optional.
 
 ## One-time setup
 
@@ -61,7 +57,7 @@ This writes four files and prints exactly where each goes:
 | `operator-signing.pub` | into the cluster Secret as `operator.pub` |
 | `server-identity.txt` | into the cluster Secret as `identity.txt` |
 
-Guard `operator-signing.key` and `server-identity.txt` — they are the private
+Guard `operator-signing.key` and `server-identity.txt`: they are the private
 keys. (They're written `0600`.)
 
 ### 3. Create the key Secret in the cluster
@@ -84,10 +80,8 @@ kubectl get pods -n nas -l app=ladd-admin      # want Running 1/1
 kubectl logs -n nas deploy/ladd-admin          # "listening on :8092"
 ```
 
-> The `ladd` Secret must already exist (from your normal deploy) — the server
+> The `ladd` Secret must already exist (from your normal deploy): the server
 > updates it, it does not create it.
-
----
 
 ## Uploading a LADD file
 
@@ -109,9 +103,7 @@ uploaded LADD_Industry_Filter_CUI_SP_PRVCY_20260811.txt: 70655 entries
 
 The server rejects (and never touches the Secret) if the signature is invalid
 (`401`), the ciphertext won't decrypt (`400`), or the file is malformed / empty /
-stale / future-dated / misnamed (`422`) — the fail-closed guarantee.
-
----
+stale / future-dated / misnamed (`422`): the fail-closed guarantee.
 
 ## Verifying it took effect
 
@@ -123,8 +115,6 @@ kubectl rollout restart deploy/filter -n nas
 kubectl logs -n nas deploy/filter --tail=5      # "LADD list loaded: N entries, effective <date>"
 ```
 
----
-
 ## Weekly update (steady state)
 
 ```bash
@@ -134,8 +124,6 @@ kubectl port-forward -n nas svc/ladd-admin 8092:8092
   --sign-key-file ./keys/operator-signing.key \
   --url http://localhost:8092/upload
 ```
-
----
 
 ## Exposing it publicly (upload from anywhere)
 
@@ -150,13 +138,11 @@ exposed. Add a Cloudflare tunnel route to the `ladd-admin` service and point
 ```
 
 Until you add that route, the service stays ClusterIP (internal-only) and you
-reach it with `port-forward` as above. Security still rests on the signature —
+reach it with `port-forward` as above. Security still rests on the signature:
 an attacker at the public endpoint cannot produce a valid signature without your
 `operator-signing.key`.
 
----
-
-## Configuration (server env vars — all optional)
+## Configuration (server env vars, all optional)
 
 | Variable | Default | Meaning |
 |---|---|---|
@@ -168,21 +154,17 @@ an attacker at the public endpoint cannot produce a valid signature without your
 | `LADD_MAX_AGE` | `216h` | reject files older than this (9 days) |
 | `LADD_MAX_UPLOAD_BYTES` | `4194304` | request-body cap (4 MiB) |
 
----
-
 ## Troubleshooting
 
 | Symptom | Likely cause / fix |
 |---|---|
-| pod `CrashLoopBackOff`, log `load identity` / `operator public key` | `ladd-admin-keys` Secret missing a key — it needs both `identity.txt` and `operator.pub` |
+| pod `CrashLoopBackOff`, log `load identity` / `operator public key` | `ladd-admin-keys` Secret missing a key: it needs both `identity.txt` and `operator.pub` |
 | pod log `get secret … forbidden` | RBAC not applied, or the `ladd` Secret doesn't exist yet |
-| CLI `upload rejected (401)` | signature invalid — wrong `--sign-key-file`, or the Secret's `operator.pub` doesn't match it |
+| CLI `upload rejected (401)` | signature invalid: wrong `--sign-key-file`, or the Secret's `operator.pub` doesn't match it |
 | CLI `upload rejected (400)` | `--recipient` doesn't match the server's private key |
-| CLI `upload rejected (422)` | the file failed validation (stale/empty/misnamed) — expected fail-closed |
-| upload OK but filter unchanged | filter hasn't hit its reload interval — `rollout restart deploy/filter` |
+| CLI `upload rejected (422)` | the file failed validation (stale/empty/misnamed): expected fail-closed |
+| upload OK but filter unchanged | filter hasn't hit its reload interval: `rollout restart deploy/filter` |
 | `connection refused` on `localhost:8092` | the `port-forward` isn't running |
-
----
 
 ## Security model (summary)
 
@@ -196,5 +178,5 @@ an attacker at the public endpoint cannot produce a valid signature without your
   reach the Secret.
 
 Key rotation: regenerate with `keygen`, update the Secret + your local files.
-For zero-downtime rotation you'd support two operator keys at once — a future
+For zero-downtime rotation you'd support two operator keys at once: a future
 enhancement.

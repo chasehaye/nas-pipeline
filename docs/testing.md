@@ -10,7 +10,7 @@ make test          # unit tests for every Go module
 ```
 
 CI runs the same on every push and pull request
-([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)).
 
 ## Where tests live
 

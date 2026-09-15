@@ -18,10 +18,10 @@ Same input as cache-writer, different job: cache-writer keeps the **now**
 
 For each message, in one transaction:
 
-1. **Parse** it — GUFI, callsign, registration, aircraft type, origin/destination,
+1. **Parse** it: GUFI, callsign, registration, aircraft type, origin/destination,
    status, departure/arrival actual times, and the latest `enRoute` position.
 2. **Upsert the airports** (origin + destination) so the flight's FKs resolve.
-3. **Upsert the flight** row (one per GUFI) — filling metadata and advancing its
+3. **Upsert the flight** row (one per GUFI), filling metadata and advancing its
    lifecycle status/counters.
 4. **Append a position** row (if the message carried one).
 
@@ -41,16 +41,16 @@ The split is the key idea: a flight's **identity** is constant (one `flights`
 row), but its **position** changes constantly (many `positions` rows). Rebuild a
 flight's full track by joining them on `gufi`.
 
-- **Airport coordinates** are populated opportunistically — the feed carries the
+- **Airport coordinates** are populated opportunistically: the feed carries the
   codes reliably but the aerodrome lat/lon only rarely, so `airports.lat/lon`
   are mostly `NULL` until backfilled from a reference dataset.
 - `positions` compresses after 7 days and is dropped after 90 (TimescaleDB
-  policies) — long retention stays cheap.
+  policies); long retention stays cheap.
 
 ## Lifecycle: no status is "terminal"
 
 FDPS flight status (`ACTIVE`, `PROPOSED`, `COMPLETED`, `CANCELLED`, `DROPPED`)
-is recorded but never used to "close" a flight — because **`DROPPED` is a
+is recorded but never used to "close" a flight, because **`DROPPED` is a
 coverage/airspace transition, not a landing**. Measured over real data, ~19% of
 dropped flights return to `ACTIVE`, and no `DROPPED` message carries an arrival
 time. So the writer stays dumb: it records status and moves on.
@@ -67,8 +67,8 @@ WHERE status = 'COMPLETED'
 
 Two counters capture the bounce-back signal, computed inside the upsert:
 
-- `drop_count` — how many times it entered `DROPPED`,
-- `reactivation_count` — how many `DROPPED → ACTIVE` transitions.
+- `drop_count`: how many times it entered `DROPPED`,
+- `reactivation_count`: how many `DROPPED → ACTIVE` transitions.
 
 A `status_time` guard (the timestamp of the message that set the status) makes
 these count real *episodes* (not every repeated `DROPPED` message) and shrugs
@@ -91,7 +91,7 @@ is committed only after the transaction commits, and a replayed batch is safe
 
 ## Migrations
 
-The schema is owned by this service and applied **on startup** — no manual SQL,
+The schema is owned by this service and applied **on startup**: no manual SQL,
 no `docker-entrypoint-initdb.d`. On boot (after Postgres is reachable) it:
 
 1. ensures a `schema_migrations` table exists,
@@ -113,7 +113,7 @@ exact same files with nothing to mount.
 3. Rebuild and restart the service. It applies `0002` (and only `0002`) once,
    logs `migrate: applied 0002_add_flight_type`, and records version 2.
 
-That's the whole workflow — drop in a higher-numbered file and it runs on the
+That's the whole workflow: drop in a higher-numbered file and it runs on the
 next startup. Don't edit already-applied files (they won't re-run); ship a new
 one instead. Migrations run as a superuser (needed for `CREATE EXTENSION
 timescaledb`), which `naspipeline` is in both dev and k8s.
@@ -125,11 +125,11 @@ timescaledb`), which `naspipeline` is in both dev and k8s.
 | `KAFKA_BROKERS` | `localhost:9092` | Kafka bootstrap servers |
 | `KAFKA_TOPIC_FILTERED` | `fixm.filtered` | input topic |
 | `KAFKA_GROUP` | `database-writer` | consumer group |
-| `DATABASE_URL` | `postgres://naspipeline:changeme@localhost:5433/naspipeline?sslmode=disable` | Postgres DSN (sensitive — holds the password) |
+| `DATABASE_URL` | `postgres://naspipeline:changeme@localhost:5433/naspipeline?sslmode=disable` | Postgres DSN (sensitive: holds the password) |
 | `DB_WRITER_BATCH_SIZE` | `500` | flush after this many messages |
 | `DB_WRITER_FLUSH_TIMEOUT` | `1s` | flush after this long since the batch's first message |
 
-> **Dev port note:** the DSN uses host port **5433**, not 5432 — a native
+> **Dev port note:** the DSN uses host port **5433**, not 5432; a native
 > PostgreSQL owns 5432 on the dev box, so compose maps the container to 5433. In
 > k8s it's the normal `postgres:5432`.
 
@@ -140,12 +140,12 @@ go run ./cmd/database-writer
 ```
 
 It waits for Postgres, applies migrations, then consumes. Container / k8s:
-distroless Go image, deployed as the `database-writer` Deployment (no Service —
+distroless Go image, deployed as the `database-writer` Deployment (no Service,
 pure consumer/writer). Postgres is the persistent `postgres` service; the DSN
 comes from a Secret (it embeds the password).
 
 ---
 
 **In one line:** database-writer turns the filtered flight stream into a durable,
-queryable history — one row per flight plus a compressed position time-series —
+queryable history (one row per flight plus a compressed position time-series),
 batching its disk writes so a cheap HDD keeps up with the live feed.

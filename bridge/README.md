@@ -1,6 +1,6 @@
 # bridge
 
-The pipeline's **ingestion boundary** — the one service that talks to FAA SWIM.
+The pipeline's **ingestion boundary**: the one service that talks to FAA SWIM.
 It pulls raw SFDPS messages off a Solace **JMS** queue and forwards them,
 unmodified, to the Kafka topic `fixm.raw`.
 
@@ -11,9 +11,9 @@ FAA SWIM SFDPS ──JMS/Solace──►  bridge  ──►  Kafka: fixm.raw  �
 ## Why it exists (and why it's Java)
 
 FAA SWIM **requires JMS** for SFDPS, and the mature JMS/Solace client is on the
-JVM — so this is the only Java service in an otherwise Go pipeline. Its job is
+JVM, so this is the only Java service in an otherwise Go pipeline. Its job is
 deliberately tiny: **retrieve and forward**. It does **no parsing or
-transformation** — the raw FIXM XML goes straight to Kafka, and the `normalizer`
+transformation**: the raw FIXM XML goes straight to Kafka, and the `normalizer`
 downstream does the heavy lifting. Keeping the SWIM-facing boundary this thin
 means the protocol-specific complexity lives in one small, replaceable place.
 
@@ -27,10 +27,10 @@ means the protocol-specific complexity lives in one small, replaceable place.
 ## Key design decisions
 
 - **At-least-once, never drop data.** The listener uses `CLIENT_ACKNOWLEDGE`, so
-  a message stays on the Solace queue until explicitly acked — and it acks
+  a message stays on the Solace queue until explicitly acked, and it acks
   **only after** the Kafka write succeeds. If the Kafka send fails, it does *not*
   ack; Solace redelivers. A crash between send and ack means a duplicate is
-  reprocessed, never a lost message. (Duplicates are harmless — downstream keys
+  reprocessed, never a lost message. (Duplicates are harmless: downstream keys
   by GUFI and upserts.)
 - **No partition key.** One SWIM message carries many flights with different
   GUFIs, so there's no single sensible key at this layer. The `normalizer`
@@ -46,18 +46,18 @@ means the protocol-specific complexity lives in one small, replaceable place.
 ## Configuration (environment variables)
 
 Loaded from a local `.env` (optional) or real env vars. SWIM credentials are
-**required and sensitive** — see `.env.example`.
+**required and sensitive**; see `.env.example`.
 
-| Variable | Meaning |
-|---|---|
-| `SOLACE_HOST` | Solace URI incl. scheme+port (e.g. `tcps://ems2.swim.faa.gov:55443`) |
-| `SOLACE_VPN` | Solace message VPN |
-| `SOLACE_USERNAME` / `SOLACE_PASSWORD` | SWIM credentials |
-| `SOLACE_QUEUE` | the SFDPS queue to consume |
-| `SOLACE_CONNECTION_FACTORY` | JNDI connection-factory name |
-| `KAFKA_BROKERS` | Kafka bootstrap servers (default `localhost:9092`) |
-| `KAFKA_TOPIC_RAW` | output topic (default `fixm.raw`) |
-| `LOG_LEVEL` | app log level (default `INFO`) |
+| Variable | Default | Meaning |
+|---|---|---|
+| `SOLACE_HOST` | (required) | Solace URI incl. scheme+port (e.g. `tcps://ems2.swim.faa.gov:55443`) |
+| `SOLACE_VPN` | (required) | Solace message VPN |
+| `SOLACE_USERNAME` / `SOLACE_PASSWORD` | (required) | SWIM credentials |
+| `SOLACE_QUEUE` | (required) | the SFDPS queue to consume |
+| `SOLACE_CONNECTION_FACTORY` | (required) | JNDI connection-factory name |
+| `KAFKA_BROKERS` | `localhost:9092` | Kafka bootstrap servers |
+| `KAFKA_TOPIC_RAW` | `fixm.raw` | output topic |
+| `LOG_LEVEL` | `INFO` | app log level |
 
 Solace objects (connection factory, destinations) are resolved through **JNDI**,
 using `username@vpn` as the security principal.
@@ -69,8 +69,8 @@ using `username@vpn` as the security principal.
 ./mvnw spring-boot:run
 ```
 
-**Container / k8s:** built by a multi-stage Maven → JRE image and deployed as the
-`bridge` Deployment (no Service — it only connects *out* to SWIM and Kafka). In
+**Container / k8s:** built by a multi-stage Maven to JRE image and deployed as the
+`bridge` Deployment (no Service; it only connects *out* to SWIM and Kafka). In
 k8s the SWIM credentials come from the `swim` Secret; `KAFKA_BROKERS` points at
 the in-cluster broker (`kafka:29092`).
 
@@ -82,11 +82,11 @@ the in-cluster broker (`kafka:29092`).
 ## Scaling note
 
 `concurrency` is `1` (single JMS consumer). Raising it parallelizes consumption
-but gives up per-queue ordering — fine for this data, but a deliberate choice to
+but gives up per-queue ordering. Fine for this data, but a deliberate choice to
 make when throughput demands it.
 
 ---
 
-**In one line:** bridge is the thin, at-least-once JMS→Kafka ingestion edge —
+**In one line:** bridge is the thin, at-least-once JMS→Kafka ingestion edge:
 SWIM's protocol complexity isolated in one place, raw FIXM forwarded to
 `fixm.raw` for the rest of the pipeline to process.

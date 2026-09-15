@@ -17,7 +17,7 @@ filter ──► Kafka: fixm.filtered ──►  cache-writer  ──►  Redis 
 ## What it does
 
 For each flight message:
-1. **Parse** it — GUFI, callsign, registration, status, timestamp, and the
+1. **Parse** it: GUFI, callsign, registration, status, timestamp, and the
    latest position (lat/lon/altitude) from the `enRoute` positions.
 2. **Compute heading + speed** by dead reckoning from the position's track
    velocity (see below).
@@ -35,7 +35,7 @@ serves the map from exactly these keys.
 Two mechanisms keep Redis reflecting reality without any cleanup job:
 
 - **TTL (`FLIGHT_TTL`, default 3m).** Every upsert refreshes the flight's
-  expiry. A flight that stops sending updates simply **expires** on its own —
+  expiry. A flight that stops sending updates simply **expires** on its own,
   so stale entries never accumulate. The cache is **self-cleaning**.
 - **Delete on inactive.** A flight that reports a terminal status is removed
   immediately, rather than waiting for its TTL.
@@ -61,16 +61,16 @@ These are only set when a non-zero velocity is present (`HasHeading`), so the
 - **At-least-once.** The offset is committed only *after* the Redis write
   succeeds. On a Redis error the message isn't committed and is retried; on a
   parse error or a positionless flight there's nothing to write, so it commits
-  and moves on. Re-processing is harmless — upserts are idempotent.
+  and moves on. Re-processing is harmless: upserts are idempotent.
 - **Upsert is one round-trip.** `HSET` + `EXPIRE` are issued in a single Redis
   transaction pipeline.
 
 ## Scaling note (current state)
 
-Processing is **sequential today** — one message, one Redis round-trip. That's
+Processing is **sequential today**: one message, one Redis round-trip. That's
 fine at the current volume. If it ever falls behind (Redis consumer lag on the
 `redis-writer` group climbing), the right lever for a Redis-bound stage isn't
-more workers, it's **pipelining** — batching many messages' commands into one
+more workers, it's **pipelining**: batching many messages' commands into one
 `Exec` to collapse the per-message round-trip. Not implemented yet; it's the
 first thing to reach for if throughput becomes a problem.
 
@@ -94,12 +94,12 @@ go run ./cmd/cache-writer
 ```
 
 It waits for Redis to be reachable before consuming. Container / k8s: distroless
-Go image, deployed as the `cache-writer` Deployment (no Service — pure
+Go image, deployed as the `cache-writer` Deployment (no Service: pure
 consumer/writer). Config from the `cache-writer-config` ConfigMap; Redis is the
 persistent `redis` service.
 
 ---
 
 **In one line:** cache-writer keeps Redis as a self-expiring, live view of every
-active flight — upserting positions with a TTL and deleting flights that land —
+active flight (upserting positions with a TTL and deleting flights that land)
 so the API can serve the map straight from memory.
