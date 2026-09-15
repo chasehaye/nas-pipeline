@@ -11,7 +11,7 @@ An index of every doc in the repo. Start with the
 | [Testing](testing.md) | Test strategy, the pyramid, the synthetic-input pattern |
 | [Security](SECURITY.md) | Vulnerability reporting, CUI / credentials handling |
 | [Roadmap](roadmap.md) | Known limitations and planned work |
-| [CI/CD](../.github/README.md) | The deploy pipeline |
+| [CI/CD](../.github/actions.md) | The deploy pipeline |
 
 ## Post-mortems
 
