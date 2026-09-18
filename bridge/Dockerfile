@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build ----
-FROM eclipse-temurin:25-jdk AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /src
 # Resolve dependencies from the pom first so they cache across code changes.
 COPY .mvn/ .mvn/
