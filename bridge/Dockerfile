@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build ----
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /src
 # Resolve dependencies from the pom first so they cache across code changes.
 COPY .mvn/ .mvn/
@@ -11,8 +11,10 @@ COPY src/ src/
 RUN ./mvnw -B clean package -DskipTests
 
 # ---- runtime ----
-# If eclipse-temurin:25-jre is not published for your platform, use 25-jdk here.
-FROM eclipse-temurin:25-jre
+# Pinned to Temurin 21 (LTS): Temurin 25 SIGILLs on the prod host under the real
+# workload (a deterministic crash, not corruption; `java -version` works but the
+# full app does not). If 21-jre is not published for your platform, use 21-jdk.
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 # Spring Boot repackaged jar (the plain one; *.jar.original is skipped).
 COPY --from=build /src/target/*.jar /app/app.jar
