@@ -19,7 +19,7 @@
     <description>JMS to Kafka bridge for SWIM SFDPS flight data</description>
  
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <!-- Matches the version used by the FAA jumpstart kit. -->
         <solace.jms.version>10.30.1</solace.jms.version>
         <jakarta.jms.version>3.1.0</jakarta.jms.version>
