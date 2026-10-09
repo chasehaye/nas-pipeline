@@ -23,6 +23,12 @@ type Config struct {
 
 	Workers int    // number of concurrent processing workers
 	OpsAddr string // host:port for the ops endpoint (/metrics, /healthz, /readyz)
+
+	// IsDev mirrors the bridge's ISDEV switch. Optional, defaults to false. When
+	// true the filter runs in dev mode: it skips LADD loading and the
+	// fail-closed staleness gate and forwards everything, because the dev stream
+	// is already LADD-clean. No CUI LADD list is required locally.
+	IsDev bool
 }
 
 func Load() Config {
@@ -47,7 +53,18 @@ func Load() Config {
 
 		Workers: envInt("FILTER_WORKERS", 1000),
 		OpsAddr: envOr("OPS_ADDR", ":2113"),
+
+		IsDev: envBool("ISDEV", false),
 	}
+}
+
+func envBool(key string, fallback bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if b, err := strconv.ParseBool(value); err == nil {
+			return b
+		}
+	}
+	return fallback
 }
 
 func envInt(key string, fallback int) int {

@@ -34,6 +34,19 @@ kafka:
   topic:
     raw: ${KAFKA_TOPIC_RAW:fixm.raw}
 
+# Dev replay switch. Optional: defaults to false when ISDEV is unset, so the
+# real Solace bridge runs. Set ISDEV=true to instead replay a local seed file
+# into fixm.raw (ReplayRunner), which needs no Solace credentials.
+isdev: ${ISDEV:false}
+
+# Only used when isdev=true. The seed is the committed, LADD-clean dev stream,
+# split across several files in replay.dir (GitHub caps a single file at 100 MB)
+# and read in sorted order as one continuous stream.
+replay:
+  dir: ${REPLAY_DIR:seed-data}
+  delay-ms: ${REPLAY_DELAY_MS:250}
+  loop: ${REPLAY_LOOP:true}
+
 solace:
   # Full URI including scheme and port, e.g. tcps://ems2.swim.faa.gov:55443
   host: ${SOLACE_HOST}

@@ -4,6 +4,10 @@
 
 $root = Split-Path -Parent $PSScriptRoot
 
+# Called by `make services`, which exports ISDEV; the windows spawned below
+# inherit it, so dev vs live follows the Makefile's ISDEV toggle. (Run this
+# script directly, without make, and each service falls back to its own .env.)
+
 $services = @(
     @{ name = 'bridge';       cmd = '.\mvnw.cmd spring-boot:run' },
     @{ name = 'normalizer';   cmd = 'go run ./cmd/normalizer' },

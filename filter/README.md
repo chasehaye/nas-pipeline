@@ -1,21 +1,21 @@
 # filter
 
-The pipeline's **compliance gate**. It reads normalized flights off
-`fixm.normalized`, drops any aircraft on the FAA **LADD** block list, and
+The pipeline's compliance gate. It reads normalized flights off
+`fixm.normalized`, drops any aircraft on the [FAA](#acronyms) [LADD](#acronyms) block list, and
 forwards the rest to `fixm.filtered`. If the block list is missing or stale it
-**halts** rather than pass unfiltered data.
+halts rather than pass unfiltered data.
 
 ```
-normalizer ──► Kafka: fixm.normalized ──►  filter  ──►  Kafka: fixm.filtered ──► cache-writer ──► …
-                                        (drop LADD-listed
-                                         flights, forward rest)
+normalizer  ->  Kafka: fixm.normalized  ->  filter  ->  Kafka: fixm.filtered ->  cache-writer  ->  ...
+                                            (drop LADD-listed
+                                            flights, forward rest)
 ```
 
 ## What LADD is (and why fail-closed)
 
 **LADD** (Limiting Aircraft Data Displayed) is an FAA program: aircraft owners
 can request that their aircraft not be publicly displayed. The Industry list of
-those aircraft is **CUI** and updates weekly. This service is what enforces it:
+those aircraft is [**CUI**](#acronyms) and updates weekly. This service is what enforces it:
 it must never publish a flight that's on the list.
 
 Because getting this wrong is a compliance failure, the filter is **fail-closed**:
@@ -26,12 +26,12 @@ list, no output: never "pass everything through."
 ## What it does
 
 For each flight:
-1. Parse just the identifying fields (callsign, registration, GUFI).
-2. If the callsign **or** registration is on the LADD set → **drop it** (not
+1. Parse just the identifying fields (callsign, registration, [GUFI](#acronyms)).
+2. If the callsign **or** registration is on the LADD set -> **drop it** (not
    published).
-3. Otherwise → **publish** to `fixm.filtered`, keyed by GUFI.
+3. Otherwise -> **publish** to `fixm.filtered`, keyed by GUFI.
 
-It's a thin, high-throughput screen: a tiny JSON parse, a set lookup, and a
+It's a thin, high-throughput screen: a tiny [JSON](#acronyms) parse, a set lookup, and a
 forward.
 
 ## How the LADD list gets here (and updates)
@@ -63,6 +63,7 @@ The filter doesn't know or care how the Secret changed; it just reloads.
 
 | Variable | Default | Meaning |
 |---|---|---|
+| `ISDEV` | `false` | `true` disables LADD loading and the fail-closed gate for local dev (see [Dev mode](#dev-mode-isdevtrue)) |
 | `KAFKA_BROKERS` | `localhost:9092` | Kafka bootstrap servers |
 | `KAFKA_TOPIC_NORMALIZED` | `fixm.normalized` | input topic |
 | `KAFKA_TOPIC_FILTERED` | `fixm.filtered` | output topic |
@@ -71,6 +72,15 @@ The filter doesn't know or care how the Secret changed; it just reloads.
 | `LADD_MAX_AGE` | `216h` | staleness limit from the file's publication date (9 days) |
 | `LADD_CHECK_EVERY` | `1h` | how often to re-scan for a newer list |
 | `FILTER_WORKERS` | `4` | concurrent workers (I/O-bound; safe above core count) |
+
+### Dev mode (`ISDEV=true`)
+
+For local development without the (CUI) LADD list, set `ISDEV=true`. The filter
+then skips LADD loading, the fail-closed staleness gate, and the reloader, and
+forwards every flight. It pairs with the bridge's `ISDEV` replay: the dev stream
+is already LADD-clean, so nothing needs dropping. `ISDEV` is optional and
+defaults to `false`, so in any real deployment the fail-closed LADD enforcement
+described above stays fully in effect.
 
 ## Running
 
@@ -95,3 +105,11 @@ local-dev convenience; the `ladd-admin` service handles delivery in the cluster.
 
 **In one line:** filter is the fail-closed LADD compliance screen: it drops
 blocked aircraft, forwards the rest, and refuses to run without a current list.
+
+## Acronyms
+
+- **CUI**: Controlled Unclassified Information
+- **FAA**: Federal Aviation Administration
+- **GUFI**: Globally Unique Flight Identifier
+- **JSON**: JavaScript Object Notation
+- **LADD**: Limiting Aircraft Data Displayed

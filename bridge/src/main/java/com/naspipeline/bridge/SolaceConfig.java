@@ -11,8 +11,14 @@ import org.springframework.jndi.JndiTemplate;
 import javax.naming.Context;
 import java.util.Properties;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.annotation.EnableJms;
 
+// Live ingestion path. Loads only when ISDEV is false/absent. When ISDEV=true
+// none of these Solace beans are created, so the app needs no Solace
+// credentials and makes no broker connection at startup (ReplayRunner feeds
+// fixm.raw from a local file instead).
+@ConditionalOnProperty(name = "isdev", havingValue = "false", matchIfMissing = true)
 @Configuration
 @EnableJms
 

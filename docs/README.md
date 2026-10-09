@@ -17,6 +17,7 @@ An index of every doc in the repo. Start with the
 
 | Post-mortem | What it covers |
 |---|---|
+| [Bridge SIGILL + RAM corruption (2026-09-18)](post-mortems/2026-09-18-bridge-sigill-and-ram-corruption.md) | Two overlapping failures (glibc-vs-runc SIGILL, recurring RAM corruption) plus the SMR-Postgres finding, with the hardening plan |
 | [Corrupt batch (2026-09-03)](post-mortems/2026-09-03-corrupt-batch.md) | A corrupt Kafka record froze `normalizer`: cause, recovery, proposed fix |
 | [Stalled consumer](post-mortems/stalled-consumer.md) | Silent consumer stalls have no alerting: diagnosis and proposed fix |
 

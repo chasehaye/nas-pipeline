@@ -17,6 +17,14 @@ else
   MVNW := ./mvnw
 endif
 
+# ISDEV is the one dev/live toggle for the whole local stack, true or false
+# (default true). true = dev (bridge replays the committed seed, filter skips
+# LADD); false = live Solace feed + LADD enforcement. Flip per run, e.g.
+# `make services ISDEV=false`. `export` puts it in every recipe's environment
+# (and the service windows the ps1 spawns), so one switch drives all services.
+# When run through make it overrides a service's own .env (OS env wins).
+export ISDEV ?= true
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -28,6 +36,7 @@ help:
 	@echo "                  Grafana http://localhost:3000 - Prometheus http://localhost:9090"
 	@echo -------------------------------------------------------------------------------------------
 	@echo -  make services   run all services (separate windows on Windows)
+	@echo "                  dev by default (ISDEV=true); add ISDEV=false for the live feed"
 	@echo ------------------------------------------------------------------------------------------
 	@echo -  make bridge     run the bridge service    (Spring Boot; own terminal)
 	@echo -  make normalizer  run the normalizer service (own terminal)

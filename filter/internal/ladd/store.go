@@ -10,6 +10,7 @@ import (
 type Store struct {
 	current atomic.Pointer[snapshot]
 	maxAge  time.Duration
+	dev     bool
 }
 
 type snapshot struct {
@@ -21,6 +22,13 @@ func NewStore(maxAge time.Duration) *Store {
 	s := &Store{maxAge: maxAge}
 	s.current.Store(&snapshot{set: NewSet(nil)})
 	return s
+}
+
+// SetDev enables dev mode. In dev the store holds an empty blocklist (so
+// Blocks never matches) and Ready always passes, so the filter forwards
+// everything without a real LADD list. Set once at startup from ISDEV.
+func (s *Store) SetDev(dev bool) {
+	s.dev = dev
 }
 
 func (s *Store) Swap(set *Set, effectiveDate time.Time) {
@@ -46,6 +54,9 @@ func (s *Store) Blocks(callSign, registration string) bool {
 }
 
 func (s *Store) Ready() (bool, string) {
+	if s.dev {
+		return true, ""
+	}
 	snap := s.current.Load()
 	if snap.effectiveDate.IsZero() || snap.set.Len() == 0 {
 		return false, "no LADD list loaded"

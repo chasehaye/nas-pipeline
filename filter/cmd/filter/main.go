@@ -51,44 +51,52 @@ func main() {
 	defer dlq.Close()
 
 	store := ladd.NewStore(cfg.MaxAge)
+	store.SetDev(cfg.IsDev)
 
-	dirs := ladd.Dirs{
-		Staging:  cfg.LADDStaging,
-		Active:   cfg.LADDDir,
-		Archived: cfg.LADDArchive,
-	}
-
-	if promoted, err := ladd.Promote(dirs); err != nil {
-		slog.Warn("LADD promote on startup failed", "err", err)
-	} else if promoted != "" {
-		slog.Info("LADD promoted from staging", "file", promoted)
-	}
-
-	if set, effective, err := ladd.LoadLatest(dirs.Active); err != nil {
-		slog.Warn("LADD list not loaded", "dir", dirs.Active, "err", err)
+	if cfg.IsDev {
+		// Dev mode (ISDEV=true): no LADD list on disk, no fail-closed gate, no
+		// reloader. The dev stream is already LADD-clean, so the filter just
+		// passes everything through. Mirrors the bridge's ISDEV behavior.
+		slog.Warn("ISDEV=true: LADD enforcement disabled (dev mode); forwarding all flights")
 	} else {
-		store.Swap(set, effective)
-		slog.Info("LADD list loaded", "entries", set.Len(), "effective", effective.Format("2006-01-02"))
-	}
+		dirs := ladd.Dirs{
+			Staging:  cfg.LADDStaging,
+			Active:   cfg.LADDDir,
+			Archived: cfg.LADDArchive,
+		}
 
-	go func() {
-		t := time.NewTicker(cfg.CheckEvery)
-		defer t.Stop()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case <-t.C:
-				swapped, err := store.Reload(dirs)
-				if err != nil {
-					slog.Warn("ladd reload issue (keeping current list)", "err", err)
-				}
-				if swapped {
-					slog.Info("ladd list reloaded (newer file promoted and picked up)")
+		if promoted, err := ladd.Promote(dirs); err != nil {
+			slog.Warn("LADD promote on startup failed", "err", err)
+		} else if promoted != "" {
+			slog.Info("LADD promoted from staging", "file", promoted)
+		}
+
+		if set, effective, err := ladd.LoadLatest(dirs.Active); err != nil {
+			slog.Warn("LADD list not loaded", "dir", dirs.Active, "err", err)
+		} else {
+			store.Swap(set, effective)
+			slog.Info("LADD list loaded", "entries", set.Len(), "effective", effective.Format("2006-01-02"))
+		}
+
+		go func() {
+			t := time.NewTicker(cfg.CheckEvery)
+			defer t.Stop()
+			for {
+				select {
+				case <-ctx.Done():
+					return
+				case <-t.C:
+					swapped, err := store.Reload(dirs)
+					if err != nil {
+						slog.Warn("ladd reload issue (keeping current list)", "err", err)
+					}
+					if swapped {
+						slog.Info("ladd list reloaded (newer file promoted and picked up)")
+					}
 				}
 			}
-		}
-	}()
+		}()
+	}
 
 	if err := pipeline.New(consumer, producer, dlq, store, cfg.Workers).Run(ctx); err != nil {
 		slog.Error("pipeline stopped", "err", err)
