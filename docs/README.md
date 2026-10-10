@@ -8,6 +8,7 @@ An index of every doc in the repo. Start with the
 | Doc | What it covers |
 |---|---|
 | [Getting started](getting-started.md) | Local setup, the `make` targets, dev/prod port maps |
+| [Data model](data-model.md) | The normalized flight JSON: the keep-set, what is dropped, and why |
 | [Testing](testing.md) | Test strategy, the pyramid, the synthetic-input pattern |
 | [Security](SECURITY.md) | Vulnerability reporting, CUI / credentials handling |
 | [Roadmap](roadmap.md) | Known limitations and planned work |
@@ -41,6 +42,7 @@ plumbing every service imports.
 TODO (author): pages still to write:
   - architecture.md   cross-cutting: Kafka topology, delivery guarantees,
                       the platform/ shared module, fail-closed/fail-fast.
-  - data-model.md     FIXM -> normalized JSON -> Redis hash -> Postgres schema.
   - deployment.md     k3s single-node, Cloudflare tunnel, storage, secrets.
+Note: data-model.md currently covers the FIXM -> normalized JSON keep-set; the
+Redis hash and Postgres schema could be folded in later.
 -->

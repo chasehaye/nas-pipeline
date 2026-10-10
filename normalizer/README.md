@@ -1,17 +1,15 @@
 # normalizer
 
-The pipeline's **transformation stage**. It reads raw FIXM XML off `fixm.raw`,
-parses it into typed Go structs, and emits clean per-flight **JSON** to
-`fixm.normalized`: one flight per message, keyed by GUFI.
+The pipeline's transformation stage. It consumes raw [FIXM](#acronyms) [XML](#acronyms)
+from the Kafka topic `fixm.raw`, parses it into typed Go structs, and produces
+clean per-flight [JSON](#acronyms) to the `fixm.normalized` topic: one flight per
+message, keyed by [GUFI](#acronyms).
 
 ```
-bridge ──► Kafka: fixm.raw  ──►  normalizer  ──►  Kafka: fixm.normalized ──► filter ──► …
-             (raw FIXM XML)      (XML → JSON,        (one JSON flight
-                                  1 envelope→N flights)  per message, keyed by GUFI)
+bridge  ->  Kafka: fixm.raw  ->  normalizer  --->  Kafka: fixm.normalized  ->  filter  ->  ...
+            (raw FIXM XML)    (XML → JSON,           (one JSON flight
+                              1 envelope→N flights)  per message, keyed by GUFI)
 ```
-
-> The Go module is internally named `processor` (its import paths and consumer
-> group use that name); the service/directory is `normalizer`.
 
 ## What it does
 
@@ -23,24 +21,30 @@ holding many `<message>` elements, each wrapping one `<flight>`. The normalizer:
    JSON fields, dropping XML noise and namespacing.
 3. **Publishes** each flight to `fixm.normalized`, **keyed by its GUFI**.
 
-So it's a **1-envelope → N-flights fan-out**: one bulky XML blob in, many small,
+So it's a 1-envelope -> N-flights fan-out: one bulky XML blob in, many small,
 uniform JSON records out, the format every downstream service actually works
 with (`filter` reads a tiny slice of it; `cache-writer` stores it).
 
 ## The model (`internal/fixm/models.go`)
 
-The structs capture essentially every field observed in the live feed:
-flight identification, status, GUFI, departure/arrival, en-route position,
-operator, flight plan, altitudes, and many rarer elements. That completeness
-wasn't guessed; it was built and verified against real data with the **census**
-tool below.
+The structs map only the **keep-set**: the fields some downstream service
+actually reads (`filter`, `cache-writer`, `database-writer`), identity, status,
+GUFI, departure/arrival, and en-route position. FIXM has dozens more subtrees
+(routes, coordination, capabilities, and a long tail that keeps growing), but
+they are deliberately not mapped. Go's `encoding/xml` silently ignores any
+element the structs don't declare, so unused or newly-appearing FIXM fields cost
+nothing; the model grows only when a consumer needs a new field.
+
+The keep-set was derived from real data with the **census** tool below and by
+cross-referencing what each consumer parses. See
+[data-model.md](../docs/data-model.md) for the full keep/drop list and rationale.
 
 ## Key design decisions
 
 - **Keyed by GUFI.** Publishing each flight with its GUFI as the Kafka key means
   all updates for one flight land on the same partition, preserving per-flight
   order for everything downstream.
-- **Concurrent worker pool (CPU-bound).** XML parsing is the heaviest step in the
+- **Concurrent worker pool CPU-bound.** XML parsing is the heaviest step in the
   whole pipeline, so processing runs across a pool of workers: a batch of
   envelopes is fanned out, each worker parses + encodes + publishes its flights,
   and the batch's offset is committed only after all of it succeeds. Because the
@@ -52,7 +56,19 @@ tool below.
 - **Atomic metrics.** Envelope/byte/error counters are `atomic.Int64`, safe for
   the concurrent workers to update.
 
-## The `census` tool (`cmd/census`)
+The worker pool:
+
+```
+read a batch of N envelopes (fixm.raw)
+   |  fan out to the worker pool   (N = NumCPU = NORMALIZER_WORKERS)
+   |--> worker 1 - parse > encode > publish -> fixm.normalized
+   |--> worker 2 - parse > encode > publish -> fixm.normalized
+   |--> worker N - parse > encode > publish -> fixm.normalized
+   |
+   |--> then commit the batch's offset  (only after ALL workers succeeded)
+```
+
+## The `census` tool (`cmd/dev_census`)
 
 A diagnostic that **reconstructs the shape of the FIXM feed from the data
 itself** and prints it as a JSON-like nested tree: nesting, presence,
@@ -62,11 +78,11 @@ structs were derived and are re-verified when the feed changes.
 - Reads the `fixm.raw` partition **directly** (not via a consumer group), so it
   always starts from the beginning and **never disturbs the normalizer's
   offsets**. Safe to run repeatedly.
-- Fully enumerates low-cardinality attributes (status codes, UoMs, flight
+- Fully enumerates low-cardinality attributes (status codes, [UoMs](#acronyms), flight
   types…); samples high-cardinality ones (callsigns) to avoid a memory blowup.
 
 ```bash
-go run ./cmd/census        # print the reconstructed FIXM shape
+go run ./cmd/dev_census        # print the reconstructed FIXM shape
 ```
 
 ## Configuration (environment variables)
@@ -76,7 +92,7 @@ go run ./cmd/census        # print the reconstructed FIXM shape
 | `KAFKA_BROKERS` | `localhost:9092` | Kafka bootstrap servers |
 | `KAFKA_TOPIC_RAW` | `fixm.raw` | input topic |
 | `KAFKA_TOPIC_NORMALIZED` | `fixm.normalized` | output topic |
-| `KAFKA_GROUP` | `processor` | consumer group |
+| `KAFKA_GROUP` | `normalizer` | consumer group |
 | `NORMALIZER_WORKERS` | `NumCPU` | concurrent workers (CPU-bound; keep near core count) |
 
 ## Running
@@ -94,3 +110,12 @@ Container / k8s: distroless Go image, deployed as the `normalizer` Deployment
 **In one line:** normalizer turns bulky raw FIXM XML into clean, GUFI-keyed
 per-flight JSON, in parallel across CPU cores, the stage that makes the rest of
 the pipeline simple.
+
+## Acronyms
+
+- **CPU**: Central Processing Unit
+- **FIXM**: Flight Information Exchange Model
+- **GUFI**: Globally Unique Flight Identifier
+- **JSON**: JavaScript Object Notation
+- **UoM**: Unit of Measure
+- **XML**: Extensible Markup Language

@@ -10,9 +10,9 @@ import (
 	"github.com/chasehaye/nas-pipeline/platform/kafkax"
 	"github.com/chasehaye/nas-pipeline/platform/observability"
 
-	"github.com/chasehaye/nas-pipeline/processor/internal/config"
-	"github.com/chasehaye/nas-pipeline/processor/internal/kafka"
-	"github.com/chasehaye/nas-pipeline/processor/internal/pipeline"
+	"github.com/chasehaye/nas-pipeline/normalizer/internal/config"
+	"github.com/chasehaye/nas-pipeline/normalizer/internal/kafka"
+	"github.com/chasehaye/nas-pipeline/normalizer/internal/pipeline"
 )
 
 func main() {

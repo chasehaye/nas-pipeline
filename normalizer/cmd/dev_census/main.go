@@ -7,7 +7,7 @@
 // so the output can be read straight down while writing structs.
 //
 // Reads the partition directly rather than joining a consumer group, so it
-// always starts from the beginning and never disturbs the processor's
+// always starts from the beginning and never disturbs the normalizer's
 // offsets. Safe to run repeatedly.
 package main
 

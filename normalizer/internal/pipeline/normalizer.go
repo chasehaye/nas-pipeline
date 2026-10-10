@@ -12,8 +12,8 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/chasehaye/nas-pipeline/processor/internal/fixm"
-	"github.com/chasehaye/nas-pipeline/processor/internal/metrics"
+	"github.com/chasehaye/nas-pipeline/normalizer/internal/fixm"
+	"github.com/chasehaye/nas-pipeline/normalizer/internal/metrics"
 )
 
 const (
@@ -34,7 +34,7 @@ type DLQPublisher interface {
 	Publish(ctx context.Context, orig kafka.Message, stage, class, cause string) error
 }
 
-type Processor struct {
+type Normalizer struct {
 	consumer  Consumer
 	publisher Publisher
 	dlq       DLQPublisher
@@ -42,11 +42,11 @@ type Processor struct {
 	batchSize int
 }
 
-func New(consumer Consumer, publisher Publisher, dlq DLQPublisher, workers int) *Processor {
+func New(consumer Consumer, publisher Publisher, dlq DLQPublisher, workers int) *Normalizer {
 	if workers < 1 {
 		workers = 1
 	}
-	return &Processor{
+	return &Normalizer{
 		consumer:  consumer,
 		publisher: publisher,
 		dlq:       dlq,
@@ -62,7 +62,7 @@ type job struct {
 	failed *atomic.Bool
 }
 
-func (p *Processor) Run(ctx context.Context) error {
+func (p *Normalizer) Run(ctx context.Context) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
@@ -118,7 +118,7 @@ func (p *Processor) Run(ctx context.Context) error {
 
 // readBatch blocks for the first envelope, then drains up to batchSize more
 // until full or flushTimeout elapses.
-func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
+func (p *Normalizer) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	first, err := p.consumer.Fetch(ctx)
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func (p *Processor) readBatch(ctx context.Context) ([]kafka.Message, error) {
 	return batch, nil
 }
 
-func (p *Processor) process(ctx context.Context, msg kafka.Message, stats *metrics.Stats, failed *atomic.Bool) {
+func (p *Normalizer) process(ctx context.Context, msg kafka.Message, stats *metrics.Stats, failed *atomic.Bool) {
 	start := time.Now()
 	defer func() { metrics.ProcessDuration.Observe(time.Since(start).Seconds()) }()
 
@@ -181,7 +181,7 @@ func (p *Processor) process(ctx context.Context, msg kafka.Message, stats *metri
 
 // deadLetter quarantines a poison message. A failed DLQ write is transient, so
 // gate the commit rather than lose the message.
-func (p *Processor) deadLetter(ctx context.Context, msg kafka.Message, reason string, cause error, failed *atomic.Bool) {
+func (p *Normalizer) deadLetter(ctx context.Context, msg kafka.Message, reason string, cause error, failed *atomic.Bool) {
 	if err := p.dlq.Publish(ctx, msg, "normalizer", "poison", cause.Error()); err != nil {
 		slog.Error("dlq publish failed", "offset", msg.Offset, "reason", reason, "err", err)
 		failed.Store(true)
@@ -211,7 +211,7 @@ func encodeFlights(flights []fixm.Message) ([]kafka.Message, error) {
 	return msgs, nil
 }
 
-func (p *Processor) commit(ctx context.Context, msg kafka.Message) {
+func (p *Normalizer) commit(ctx context.Context, msg kafka.Message) {
 	if err := p.consumer.Commit(ctx, msg); err != nil {
 		slog.Error("commit failed", "err", err)
 	}
