@@ -149,7 +149,7 @@ func (p *Normalizer) process(ctx context.Context, msg kafka.Message, stats *metr
 		slog.Info("progress", "stats", stats)
 	}
 
-	// Parse / encode failures are poison → dead-letter, don't retry.
+	// Parse / encode failures are poison -> dead-letter, don't retry.
 	flights, err := fixm.ParseEnvelope(msg.Value)
 	if err != nil {
 		stats.ParseErrors.Add(1)
