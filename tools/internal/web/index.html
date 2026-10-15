@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FAA API census</title>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 1.5rem; }
+  h1 { font-size: 1.1rem; }
+  input { padding: .3rem .5rem; width: 24rem; margin-bottom: .5rem; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: .25rem .6rem; border-bottom: 1px solid #ddd; white-space: nowrap; }
+  th { cursor: pointer; user-select: none; }
+  td.path { font-family: ui-monospace, monospace; white-space: normal; }
+  .muted { color: #888; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.row { cursor: pointer; }
+  tr.row:hover td { background: #f3f7ff; }
+  tr.detail td { background: #f6f6f6; padding: .5rem .7rem; }
+  tr.detail .sec { margin-bottom: .45rem; }
+  tr.detail .sech { font-weight: 600; color: #555; margin-bottom: .2rem; }
+  tr.detail ul { margin: 0; padding: 0; list-style: none; }
+  tr.detail li { font-family: ui-monospace, monospace; font-size: 12px; white-space: normal; word-break: break-all; padding: 1px 0; }
+  tr.detail .c { display: inline-block; min-width: 3.5rem; margin-right: .6rem; text-align: right; color: #888; }
+</style>
+</head>
+<body>
+<h1>fixm.raw census <span id="meta" class="muted"></span></h1>
+<input id="filter" placeholder="filter paths...">
+<table>
+  <thead><tr>
+    <th data-k="path">path</th>
+    <th data-k="kind">kind</th>
+    <th data-k="occurrences" class="num">occurrences</th>
+    <th data-k="distinct" class="num">distinct</th>
+    <th data-k="types">types</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+<script>
+let fields = [], sortKey = "path", sortDir = 1, filter = "";
+
+const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const typeStr = t => t ? Object.keys(t).sort().join(", ") : "";
+
+// Expanded detail: sample values, plus the full enum (with counts) for categoricals.
+function section(title, items) {
+  return "<div class='sec'><div class='sech'>" + title + "</div><ul>" + items.join("") + "</ul></div>";
+}
+
+function detailHTML(f) {
+  let html = "";
+  if (f.samples && f.samples.length) {
+    html += section("samples", f.samples.map(s => "<li>" + esc(s) + "</li>"));
+  }
+  if (f.values) {
+    const items = Object.entries(f.values)
+      .sort((a, b) => b[1] - a[1])
+      .map(([v, c]) => "<li><span class='c'>" + c + "</span>" + esc(v) + "</li>");
+    html += section("values (distinct, by count)" + (f.truncated ? ", capped" : ""), items);
+  }
+  return html || "<span class='muted'>no values recorded</span>";
+}
+
+function render() {
+  const rows = fields
+    .filter(f => f.path.toLowerCase().includes(filter))
+    .sort((a, b) => {
+      let x = a[sortKey], y = b[sortKey];
+      if (sortKey === "types") { x = typeStr(a.types); y = typeStr(b.types); }
+      return (x > y ? 1 : x < y ? -1 : 0) * sortDir;
+    });
+  document.getElementById("rows").innerHTML = rows.map(f =>
+    "<tr class='row'><td class='path'>" + esc(f.path) + "</td><td>" + esc(f.kind) +
+    "</td><td class='num'>" + f.occurrences + "</td><td class='num'>" + (f.distinct || "") +
+    (f.truncated ? "+" : "") + "</td><td>" + typeStr(f.types) + "</td></tr>" +
+    "<tr class='detail' hidden><td colspan='5'>" + detailHTML(f) + "</td></tr>"
+  ).join("");
+}
+
+async function load() {
+  const snap = await (await fetch("/shape")).json();
+  fields = Object.values(snap.fields || {});
+  document.getElementById("meta").textContent =
+    "(" + fields.length + " paths, as of " + new Date(snap.generatedAt).toLocaleTimeString() + ")";
+  render();
+}
+
+// Click a row to toggle its detail row (the next sibling).
+document.getElementById("rows").addEventListener("click", e => {
+  const row = e.target.closest("tr.row");
+  if (!row) return;
+  const d = row.nextElementSibling;
+  if (d && d.classList.contains("detail")) d.hidden = !d.hidden;
+});
+document.querySelectorAll("th").forEach(th => th.onclick = () => {
+  const k = th.dataset.k;
+  sortDir = (sortKey === k) ? -sortDir : 1;
+  sortKey = k;
+  render();
+});
+document.getElementById("filter").oninput = e => { filter = e.target.value.toLowerCase(); render(); };
+
+load(); // one fetch on open; refresh the page to pull the latest shape
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# census runtime snapshot (CENSUS_SNAPSHOT); rebuilt from the feed on start,
+# so it is local state, not source. Never commit it.
+/census.json

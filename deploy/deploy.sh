@@ -7,7 +7,7 @@
 #   APPLY_INFRA=1 ./deploy/deploy.sh   # also apply Kafka/Redis/Postgres/PV
 set -euo pipefail
 
-SERVICES=(api normalizer cache-writer filter web bridge ladd-admin database-writer)
+SERVICES=(api normalizer cache-writer filter web bridge ladd-admin database-writer census)
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INFRA_OVERLAY="deploy/k8s/overlays/prod/infra"
 APPS_OVERLAY="deploy/k8s/overlays/prod/apps"
@@ -88,6 +88,10 @@ for svc in "${SERVICES[@]}"; do
     bridge|web)
       # Self-contained: build with the service dir as context.
       build_one "$svc" build "${build_args[@]}" -t "nas-$svc:latest" "./$svc"
+      ;;
+    census)
+      # Lives under tools/ (module tools, cmd/census); build from the repo root.
+      build_one "$svc" build "${build_args[@]}" -t "nas-census:latest" -f "./tools/Dockerfile" .
       ;;
     *)
       # Go services import the shared ./platform module, so the build context

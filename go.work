@@ -11,4 +11,5 @@ use (
 	./ladd-admin
 	./normalizer
 	./platform
+	./tools
 )

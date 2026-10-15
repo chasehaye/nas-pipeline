@@ -11,3 +11,4 @@ resources:
   - api.yaml
   - web.yaml
   - ladd-admin.yaml
+  - census.yaml

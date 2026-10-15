@@ -38,6 +38,12 @@ An index of every doc in the repo. Start with the
 Shared module: [platform](../platform/README.md), the observability and Kafka
 plumbing every service imports.
 
+## Tools
+
+| Tool | Role |
+|---|---|
+| [census](../tools/README.md) | Infers and serves the live shape of `fixm.raw` (schema / drift diagnostic) |
+
 <!--
 TODO (author): pages still to write:
   - architecture.md   cross-cutting: Kafka topology, delivery guarantees,

@@ -46,6 +46,8 @@ help:
 	@echo -  make api         run the read API (Gin, reads Redis; own terminal)
 	@echo -  make web         run the front-end map (Vite dev server, http://localhost:5173)
 	@echo ------------------------------------------------------------------------------------------
+	@echo -  make census     run the fixm.raw schema census tool (web UI http://localhost:8088)
+	@echo ------------------------------------------------------------------------------------------
 	@echo -  make test       run unit tests for all Go modules (go test ./...)
 	@echo ------------------------------------------------------------------------------------------
 
@@ -94,6 +96,11 @@ api:
 web:
 	cd web && npm run dev
 
+# ---------- tools (not part of `make services`; run on demand) ----------
+.PHONY: census
+census:
+	cd tools && go run ./cmd/census
+
 # ---------- test ----------
 .PHONY: test
 test:
@@ -104,3 +111,4 @@ test:
 	cd cache-writer && go test $(GOTEST_FLAGS) ./...
 	cd database-writer && go test $(GOTEST_FLAGS) ./...
 	cd api && go test $(GOTEST_FLAGS) ./...
+	cd tools && go test $(GOTEST_FLAGS) ./...
